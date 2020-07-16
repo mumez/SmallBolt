@@ -48,6 +48,12 @@ SbSettings >> at: key put: value [
 
 { #category : #defaults }
 SbSettings >> defaultRootUri [
+	"neo4j
+	neo4j+s
+	neo4j+ssc
+	bolt
+	bolt+s
+	bolt+ssc"
 	"bolt+routing://graph.example.com:7687"
 	^'bolt://localhost:7687'
 ]
@@ -62,6 +68,26 @@ SbSettings >> includesKey: key [
 	^self settingsDict includesKey: key
 ]
 
+{ #category : #aliasing }
+SbSettings >> isDirectScheme [
+	^self parsedUriScheme first = 'bolt'
+]
+
+{ #category : #aliasing }
+SbSettings >> isEncryptedTransport [
+	^self isPlainTextTransport not
+]
+
+{ #category : #aliasing }
+SbSettings >> isNeo4jScheme [
+	^self parsedUriScheme first = 'neo4j'
+]
+
+{ #category : #aliasing }
+SbSettings >> isPlainTextTransport [
+	^self parsedUriScheme last = ''
+]
+
 { #category : #'accessing - dictionary' }
 SbSettings >> keys [
 	^self settingsDict keys
@@ -70,6 +96,11 @@ SbSettings >> keys [
 { #category : #private }
 SbSettings >> parseUri: aString [
 	self parsedUriValues: (self portableUtil parseUri: aString)
+]
+
+{ #category : #private }
+SbSettings >> parsedUriScheme [
+	^self portableUtil parseUriScheme: self scheme
 ]
 
 { #category : #'accessing - private' }
@@ -128,6 +159,11 @@ SbSettings >> targetUri: aString [
 	self at: #targetUri put: aString.
 	aString ifNotNil: [ self parseUri: aString ].
 	^aString
+]
+
+{ #category : #accessing }
+SbSettings >> userAgent [
+	^self parsedUriValues at: #userAgent ifAbsent: [ 'SmallBolt/1' ]
 ]
 
 { #category : #authentication }

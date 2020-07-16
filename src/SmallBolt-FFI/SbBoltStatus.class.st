@@ -21,7 +21,6 @@ SbBoltStatus >> connectionStateSymbol [
 
 { #category : #releasing }
 SbBoltStatus >> destroy [
-self inspect.
 	self ffi destroyStatus: self
 ]
 

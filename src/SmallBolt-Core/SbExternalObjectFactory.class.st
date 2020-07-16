@@ -8,7 +8,7 @@ Class {
 	#category : #'SmallBolt-Core'
 }
 
-{ #category : #actions }
+{ #category : #'initailize-release' }
 SbExternalObjectFactory >> autoRelease [
 	self pool autoRelease.
 	self initPool
@@ -20,6 +20,15 @@ SbExternalObjectFactory >> create: aSbExternalObjectClass [
 	inst := aSbExternalObjectClass on: self settings.
 	self pool register: inst.
 	^inst 
+]
+
+{ #category : #actions }
+SbExternalObjectFactory >> createConnector: address token: token config: config [
+	| inst |
+	inst := SbBoltConnector address: address token: token config: config.
+	inst initWithSettings: self settings.
+	self pool register: inst.
+	^inst
 ]
 
 { #category : #'initailize-release' }

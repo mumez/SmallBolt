@@ -39,7 +39,7 @@ SbExternalObject class >> initialize [
 SbExternalObject class >> on: aSbSettings [ 
 	| inst |
 	inst := self create.
-	inst settings: aSbSettings.
+	inst initWithSettings: aSbSettings.
 	^inst
 ]
 
@@ -53,6 +53,12 @@ SbExternalObject >> ffiLibraryName [
 	^ SbSeaboltLibrary
 ]
 
+{ #category : #'initailize-release' }
+SbExternalObject >> initWithSettings: aSbSettings [ 
+	self settings: aSbSettings.
+	self setup
+]
+
 { #category : #accessing }
 SbExternalObject >> settings [
 	^ settings
@@ -61,4 +67,9 @@ SbExternalObject >> settings [
 { #category : #accessing }
 SbExternalObject >> settings: anObject [
 	settings := anObject
+]
+
+{ #category : #'initailize-release' }
+SbExternalObject >> setup [
+	"override if you wish"
 ]

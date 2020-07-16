@@ -239,6 +239,16 @@ SbSeaboltFFI >> getLocalEndpointOnConnection: aBoltConnection [
 ]
 
 { #category : #config }
+SbSeaboltFFI >> getMaxConnectionAcquisitionTimeOnConfig: aBoltConfig [
+	^ self ffiCall: #( int32 BoltConfig_get_max_connection_acquisition_time(SbBoltConfig aBoltConfig) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> getMaxConnectionLifeTimeOnConfig: aBoltConfig [
+	^ self ffiCall: #( int32 BoltConfig_get_max_connection_life_time(SbBoltConfig aBoltConfig) )
+]
+
+{ #category : #config }
 SbSeaboltFFI >> getMaxPoolSizeOnConfig: aBoltConfig [
 	^ self ffiCall: #( int32 BoltConfig_get_max_pool_size(SbBoltConfig aBoltConfig) )
 ]
@@ -256,6 +266,11 @@ SbSeaboltFFI >> getPortOnAddress: aBoltAddress [
 { #category : #connection }
 SbSeaboltFFI >> getRemoteEndpointOnConnection: aBoltConnection [
 	^ self ffiCall: #( BoltAddress BoltConnection_remote_endpoint(SbBoltConnection aBoltConnection) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> getSchemeOnConfig: aBoltConfig [
+	^ self ffiCall: #( int32 BoltConfig_get_scheme(SbBoltConfig aBoltConfig) )
 ]
 
 { #category : #connection }
@@ -291,6 +306,11 @@ SbSeaboltFFI >> getStructureOnValue: aBoltValue [
 { #category : #connection }
 SbSeaboltFFI >> getSummarySuccessOnConnection: aBoltConnection [
 	^ self ffiCall: #( int32 BoltConnection_summary_success(SbBoltConnection aBoltConnection) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> getTransportOnConfig: aBoltConfig [
+	^ self ffiCall: #( int32 BoltConfig_get_transport(SbBoltConfig aBoltConfig) )
 ]
 
 { #category : #value }
@@ -365,6 +385,16 @@ SbSeaboltFFI >> setBeginTransactionMetadataMetadata: metadata onConnection: aBol
 { #category : #connection }
 SbSeaboltFFI >> setBeginTransactionTimeout: timeout onConnection: aBoltConnection [
 	^ self ffiCall: #( int32 BoltConnection_set_begin_tx_timeout(SbBoltConnection aBoltConnection, int64 timeout) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> setMaxConnectionAcquisitionTime: anInteger onConfig: aBoltConfig [
+	^ self ffiCall: #( void BoltConfig_set_max_connection_acquisition_time(SbBoltConfig aBoltConfig , int32 anInteger) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> setMaxConnectionLifeTime: anInteger onConfig: aBoltConfig [
+	^ self ffiCall: #( void BoltConfig_set_max_connection_life_time(SbBoltConfig aBoltConfig , int32 anInteger) )
 ]
 
 { #category : #config }

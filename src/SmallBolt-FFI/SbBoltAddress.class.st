@@ -4,24 +4,17 @@ Class {
 	#category : #'SmallBolt-FFI'
 }
 
-{ #category : #defaults }
-SbBoltAddress class >> defaultHost [
-	^'localhost'
-]
-
-{ #category : #defaults }
-SbBoltAddress class >> defaultPort [
-	^7687
-]
-
-{ #category : #'instance creation' }
-SbBoltAddress class >> host: host [
-	^self host: host port: self defaultPort
-]
-
 { #category : #'instance creation' }
 SbBoltAddress class >> host: host port: port [
 	^self ffi createAddress: host port: port asString
+]
+
+{ #category : #'instance creation' }
+SbBoltAddress class >> on: aSbSettings [ 
+	| inst |
+	inst := self host: aSbSettings host port: aSbSettings port.
+	inst initWithSettings: aSbSettings.
+	^inst
 ]
 
 { #category : #releasing }

@@ -24,3 +24,11 @@ SbPharoPortableUtil >> parseUri: targetUri [
 	
 	
 ]
+
+{ #category : #actions }
+SbPharoPortableUtil >> parseUriScheme: usiScheme [
+	| tokens |
+	tokens := usiScheme findTokens: '+'.
+	tokens size = 1 ifTrue: [ ^ Array with: tokens first with: '' ].
+	^ tokens asArray
+]

@@ -39,3 +39,15 @@ SbPortableUtil class >> initialize [
 SbPortableUtil >> parseUri: targetUrl [
 	^Dictionary new
 ]
+
+{ #category : #actions }
+SbPortableUtil >> parseUriScheme: usiScheme [
+	"neo4j
+	neo4j+s
+	neo4j+ssc
+	bolt
+	bolt+s
+	bolt+ssc
+	"
+	^ Array with: 'bolt' with: ''
+]

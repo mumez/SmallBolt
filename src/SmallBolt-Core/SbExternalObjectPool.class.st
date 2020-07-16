@@ -12,6 +12,11 @@ SbExternalObjectPool class >> finalizeResourceData: externalObjects [
 	externalObjects do: [ :each | each destroy ]
 ]
 
+{ #category : #'instance creation' }
+SbExternalObjectPool class >> on: aSbSettings [
+	^self new settings: aSbSettings; yourself
+]
+
 { #category : #'initailize-release' }
 SbExternalObjectPool >> autoRelease [
 	FFIExternalResourceManager addResource: self

@@ -2,7 +2,8 @@ Class {
 	#name : #SbClient,
 	#superclass : #Object,
 	#instVars : [
-		'settings'
+		'settings',
+		'factory'
 	],
 	#classInstVars : [
 		'ffi'
@@ -35,6 +36,16 @@ SbClient class >> release [
 	<script>
 	ffi ifNotNil: [ ffi shutdown ].
 	ffi := nil
+]
+
+{ #category : #accessing }
+SbClient >> factory [
+	^ factory ifNil: [ factory := SbExternalObjectFactory on: self settings ]
+]
+
+{ #category : #accessing }
+SbClient >> factory: anObject [
+	factory := anObject
 ]
 
 { #category : #accessing }
