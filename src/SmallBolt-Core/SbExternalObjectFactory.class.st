@@ -8,6 +8,11 @@ Class {
 	#category : #'SmallBolt-Core'
 }
 
+{ #category : #'instance creation' }
+SbExternalObjectFactory class >> on: aSbSettings [
+	^self new settings: aSbSettings; yourself
+]
+
 { #category : #'initailize-release' }
 SbExternalObjectFactory >> autoRelease [
 	self pool autoRelease.

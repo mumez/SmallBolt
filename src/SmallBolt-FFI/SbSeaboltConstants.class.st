@@ -61,3 +61,17 @@ SbSeaboltConstants class >> initializeConnectionState [
 	BOLT_CONNECTION_STATE_FAILED := 3.
 	BOLT_CONNECTION_STATE_DEFUNCT := 4.
 ]
+
+{ #category : #utility }
+SbSeaboltConstants class >> schemeSymbolAt: anInteger [
+	anInteger = BOLT_SCHEME_DIRECT ifTrue: [ ^#DIRECT ].
+	anInteger = BOLT_SCHEME_NEO4J ifTrue: [ ^#NEO4J ].
+	^ #UNKNOWN
+]
+
+{ #category : #utility }
+SbSeaboltConstants class >> transportSymbolAt: anInteger [
+	anInteger = BOLT_TRANSPORT_PLAINTEXT ifTrue: [ ^#PLAINTEXT ].
+	anInteger = BOLT_TRANSPORT_ENCRYPTED ifTrue: [ ^#ENCRYPTED ].
+	^ #UNKNOWN
+]

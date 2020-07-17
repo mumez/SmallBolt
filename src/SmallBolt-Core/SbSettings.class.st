@@ -46,6 +46,16 @@ SbSettings >> at: key put: value [
 	^self settingsDict at: key put: value
 ]
 
+{ #category : #authentication }
+SbSettings >> authType [
+	^self at: #authType ifAbsentPut: [#basic]
+]
+
+{ #category : #authentication }
+SbSettings >> authType: aSymbol [
+	self at: #authType put: aSymbol
+]
+
 { #category : #defaults }
 SbSettings >> defaultRootUri [
 	"neo4j
@@ -69,6 +79,11 @@ SbSettings >> includesKey: key [
 ]
 
 { #category : #aliasing }
+SbSettings >> isBasicAuth [
+	^ self authType = #basic
+]
+
+{ #category : #aliasing }
 SbSettings >> isDirectScheme [
 	^self parsedUriScheme first = 'bolt'
 ]
@@ -81,6 +96,11 @@ SbSettings >> isEncryptedTransport [
 { #category : #aliasing }
 SbSettings >> isNeo4jScheme [
 	^self parsedUriScheme first = 'neo4j'
+]
+
+{ #category : #aliasing }
+SbSettings >> isNoAuth [
+	^ self authType = #none
 ]
 
 { #category : #aliasing }
@@ -131,6 +151,16 @@ SbSettings >> port [
 { #category : #'accessing - private' }
 SbSettings >> portableUtil [
 	^SbPortableUtil default
+]
+
+{ #category : #authentication }
+SbSettings >> realm [
+	^self at: #realm ifAbsentPut: [nil]
+]
+
+{ #category : #authentication }
+SbSettings >> realm: aString [
+	self at: #realm put: aString
 ]
 
 { #category : #accessing }

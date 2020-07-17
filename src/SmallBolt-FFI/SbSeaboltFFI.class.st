@@ -38,17 +38,17 @@ SbSeaboltFFI >> applyDefaults: config [
 	^ self ffiCall: #( SbBoltConfig BoltConnector_apply_defaults(SbBoltConfig config) )
 ]
 
-{ #category : #auth }
+{ #category : #authentication }
 SbSeaboltFFI >> authBasic: userName password: password [
 	 ^ self authBasic: userName password: password realm: nil
 ]
 
-{ #category : #auth }
+{ #category : #authentication }
 SbSeaboltFFI >> authBasic: userName password: password realm: realm [
 	 ^ self ffiCall: #( SbBoltValue BoltAuth_basic(String userName, String password, String realm) )
 ]
 
-{ #category : #auth }
+{ #category : #authentication }
 SbSeaboltFFI >> authNone [
 	 ^ self ffiCall: #( SbBoltValue BoltAuth_none() )
 ]

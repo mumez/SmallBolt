@@ -1,19 +1,19 @@
 Class {
-	#name : #SbClient,
+	#name : #SbAuthenticator,
 	#superclass : #SbObject,
-	#instVars : [
-		'factory'
-	],
 	#category : #'SmallBolt-Core'
 }
 
-{ #category : #authentication }
-SbClient >> authenticate [
-	^(SbAuthenticator on: self settings) authenticate
+{ #category : #actions }
+SbAuthenticator >> authenticate [
+	| token |
+	token := self basicAuthenticate.
+	self factory pool register: token.
+	^token
 ]
 
-{ #category : #authentication }
-SbClient >> basicAuthenticate [
+{ #category : #actions }
+SbAuthenticator >> basicAuthenticate [
 	| se |
 	se := self settings.
 	se isBasicAuth
