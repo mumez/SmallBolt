@@ -72,3 +72,20 @@ SbBoltType class >> string [
 SbBoltType class >> structure [
 	^BOLT_STRUCTURE
 ]
+
+{ #category : #testing }
+SbBoltType >> isComposite [
+	^ #(
+	#BOLT_STRUCTURE BOLT_DICTIONARY BOLT_LIST
+	) includes: self typeSymbol
+]
+
+{ #category : #testing }
+SbBoltType >> isPrimitive [
+	^self isComposite not
+]
+
+{ #category : #accessing }
+SbBoltType >> typeSymbol [
+	^self item
+]

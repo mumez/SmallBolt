@@ -57,12 +57,12 @@ SbBoltValue >> duplicate [
 ]
 
 { #category : #accessing }
-SbBoltValue >> floatValueAt: index [
+SbBoltValue >> floatValue [
 	^ self ffi getFloatOnValue: self
 ]
 
 { #category : #accessing }
-SbBoltValue >> integerValueAt: index [
+SbBoltValue >> integerValue [
 	^ self ffi getIntegerOnValue: self
 ]
 

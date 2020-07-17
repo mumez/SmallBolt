@@ -2,8 +2,7 @@ Class {
 	#name : #SbObject,
 	#superclass : #Object,
 	#instVars : [
-		'settings',
-		'factory'
+		'client'
 	],
 	#classInstVars : [
 		'ffi'
@@ -26,14 +25,14 @@ SbObject class >> ffi: anObject [
 	ffi := anObject
 ]
 
+{ #category : #'instance creation' }
+SbObject class >> for: aSbClient [
+	^self new client: aSbClient; yourself
+]
+
 { #category : #'class initialization' }
 SbObject class >> initialize [
 	ffi := nil
-]
-
-{ #category : #'instance creation' }
-SbObject class >> on: aSbSettings [
-	^self new settings: aSbSettings; yourself
 ]
 
 { #category : #releasing }
@@ -44,13 +43,18 @@ SbObject class >> release [
 ]
 
 { #category : #accessing }
-SbObject >> factory [
-	^ factory ifNil: [ factory := SbExternalObjectFactory on: self settings ]
+SbObject >> client [
+	^ client
 ]
 
 { #category : #accessing }
-SbObject >> factory: anObject [
-	factory := anObject
+SbObject >> client: anObject [
+	client := anObject
+]
+
+{ #category : #accessing }
+SbObject >> factory [
+	^ self client factory
 ]
 
 { #category : #accessing }
@@ -60,10 +64,5 @@ SbObject >> ffi [
 
 { #category : #accessing }
 SbObject >> settings [
-	^ settings ifNil: [ settings := SbSettings default ]
-]
-
-{ #category : #accessing }
-SbObject >> settings: anObject [
-	settings := anObject
+	^ self client settings
 ]

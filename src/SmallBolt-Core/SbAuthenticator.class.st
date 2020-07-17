@@ -18,7 +18,7 @@ SbAuthenticator >> basicAuthenticate [
 	se := self settings.
 	se isBasicAuth
 		ifTrue: [ ^ self ffi
-				authBasic: se userName
+				authBasic: se username
 				password: se password
 				realm: se realm ].
 	^ self ffi authNone
