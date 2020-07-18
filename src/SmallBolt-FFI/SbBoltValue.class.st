@@ -1,6 +1,9 @@
 Class {
 	#name : #SbBoltValue,
 	#superclass : #SbExternalObject,
+	#instVars : [
+		'value'
+	],
 	#category : #'SmallBolt-FFI'
 }
 
@@ -54,6 +57,11 @@ SbBoltValue >> dictionaryValueAt: index [
 { #category : #copying }
 SbBoltValue >> duplicate [
 	^ self ffi duplicateOnValue: self
+]
+
+{ #category : #converting }
+SbBoltValue >> fetchValue [
+	^ SbValueFetcher new fetchFrom: self	
 ]
 
 { #category : #accessing }
@@ -112,4 +120,14 @@ SbBoltValue >> toString: dest length: length onConnection: aSbBoldConnection [
 { #category : #accessing }
 SbBoltValue >> type [
 	^ self ffi getTypeOnValue: self
+]
+
+{ #category : #converting }
+SbBoltValue >> value [
+	^ value ifNil: [ value := self fetchValue ]
+]
+
+{ #category : #accessing }
+SbBoltValue >> value: anObject [
+	value := anObject
 ]

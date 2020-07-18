@@ -28,6 +28,14 @@ SbExternalObjectFactory >> create: aSbExternalObjectClass [
 ]
 
 { #category : #actions }
+SbExternalObjectFactory >> createConfigBySetting: setupBlock [
+	| config |
+	config := self create: SbBoltConfig.
+	setupBlock value: config value: self settings.
+	^ config
+]
+
+{ #category : #actions }
 SbExternalObjectFactory >> createConnector: address token: token config: config [
 	| inst |
 	inst := SbBoltConnector address: address token: token config: config.

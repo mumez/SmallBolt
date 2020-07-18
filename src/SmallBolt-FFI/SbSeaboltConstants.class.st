@@ -17,24 +17,27 @@ Class {
 	#category : #'SmallBolt-FFI'
 }
 
-{ #category : #accessing }
-SbSeaboltConstants class >> ACCESS_MODE_READ [
-	^BOLT_ACCESS_MODE_READ
+{ #category : #utility }
+SbSeaboltConstants class >> accessModeAt: aSymbol [
+	aSymbol = #write ifTrue: [ ^ BOLT_ACCESS_MODE_WRITE ].
+	^ BOLT_ACCESS_MODE_READ
 ]
 
-{ #category : #accessing }
-SbSeaboltConstants class >> ACCESS_MODE_WRITE [
-	^BOLT_ACCESS_MODE_WRITE
+{ #category : #utility }
+SbSeaboltConstants class >> accessModeSymbolAt: anInteger [
+	anInteger = BOLT_ACCESS_MODE_READ ifTrue: [ ^ #read ].
+	anInteger = BOLT_ACCESS_MODE_WRITE ifTrue: [ ^ #write ].
+	^ #unknown
 ]
 
 { #category : #utility }
 SbSeaboltConstants class >> connectionStateSymbolAt: anInteger [
-	anInteger = BOLT_CONNECTION_STATE_DISCONNECTED ifTrue: [ ^#DISCONNECTED ].
-	anInteger = BOLT_CONNECTION_STATE_CONNECTED ifTrue: [ ^#CONNECTED ].
-	anInteger = BOLT_CONNECTION_STATE_READY ifTrue: [ ^#READY ].
-	anInteger = BOLT_CONNECTION_STATE_FAILED ifTrue: [ ^#FAILED ].
-	anInteger = BOLT_CONNECTION_STATE_DEFUNCT ifTrue: [ ^#DEFUNCT ].
-	^ #UNKNOWN
+	anInteger = BOLT_CONNECTION_STATE_DISCONNECTED ifTrue: [ ^ #disconnected].
+	anInteger = BOLT_CONNECTION_STATE_CONNECTED ifTrue: [ ^ #connected].
+	anInteger = BOLT_CONNECTION_STATE_READY ifTrue: [ ^ #ready].
+	anInteger = BOLT_CONNECTION_STATE_FAILED ifTrue: [ ^ #failed].
+	anInteger = BOLT_CONNECTION_STATE_DEFUNCT ifTrue: [ ^ #defunct ].
+	^ #unknown
 ]
 
 { #category : #'class initialization' }
@@ -64,14 +67,14 @@ SbSeaboltConstants class >> initializeConnectionState [
 
 { #category : #utility }
 SbSeaboltConstants class >> schemeSymbolAt: anInteger [
-	anInteger = BOLT_SCHEME_DIRECT ifTrue: [ ^#DIRECT ].
-	anInteger = BOLT_SCHEME_NEO4J ifTrue: [ ^#NEO4J ].
-	^ #UNKNOWN
+	anInteger = BOLT_SCHEME_DIRECT ifTrue: [ ^ #direct ].
+	anInteger = BOLT_SCHEME_NEO4J ifTrue: [ ^ #neo4j ].
+	^ #unknown
 ]
 
 { #category : #utility }
 SbSeaboltConstants class >> transportSymbolAt: anInteger [
-	anInteger = BOLT_TRANSPORT_PLAINTEXT ifTrue: [ ^#PLAINTEXT ].
-	anInteger = BOLT_TRANSPORT_ENCRYPTED ifTrue: [ ^#ENCRYPTED ].
-	^ #UNKNOWN
+	anInteger = BOLT_TRANSPORT_PLAINTEXT ifTrue: [ ^ #plaintext ].
+	anInteger = BOLT_TRANSPORT_ENCRYPTED ifTrue: [ ^ #encrypted ].
+	^ #unknown
 ]

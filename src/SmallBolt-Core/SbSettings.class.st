@@ -26,6 +26,16 @@ SbSettings class >> initialize [
 	default := nil
 ]
 
+{ #category : #accessing }
+SbSettings >> accessMode [
+	^ self at: #accessMode ifAbsentPut: [#write]
+]
+
+{ #category : #accessing }
+SbSettings >> accessMode: aSymbol [
+	^ self at: #accessMode put: aSymbol
+]
+
 { #category : #'accessing - dictionary' }
 SbSettings >> at: key [
 	^self settingsDict at: key
@@ -111,6 +121,36 @@ SbSettings >> isPlainTextTransport [
 { #category : #'accessing - dictionary' }
 SbSettings >> keys [
 	^self settingsDict keys
+]
+
+{ #category : #accessing }
+SbSettings >> maxConnectionAcquisitionTime [
+	^ self at: #maxConnectionAcquisitionTime ifAbsentPut: [0]
+]
+
+{ #category : #accessing }
+SbSettings >> maxConnectionAcquisitionTime: anInteger [
+	^ self at: #maxConnectionAcquisitionTime put: anInteger
+]
+
+{ #category : #accessing }
+SbSettings >> maxConnectionLifeTime [
+	^ self at: #maxConnectionLifeTime ifAbsentPut: [0]
+]
+
+{ #category : #accessing }
+SbSettings >> maxConnectionLifeTime: anInteger [
+	^ self at: #maxConnectionLifeTime put: anInteger
+]
+
+{ #category : #accessing }
+SbSettings >> maxPoolSize [
+	^ self at: #maxPoolSize ifAbsentPut: [100]
+]
+
+{ #category : #accessing }
+SbSettings >> maxPoolSize: anInteger [
+	^ self at: #maxPoolSize put: anInteger
 ]
 
 { #category : #private }

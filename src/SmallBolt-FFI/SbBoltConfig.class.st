@@ -15,6 +15,26 @@ SbBoltConfig >> destroy [
 ]
 
 { #category : #accessing }
+SbBoltConfig >> maxConnectionAcquisitionTime [
+	^ self ffi getMaxConnectionAcquisitionTimeOnConfig: self
+]
+
+{ #category : #accessing }
+SbBoltConfig >> maxConnectionAcquisitionTime: anInteger [
+	self ffi	setMaxConnectionAcquisitionTime: anInteger onConfig: self
+]
+
+{ #category : #accessing }
+SbBoltConfig >> maxConnectionLifeTime [
+	^ self ffi getMaxConnectionLifeTimeOnConfig: self
+]
+
+{ #category : #accessing }
+SbBoltConfig >> maxConnectionLifeTime: anInteger [
+	self ffi	setMaxConnectionLifeTime: anInteger onConfig: self
+]
+
+{ #category : #accessing }
 SbBoltConfig >> maxPoolSize [
 	^ self ffi getMaxPoolSizeOnConfig: self
 ]
@@ -36,8 +56,6 @@ SbBoltConfig >> setup [
 	self userAgent: se userAgent.
 	se isDirectScheme ifTrue: [ self useDirectScheme ] ifFalse: [ self useNeo4jScheme ].
 	se isPlainTextTransport ifTrue: [ self usePlainTextTransport ] ifFalse: [ self useEncryptedTransport ].
-	
-	
 ]
 
 { #category : #accessing }

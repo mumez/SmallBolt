@@ -3,7 +3,8 @@ Class {
 	#superclass : #SbObject,
 	#instVars : [
 		'settings',
-		'factory'
+		'factory',
+		'configBuilder'
 	],
 	#category : #'SmallBolt-Core'
 }
@@ -22,6 +23,40 @@ SbClient >> autoReleaseDo: aBlock [
 { #category : #accessing }
 SbClient >> client [
 	^ self
+]
+
+{ #category : #accessing }
+SbClient >> configBuilder [
+	^configBuilder ifNil: [ configBuilder := self defaultConfigBuilder ]
+]
+
+{ #category : #accessing }
+SbClient >> configBuilder: aBlock [
+	configBuilder := aBlock
+]
+
+{ #category : #factory }
+SbClient >> createAddress [
+	^ self factory create: SbBoltAddress
+	
+]
+
+{ #category : #factory }
+SbClient >> createConfig [
+	^ self factory createConfigBySetting: self configBuilder
+	
+]
+
+{ #category : #connecting }
+SbClient >> createConnection [
+	^ self factory createConnector: self createActionMap token: self authenticate config: self createConfig
+]
+
+{ #category : #defaults }
+SbClient >> defaultConfigBuilder [
+	^ [ :config :clientSettings| 
+		config maxPoolSize: clientSettings maxPoolSize.
+	]
 ]
 
 { #category : #accessing }

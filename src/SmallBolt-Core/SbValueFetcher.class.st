@@ -35,7 +35,7 @@ SbValueFetcher >> asPrimitiveValueTyped: typeSymbol from: aBoltValue [
 	typeSymbol = #BOLT_STRING ifTrue: [ ^ aBoltValue stringValue ].
 	typeSymbol = #BOLT_INTEGER ifTrue: [ ^ aBoltValue integerValue ].
 	typeSymbol = #BOLT_FLOAT ifTrue: [ ^ aBoltValue floatValue ].
-	typeSymbol = #BOLT_BOOLEAN ifTrue: [ ^ aBoltValue booleanValue ].
+	typeSymbol = #BOLT_BOOLEAN ifTrue: [ ^ aBoltValue booleanValue = 1].
 	typeSymbol = #BOLT_BYTES ifTrue: [ ^ aBoltValue bytesValue ].
 	typeSymbol = #BOLT_NULL ifTrue: [ ^ nil ].
 	^ nil
