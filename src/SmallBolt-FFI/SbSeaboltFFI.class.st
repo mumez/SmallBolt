@@ -285,7 +285,7 @@ SbSeaboltFFI >> getSizeOnValue: aBoltValue [
 
 { #category : #connection }
 SbSeaboltFFI >> getStatusOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltStatus BoltConnection_metadata(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( BoltStatus BoltConnection_status(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #value }
