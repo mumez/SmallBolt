@@ -4,7 +4,9 @@ Class {
 	#instVars : [
 		'settings',
 		'factory',
-		'configBuilder'
+		'configBuilder',
+		'connector',
+		'connection'
 	],
 	#category : #'SmallBolt-Core'
 }
@@ -16,7 +18,7 @@ SbClient >> authenticate [
 
 { #category : #releasing }
 SbClient >> autoReleaseDo: aBlock [
-	^ [ aBlock value: self factory ]
+	^ [ aBlock cull: self factory ]
 		ensure: [ self releaseFactory ]
 ]
 
@@ -35,6 +37,17 @@ SbClient >> configBuilder: aBlock [
 	configBuilder := aBlock
 ]
 
+{ #category : #connecting }
+SbClient >> connect [
+	connection ifNil: [ connection := self tryConnect ].
+	^connection
+]
+
+{ #category : #accessing }
+SbClient >> connector [
+	^ connector
+]
+
 { #category : #factory }
 SbClient >> createAddress [
 	^ self factory create: SbBoltAddress
@@ -47,8 +60,8 @@ SbClient >> createConfig [
 	
 ]
 
-{ #category : #connecting }
-SbClient >> createConnection [
+{ #category : #factory }
+SbClient >> createConnector [
 	^ self factory createConnector: self createActionMap token: self authenticate config: self createConfig
 ]
 
@@ -57,6 +70,13 @@ SbClient >> defaultConfigBuilder [
 	^ [ :config :clientSettings| 
 		config maxPoolSize: clientSettings maxPoolSize.
 	]
+]
+
+{ #category : #private }
+SbClient >> ensureConnector [
+	connector
+		ifNil: [ connector := self autoReleaseDo: [ self createConnector ] ].
+	^ connector
 ]
 
 { #category : #accessing }
@@ -88,4 +108,23 @@ SbClient >> settings [
 { #category : #accessing }
 SbClient >> settings: anObject [
 	settings := anObject
+]
+
+{ #category : #private }
+SbClient >> tryConnect [
+	self ensureConnector.
+	^ self autoReleaseDo: [ :f | | status newConnection |
+		status := f create: SbBoltStatus.
+		newConnection := self connector acquireConnectionWithMode: self settings accessMode toStatus: status.
+		newConnection ifNil: [ self warnConnectionFailed: status ].
+		newConnection
+	]
+]
+
+{ #category : #'error handling' }
+SbClient >> warnConnectionFailed: connectionStatus [
+	| error connectionStateSymbol |
+	error := connectionStatus connectionStateSymbol.
+	connectionStateSymbol := connectionStatus error.
+	{ error. connectionStateSymbol } inspect
 ]
