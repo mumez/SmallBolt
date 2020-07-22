@@ -185,7 +185,7 @@ SbSettings >> password: aString [
 
 { #category : #accessing }
 SbSettings >> port [
-	^self parsedUriValues at: #port ifAbsent: [ 7867 ]
+	^self parsedUriValues at: #port ifAbsent: [ 7687 ]
 ]
 
 { #category : #'accessing - private' }

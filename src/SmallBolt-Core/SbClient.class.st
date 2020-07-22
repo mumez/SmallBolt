@@ -62,7 +62,7 @@ SbClient >> createConfig [
 
 { #category : #factory }
 SbClient >> createConnector [
-	^ self factory createConnector: self createActionMap token: self authenticate config: self createConfig
+	^ self factory createConnector: self createAddress token: self authenticate config: self createConfig
 ]
 
 { #category : #defaults }
@@ -91,7 +91,8 @@ SbClient >> factory: anObject [
 
 { #category : #'initialization-release' }
 SbClient >> release [
-	self releaseFactory 
+	self releaseFactory.
+	configBuilder := connector := connection := nil.
 ]
 
 { #category : #releasing }
@@ -116,7 +117,7 @@ SbClient >> tryConnect [
 	^ self autoReleaseDo: [ :f | | status newConnection |
 		status := f create: SbBoltStatus.
 		newConnection := self connector acquireConnectionWithMode: self settings accessMode toStatus: status.
-		newConnection ifNil: [ self warnConnectionFailed: status ].
+		status connectionStateSymbol == #ready ifFalse: [ self warnConnectionFailed: status. ^ nil].
 		newConnection
 	]
 ]
