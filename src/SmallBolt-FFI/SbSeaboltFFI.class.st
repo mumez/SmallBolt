@@ -427,7 +427,7 @@ SbSeaboltFFI >> setRunCypherParameter: paramNameString at: index onConnection: a
 ]
 
 { #category : #connection }
-SbSeaboltFFI >> setRunTransactionMetadataMetadata: metadata onConnection: aBoltConnection [
+SbSeaboltFFI >> setRunTransactionMetadata: metadata onConnection: aBoltConnection [
 	^ self ffiCall: #( int32 BoltConnection_set_run_tx_metadata(SbBoltConnection aBoltConnection, BoltValue metadata) )
 ]
 
