@@ -1,5 +1,5 @@
 Class {
-	#name : #SbSeaboltError,
+	#name : #SbBoltError,
 	#superclass : #Error,
 	#instVars : [
 		'errorCode'
@@ -11,21 +11,21 @@ Class {
 }
 
 { #category : #private }
-SbSeaboltError class >> buildErrorCodes [
+SbBoltError class >> buildErrorCodes [
 	| dict |
 	dict := Dictionary newFromPairs: self errorCodePairs.
 	^ dict inject: Dictionary new into: [ :sum :each | sum at: each put: (dict keyAtValue: each); yourself]
 ]
 
 { #category : #'instance creation' }
-SbSeaboltError class >> errorCode: anInteger [
+SbBoltError class >> errorCode: anInteger [
 	^ self new
 		errorCode: anInteger;
 		yourself
 ]
 
 { #category : #accessing }
-SbSeaboltError class >> errorCodePairs [
+SbBoltError class >> errorCodePairs [
 ^ #(
 #BOLT_SUCCESS 0
 #BOLT_UNKNOWN_ERROR   1
@@ -64,57 +64,67 @@ SbSeaboltError class >> errorCodePairs [
 ]
 
 { #category : #accessing }
-SbSeaboltError class >> errorCodes [
+SbBoltError class >> errorCodes [
 	^ errorCodes ifNil: [ errorCodes := self buildErrorCodes ]
 ]
 
 { #category : #'class initialization' }
-SbSeaboltError class >> initialize [
+SbBoltError class >> initialize [
 	self initializeErrorCodes
 ]
 
 { #category : #'class initialization' }
-SbSeaboltError class >> initializeErrorCodes [
+SbBoltError class >> initializeErrorCodes [
 	errorCodes := nil
 ]
 
+{ #category : #testing }
+SbBoltError class >> isError: errorCode [
+	^ errorCode > 1 "BOLT_SUCCESS"
+]
+
+{ #category : #testing }
+SbBoltError class >> isSuccess: errorCode [
+	^ (self isError: errorCode) not
+]
+
 { #category : #private }
-SbSeaboltError >> buildMessageText [
+SbBoltError >> buildMessageText [
 	^self errorSymbol , ' - ', self errorDescription 
 ]
 
 { #category : #accessing }
-SbSeaboltError >> errorCode [
+SbBoltError >> errorCode [
 	^ errorCode
 ]
 
 { #category : #accessing }
-SbSeaboltError >> errorCode: anObject [
+SbBoltError >> errorCode: anObject [
 	errorCode := anObject
 ]
 
 { #category : #accessing }
-SbSeaboltError >> errorCodes [
+SbBoltError >> errorCodes [
 	^self class errorCodes
 ]
 
 { #category : #accessing }
-SbSeaboltError >> errorDescription [
+SbBoltError >> errorDescription [
 	^self ffi getErrorStringOnErrorCode: self errorCode
 ]
 
 { #category : #accessing }
-SbSeaboltError >> errorSymbol [
+SbBoltError >> errorSymbol [
 	^self errorCodes at: self errorCode ifAbsent: [ #UNKNOWN ].
 ]
 
 { #category : #accessing }
-SbSeaboltError >> ffi [
+SbBoltError >> ffi [
 	^ SbSeaboltFFI new
 ]
 
 { #category : #accessing }
-SbSeaboltError >> messageText [
+SbBoltError >> messageText [
 	messageText ifNil: [ messageText := self buildMessageText ].
 	^messageText 
 ]

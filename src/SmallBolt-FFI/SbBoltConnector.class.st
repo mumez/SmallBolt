@@ -12,7 +12,7 @@ SbBoltConnector class >> address: address token: token config: config [
 { #category : #actions }
 SbBoltConnector >> acquireConnectionWithMode: accessModeSymbol toStatus: status [
 	| accessMode |
-	accessMode := SbSeaboltConstants accessModeAt: accessModeSymbol.
+	accessMode := SbBoltConstants accessModeAt: accessModeSymbol.
 	^self ffi acquireConnection: self mode: accessMode status: status
 ]
 

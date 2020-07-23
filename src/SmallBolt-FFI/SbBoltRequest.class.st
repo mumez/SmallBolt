@@ -5,8 +5,18 @@ Class {
 }
 
 { #category : #actions }
-SbBoltRequest >> detailsOn: aSbBoltConnection [
+SbBoltRequest >> fetchOn: aSbBoltConnection [
 	^self ffi fetchOnConnection: aSbBoltConnection request: self
+]
+
+{ #category : #actions }
+SbBoltRequest >> recordsOn: aSbBoltConnection [
+	| values |
+	values := OrderedCollection new.
+	[(self fetchOn: aSbBoltConnection) > 0] whileTrue: [ 
+		values add: (aSbBoltConnection fieldValues)
+	].
+	^ values
 ]
 
 { #category : #actions }

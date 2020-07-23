@@ -1,5 +1,5 @@
 Class {
-	#name : #SbSeaboltConstants,
+	#name : #SbBoltConstants,
 	#superclass : #SharedPool,
 	#classVars : [
 		'BOLT_ACCESS_MODE_READ',
@@ -18,20 +18,20 @@ Class {
 }
 
 { #category : #utility }
-SbSeaboltConstants class >> accessModeAt: aSymbol [
+SbBoltConstants class >> accessModeAt: aSymbol [
 	aSymbol = #write ifTrue: [ ^ BOLT_ACCESS_MODE_WRITE ].
 	^ BOLT_ACCESS_MODE_READ
 ]
 
 { #category : #utility }
-SbSeaboltConstants class >> accessModeSymbolAt: anInteger [
+SbBoltConstants class >> accessModeSymbolAt: anInteger [
 	anInteger = BOLT_ACCESS_MODE_READ ifTrue: [ ^ #read ].
 	anInteger = BOLT_ACCESS_MODE_WRITE ifTrue: [ ^ #write ].
 	^ #unknown
 ]
 
 { #category : #utility }
-SbSeaboltConstants class >> connectionStateSymbolAt: anInteger [
+SbBoltConstants class >> connectionStateSymbolAt: anInteger [
 	anInteger = BOLT_CONNECTION_STATE_DISCONNECTED ifTrue: [ ^ #disconnected].
 	anInteger = BOLT_CONNECTION_STATE_CONNECTED ifTrue: [ ^ #connected].
 	anInteger = BOLT_CONNECTION_STATE_READY ifTrue: [ ^ #ready].
@@ -41,13 +41,13 @@ SbSeaboltConstants class >> connectionStateSymbolAt: anInteger [
 ]
 
 { #category : #'class initialization' }
-SbSeaboltConstants class >> initialize [
+SbBoltConstants class >> initialize [
 	self initializeConfig.
 	self initializeConnectionState
 ]
 
 { #category : #'class initialization' }
-SbSeaboltConstants class >> initializeConfig [
+SbBoltConstants class >> initializeConfig [
 	BOLT_SCHEME_DIRECT := 0.
 	BOLT_SCHEME_NEO4J := 1.
 	BOLT_TRANSPORT_PLAINTEXT := 0.
@@ -57,7 +57,7 @@ SbSeaboltConstants class >> initializeConfig [
 ]
 
 { #category : #'class initialization' }
-SbSeaboltConstants class >> initializeConnectionState [
+SbBoltConstants class >> initializeConnectionState [
 	BOLT_CONNECTION_STATE_DISCONNECTED := 0.
 	BOLT_CONNECTION_STATE_CONNECTED := 1.
 	BOLT_CONNECTION_STATE_READY := 2.
@@ -66,14 +66,14 @@ SbSeaboltConstants class >> initializeConnectionState [
 ]
 
 { #category : #utility }
-SbSeaboltConstants class >> schemeSymbolAt: anInteger [
+SbBoltConstants class >> schemeSymbolAt: anInteger [
 	anInteger = BOLT_SCHEME_DIRECT ifTrue: [ ^ #direct ].
 	anInteger = BOLT_SCHEME_NEO4J ifTrue: [ ^ #neo4j ].
 	^ #unknown
 ]
 
 { #category : #utility }
-SbSeaboltConstants class >> transportSymbolAt: anInteger [
+SbBoltConstants class >> transportSymbolAt: anInteger [
 	anInteger = BOLT_TRANSPORT_PLAINTEXT ifTrue: [ ^ #plaintext ].
 	anInteger = BOLT_TRANSPORT_ENCRYPTED ifTrue: [ ^ #encrypted ].
 	^ #unknown

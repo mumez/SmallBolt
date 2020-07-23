@@ -16,7 +16,7 @@ SbBoltStatus >> connectionState [
 
 { #category : #accessing }
 SbBoltStatus >> connectionStateSymbol [
-	^ SbSeaboltConstants connectionStateSymbolAt: self connectionState 
+	^ SbBoltConstants connectionStateSymbolAt: self connectionState 
 ]
 
 { #category : #releasing }
@@ -26,7 +26,7 @@ SbBoltStatus >> destroy [
 
 { #category : #accessing }
 SbBoltStatus >> error [
-	^SbSeaboltError errorCode: self errorCode
+	^SbBoltError errorCode: self errorCode
 ]
 
 { #category : #accessing }
@@ -37,4 +37,14 @@ SbBoltStatus >> errorCode [
 { #category : #accessing }
 SbBoltStatus >> errorContext [
 	^ self ffi getErrorContextOnStatus: self
+]
+
+{ #category : #testing }
+SbBoltStatus >> isError [
+	^SbBoltError isError: self errorCode
+]
+
+{ #category : #testing }
+SbBoltStatus >> isSuccess [
+	^SbBoltError isSuccess: self errorCode
 ]

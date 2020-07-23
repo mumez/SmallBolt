@@ -46,7 +46,7 @@ SbBoltConfig >> maxPoolSize: anInteger [
 
 { #category : #accessing }
 SbBoltConfig >> scheme [
-	^ SbSeaboltConstants schemeSymbolAt: (self ffi getSchemeOnConfig: self)
+	^ SbBoltConstants schemeSymbolAt: (self ffi getSchemeOnConfig: self)
 ]
 
 { #category : #'initailize-release' }
@@ -60,7 +60,7 @@ SbBoltConfig >> setup [
 
 { #category : #accessing }
 SbBoltConfig >> transport [
-	^ SbSeaboltConstants transportSymbolAt: (self ffi getTransportOnConfig: self)
+	^ SbBoltConstants transportSymbolAt: (self ffi getTransportOnConfig: self)
 	
 ]
 

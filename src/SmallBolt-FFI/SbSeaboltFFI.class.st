@@ -12,7 +12,7 @@ Class {
 		'StringHolderType'
 	],
 	#pools : [
-		'SbSeaboltConstants'
+		'SbBoltConstants'
 	],
 	#category : #'SmallBolt-FFI'
 }

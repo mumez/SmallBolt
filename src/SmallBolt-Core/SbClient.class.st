@@ -44,6 +44,11 @@ SbClient >> connect [
 ]
 
 { #category : #accessing }
+SbClient >> connection [
+	^connection 
+]
+
+{ #category : #accessing }
 SbClient >> connector [
 	^ connector
 ]
@@ -99,6 +104,16 @@ SbClient >> release [
 SbClient >> releaseFactory [
 	factory ifNotNil: [ factory autoRelease ].
 	factory := nil
+]
+
+{ #category : #accessing }
+SbClient >> requester [
+	^ self requesterClass on: self connection
+]
+
+{ #category : #factory }
+SbClient >> requesterClass [
+	^ SbBoltRequester
 ]
 
 { #category : #accessing }

@@ -5,7 +5,7 @@ Class {
 		'settings'
 	],
 	#pools : [
-		'SbSeaboltConstants'
+		'SbBoltConstants'
 	],
 	#classInstVars : [
 		'ffi'
