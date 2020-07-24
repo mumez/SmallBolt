@@ -38,9 +38,16 @@ SbExternalObjectFactory >> createConfigBySetting: setupBlock [
 { #category : #actions }
 SbExternalObjectFactory >> createConnector: address token: token config: config [
 	| inst |
+	inst := self createRetainConnector: address token: token config: config. 
+	self pool register: inst.
+	^inst
+]
+
+{ #category : #actions }
+SbExternalObjectFactory >> createRetainConnector: address token: token config: config [
+	| inst |
 	inst := SbBoltConnector address: address token: token config: config.
 	inst initWithSettings: self settings.
-	self pool register: inst.
 	^inst
 ]
 

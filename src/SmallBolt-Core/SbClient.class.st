@@ -19,7 +19,7 @@ SbClient >> authenticate [
 { #category : #releasing }
 SbClient >> autoReleaseDo: aBlock [
 	^ [ aBlock cull: self factory ]
-		ensure: [ "self releaseFactory" ]
+		ensure: [ self releaseFactory ]
 ]
 
 { #category : #accessing }
@@ -67,7 +67,7 @@ SbClient >> createConfig [
 
 { #category : #factory }
 SbClient >> createConnector [
-	^ self factory createConnector: self createAddress token: self authenticate config: self createConfig
+	^ self factory createRetainConnector: self createAddress token: self authenticate config: self createConfig
 ]
 
 { #category : #defaults }
