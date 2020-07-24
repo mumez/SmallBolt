@@ -62,7 +62,7 @@ SbBoltRequester >> runCypher: cypherString [
 		records := pullRequest recordsOn: self connection.
 	].
 	
-	^ { status. fieldNames. records }
+	^ { status. fieldNames. records } inspect
 ]
 
 { #category : #transactions }
@@ -70,7 +70,7 @@ SbBoltRequester >> transactionDo: aBlock [
 	| status ret |
 	status := self beginTransaction.
 	status isSuccess ifFalse: [ ^ status ].
-	ret := [aBlock value] on: Error do: [ ^ self rollbackTransaction].
+	ret := [aBlock value] on: Error do: [:ex | ex inspect. ^ self rollbackTransaction].
 	status := self commitTransaction.
 	status isSuccess ifFalse: [ ^ status ].
 	^ ret

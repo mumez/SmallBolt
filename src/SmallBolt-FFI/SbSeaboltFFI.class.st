@@ -230,7 +230,7 @@ SbSeaboltFFI >> getLastRequestOnConnection: aBoltConnection [
 
 { #category : #value }
 SbSeaboltFFI >> getListOnValue: aBoltValue [
-	^ self ffiCall: #( SBBoltValue BoltList_value(SbBoltValue aBoltValue) )
+	^ self ffiCall: #( SbBoltValue BoltList_value(SbBoltValue aBoltValue) )
 ]
 
 { #category : #connection }
@@ -342,9 +342,7 @@ SbSeaboltFFI >> loadDiscardRequestOnConnection: aBoltConnection [
 
 { #category : #connection }
 SbSeaboltFFI >> loadPullRequestOnConnection: aBoltConnection [
-	| n |
-	n := -1.
-	^ self ffiCall: #( int32 BoltConnection_load_pull_request(SbBoltConnection aBoltConnection, int32_t n) )
+	^ self ffiCall: #( int32 BoltConnection_load_pull_request(SbBoltConnection aBoltConnection, int32 -1) )
 ]
 
 { #category : #connection }
@@ -408,10 +406,15 @@ SbSeaboltFFI >> setRunBookmarkList: bookmarkList onConnection: aBoltConnection [
 ]
 
 { #category : #connection }
-SbSeaboltFFI >> setRunCypher: aString numberOfParameters: numberOfParameters onConnection: aBoltConnection [
+SbSeaboltFFI >> setRunCypher: cypherString cypherSize: cypherSize numberOfParameters: numberOfParameters onConnection: aBoltConnection [
+	^ self ffiCall: #( int32 BoltConnection_set_run_cypher(SbBoltConnection aBoltConnection, String cypherString, int64 cypherSize, int32 numberOfParameters) )
+]
+
+{ #category : #connection }
+SbSeaboltFFI >> setRunCypher: cypherString numberOfParameters: numberOfParameters onConnection: aBoltConnection [
 	| cypherSize |
-	cypherSize := aString asString size.
-	^ self ffiCall: #( int32 BoltConnection_set_run_cypher(SbBoltConnection aBoltConnection, String cypher, int64 cypherSize, int32 numberOfParameters) )
+	cypherSize := cypherString asString size.
+	^ self setRunCypher: cypherString cypherSize: cypherSize numberOfParameters: numberOfParameters onConnection: aBoltConnection
 ]
 
 { #category : #connection }
