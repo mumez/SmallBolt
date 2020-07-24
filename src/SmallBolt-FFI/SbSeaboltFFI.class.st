@@ -135,7 +135,7 @@ SbSeaboltFFI >> ffiLibraryName [
 
 { #category : #connection }
 SbSeaboltFFI >> getAddressOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltAddress BoltConnection_address(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltAddress BoltConnection_address(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #value }
@@ -185,17 +185,17 @@ SbSeaboltFFI >> getErrorStringOnErrorCode: anInteger [
 
 { #category : #connection }
 SbSeaboltFFI >> getFailureDetailsOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltValue BoltConnection_failure(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltValue BoltConnection_failure(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #connection }
 SbSeaboltFFI >> getFieldNamesOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltValue BoltConnection_field_names(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltValue BoltConnection_field_names(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #connection }
 SbSeaboltFFI >> getFieldValuesOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltValue BoltConnection_field_values(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltValue BoltConnection_field_values(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #value }
@@ -225,7 +225,7 @@ SbSeaboltFFI >> getLastBookmarkListOnConnection: aBoltConnection [
 
 { #category : #connection }
 SbSeaboltFFI >> getLastRequestOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltRequest BoltConnection_last_request(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltRequest BoltConnection_last_request(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #value }
@@ -235,7 +235,7 @@ SbSeaboltFFI >> getListOnValue: aBoltValue [
 
 { #category : #connection }
 SbSeaboltFFI >> getLocalEndpointOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltAddress BoltConnection_local_endpoint(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltAddress BoltConnection_local_endpoint(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #config }
@@ -255,7 +255,7 @@ SbSeaboltFFI >> getMaxPoolSizeOnConfig: aBoltConfig [
 
 { #category : #connection }
 SbSeaboltFFI >> getMetadataOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltValue BoltConnection_metadata(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltValue BoltConnection_metadata(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #address }
@@ -265,7 +265,7 @@ SbSeaboltFFI >> getPortOnAddress: aBoltAddress [
 
 { #category : #connection }
 SbSeaboltFFI >> getRemoteEndpointOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltAddress BoltConnection_remote_endpoint(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltAddress BoltConnection_remote_endpoint(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #config }
@@ -285,7 +285,7 @@ SbSeaboltFFI >> getSizeOnValue: aBoltValue [
 
 { #category : #connection }
 SbSeaboltFFI >> getStatusOnConnection: aBoltConnection [
-	^ self ffiCall: #( BoltStatus BoltConnection_status(SbBoltConnection aBoltConnection) )
+	^ self ffiCall: #( SbBoltStatus BoltConnection_status(SbBoltConnection aBoltConnection) )
 ]
 
 { #category : #value }
@@ -423,7 +423,7 @@ SbSeaboltFFI >> setRunCypher: cypherString onConnection: aBoltConnection [
 SbSeaboltFFI >> setRunCypherParameter: paramNameString at: index onConnection: aBoltConnection [
 	| paramNameSize |
 	paramNameSize := paramNameString asString size.
-	^ self ffiCall: #( BoltValue BoltConnection_set_run_cypher_parameter(SbBoltConnection aBoltConnection, int32 index, String paramNameString, int64 paramNameSize) )
+	^ self ffiCall: #( SbBoltValue BoltConnection_set_run_cypher_parameter(SbBoltConnection aBoltConnection, int32 index, String paramNameString, int64 paramNameSize) )
 ]
 
 { #category : #connection }
