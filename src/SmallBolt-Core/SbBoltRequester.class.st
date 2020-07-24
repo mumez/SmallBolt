@@ -39,6 +39,14 @@ SbBoltRequester >> connection: anObject [
 	connection := anObject
 ]
 
+{ #category : #transactions }
+SbBoltRequester >> rollbackTransaction [
+	| request |
+	request := self connection requestRollbackTransaction.
+	self connection send.
+	^ self connection statusAfterRequest: request
+]
+
 { #category : #'running-cypher' }
 SbBoltRequester >> runCypher: cypherString [
 	| runRequest pullRequest status fieldNames records |
@@ -55,4 +63,16 @@ SbBoltRequester >> runCypher: cypherString [
 	].
 	
 	^ { status. fieldNames. records }
+]
+
+{ #category : #transactions }
+SbBoltRequester >> transactionDo: aBlock [
+	| status ret |
+	status := self beginTransaction.
+	status isSuccess ifFalse: [ ^ status ].
+	ret := [aBlock value] on: Error do: [ ^ self rollbackTransaction].
+	status := self commitTransaction.
+	status isSuccess ifFalse: [ ^ status ].
+	^ ret
+	
 ]

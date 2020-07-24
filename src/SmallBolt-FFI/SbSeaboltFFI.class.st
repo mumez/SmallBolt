@@ -120,12 +120,12 @@ SbSeaboltFFI >> duplicateOnValue: aBoltValue [
 
 { #category : #connection }
 SbSeaboltFFI >> fetchOnConnection: aBoltConnection request: aBoltRequest [
-	^ self ffiCall: #( int32 BoltConnection_fetch(SbBoltConnection aBoltConnection, SbBoltRequest request) )
+	^ self ffiCall: #( int32 BoltConnection_fetch(SbBoltConnection aBoltConnection, SbBoltRequest aBoltRequest) )
 ]
 
 { #category : #connection }
 SbSeaboltFFI >> fetchSummaryOnConnection: aBoltConnection request: aBoltRequest [
-	^ self ffiCall: #( int32 BoltConnection_fetch_summary(SbBoltConnection aBoltConnection, SbBoltRequest request) )
+	^ self ffiCall: #( int32 BoltConnection_fetch_summary(SbBoltConnection aBoltConnection, SbBoltRequest aBoltRequest) )
 ]
 
 { #category : #accessing }
