@@ -14,7 +14,7 @@ SbBoltRequest >> recordsOn: aSbBoltConnection [
 	| values |
 	values := OrderedCollection new.
 	[(self fetchOn: aSbBoltConnection) > 0] whileTrue: [ 
-		values add: (aSbBoltConnection fieldValues)
+		values add: (aSbBoltConnection fieldValues value)
 	].
 	^ values
 ]

@@ -48,3 +48,8 @@ SbBoltStatus >> isError [
 SbBoltStatus >> isSuccess [
 	^SbBoltError isSuccess: self errorCode
 ]
+
+{ #category : #actions }
+SbBoltStatus >> raiseIfError [
+	self isError ifTrue: [ self error signal ]
+]

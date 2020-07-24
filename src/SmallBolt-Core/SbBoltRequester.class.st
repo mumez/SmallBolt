@@ -13,6 +13,18 @@ SbBoltRequester class >> on: aSbBoldConnection [
 ]
 
 { #category : #transactions }
+SbBoltRequester >> basicTransactionDo: aBlock ifFailed: failureBlock [
+	| status ret |
+	status := self beginTransaction.
+	status isSuccess ifFalse: [ ^ failureBlock value: status ].
+	ret := [aBlock cull: self] on: Error do: [:ex | ex inspect.  ^ failureBlock value: self rollbackTransaction].
+	status := self commitTransaction.
+	status isSuccess ifFalse: [ ^ failureBlock value: status ].
+	^ ret
+	
+]
+
+{ #category : #transactions }
 SbBoltRequester >> beginTransaction [
 	| request |
 	request := self connection requestBeginTransaction.
@@ -58,21 +70,22 @@ SbBoltRequester >> runCypher: cypherString [
 	status := self connection statusAfterRequest: runRequest.
 	
 	status isSuccess ifTrue: [ 
-		fieldNames := self connection fieldNames.
+		fieldNames := self connection fieldNames value.
 		records := pullRequest recordsOn: self connection.
 	].
 	
 	^ { status. fieldNames. records } inspect
 ]
 
+{ #category : #'running-cypher' }
+SbBoltRequester >> transactCypher: cypherString [
+	^ self transactionDo: [ 
+		self runCypher: cypherString
+	]
+]
+
 { #category : #transactions }
 SbBoltRequester >> transactionDo: aBlock [
-	| status ret |
-	status := self beginTransaction.
-	status isSuccess ifFalse: [ ^ status ].
-	ret := [aBlock value] on: Error do: [:ex | ex inspect. ^ self rollbackTransaction].
-	status := self commitTransaction.
-	status isSuccess ifFalse: [ ^ status ].
-	^ ret
+	^ self basicTransactionDo: aBlock ifFailed: [ :status | status raiseIfError].
 	
 ]
