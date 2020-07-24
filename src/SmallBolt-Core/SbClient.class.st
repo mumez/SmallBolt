@@ -19,7 +19,7 @@ SbClient >> authenticate [
 { #category : #releasing }
 SbClient >> autoReleaseDo: aBlock [
 	^ [ aBlock cull: self factory ]
-		ensure: [ self releaseFactory ]
+		ensure: [ "self releaseFactory" ]
 ]
 
 { #category : #accessing }
