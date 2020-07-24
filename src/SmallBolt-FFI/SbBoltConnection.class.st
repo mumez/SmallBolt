@@ -1,6 +1,9 @@
 Class {
 	#name : #SbBoltConnection,
 	#superclass : #SbExternalObject,
+	#instVars : [
+		'connectionStateSymbol'
+	],
 	#category : #'SmallBolt-FFI'
 }
 
@@ -22,6 +25,16 @@ SbBoltConnection >> clearBegin [
 { #category : #actions }
 SbBoltConnection >> clearRun [
 	^self ffi clearRunOnConnection: self
+]
+
+{ #category : #accessing }
+SbBoltConnection >> connectionStateSymbol [
+	^ connectionStateSymbol
+]
+
+{ #category : #accessing }
+SbBoltConnection >> connectionStateSymbol: anObject [
+	connectionStateSymbol := anObject
 ]
 
 { #category : #actions }
@@ -47,6 +60,11 @@ SbBoltConnection >> getLastRequest [
 { #category : #actions }
 SbBoltConnection >> id [
 	^self ffi getIdOnConnection: self
+]
+
+{ #category : #testing }
+SbBoltConnection >> isReady [
+	^self connectionStateSymbol == #ready
 ]
 
 { #category : #actions }
@@ -87,6 +105,14 @@ SbBoltConnection >> loadRunRequest [
 { #category : #actions }
 SbBoltConnection >> metadata [
 	^self ffi getMetadataOnConnection: self
+]
+
+{ #category : #printing }
+SbBoltConnection >> printOn: aStream [
+	aStream nextPutAll: self className.
+	aStream nextPutAll: ' ('.
+	aStream nextPutAll: self connectionStateSymbol.
+	aStream nextPutAll: ')'.
 ]
 
 { #category : #requesting }

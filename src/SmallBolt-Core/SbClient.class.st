@@ -132,7 +132,7 @@ SbClient >> tryConnect [
 	^ self autoReleaseDo: [ :f | | status newConnection |
 		status := f create: SbBoltStatus.
 		newConnection := self connector acquireConnectionWithMode: self settings accessMode toStatus: status.
-		status connectionStateSymbol == #ready ifFalse: [ self warnConnectionFailed: status. ^ nil].
+		newConnection isReady ifFalse: [ self warnConnectionFailed: status. ^ nil].
 		newConnection
 	]
 ]
