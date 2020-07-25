@@ -51,6 +51,12 @@ SbBoltRequester >> connection: anObject [
 	connection := anObject
 ]
 
+{ #category : #private }
+SbBoltRequester >> cypherResult: status fieldNames: fieldNames records: records from: cypherString [
+	^ SbCypherResult
+		status: status fieldNames: fieldNames records: records cypher: cypherString
+]
+
 { #category : #transactions }
 SbBoltRequester >> rollbackTransaction [
 	| request |
@@ -74,7 +80,8 @@ SbBoltRequester >> runCypher: cypherString [
 		records := pullRequest recordsOn: self connection.
 	].
 	
-	^ { status. fieldNames. records } inspect
+	^ self
+		cypherResult: status fieldNames: fieldNames records: records from: cypherString
 ]
 
 { #category : #'running-cypher' }
