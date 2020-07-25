@@ -97,7 +97,14 @@ SbClient >> factory: anObject [
 { #category : #'initialization-release' }
 SbClient >> release [
 	self releaseFactory.
-	configBuilder := connector := connection := nil.
+	self releaseConnector.
+	configBuilder := connection := nil.
+]
+
+{ #category : #releasing }
+SbClient >> releaseConnector [
+	connector ifNotNil: [ connector destroy ].
+	connector := nil
 ]
 
 { #category : #releasing }
