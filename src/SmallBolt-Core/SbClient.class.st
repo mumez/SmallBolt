@@ -120,7 +120,7 @@ SbClient >> requester [
 
 { #category : #factory }
 SbClient >> requesterClass [
-	^ SbBoltRequester
+	^ SbBasicRequester
 ]
 
 { #category : #accessing }
