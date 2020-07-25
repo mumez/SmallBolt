@@ -1,5 +1,5 @@
 Class {
-	#name : #SbBoltRequester,
+	#name : #SbBasicRequester,
 	#superclass : #Object,
 	#instVars : [
 		'connection'
@@ -8,12 +8,12 @@ Class {
 }
 
 { #category : #'instance creation' }
-SbBoltRequester class >> on: aSbBoldConnection [
+SbBasicRequester class >> on: aSbBoldConnection [
 	^ self new connection: aSbBoldConnection
 ]
 
 { #category : #transactions }
-SbBoltRequester >> basicTransactionDo: aBlock ifFailed: failureBlock [
+SbBasicRequester >> basicTransactionDo: aBlock ifFailed: failureBlock [
 	| status ret |
 	status := self beginTransaction.
 	status isSuccess ifFalse: [ ^ failureBlock value: status ].
@@ -25,7 +25,7 @@ SbBoltRequester >> basicTransactionDo: aBlock ifFailed: failureBlock [
 ]
 
 { #category : #transactions }
-SbBoltRequester >> beginTransaction [
+SbBasicRequester >> beginTransaction [
 	| request |
 	request := self connection requestBeginTransaction.
 	self connection send.
@@ -34,7 +34,7 @@ SbBoltRequester >> beginTransaction [
 ]
 
 { #category : #transactions }
-SbBoltRequester >> commitTransaction [
+SbBasicRequester >> commitTransaction [
 	| request |
 	request := self connection requestCommitTransaction.
 	self connection send.
@@ -42,23 +42,23 @@ SbBoltRequester >> commitTransaction [
 ]
 
 { #category : #accessing }
-SbBoltRequester >> connection [
+SbBasicRequester >> connection [
 	^ connection
 ]
 
 { #category : #accessing }
-SbBoltRequester >> connection: anObject [
+SbBasicRequester >> connection: anObject [
 	connection := anObject
 ]
 
 { #category : #private }
-SbBoltRequester >> cypherResult: status fieldNames: fieldNames records: records from: cypherString [
+SbBasicRequester >> cypherResult: status fieldNames: fieldNames records: records from: cypherString [
 	^ SbCypherResult
 		status: status fieldNames: fieldNames records: records cypher: cypherString
 ]
 
 { #category : #transactions }
-SbBoltRequester >> rollbackTransaction [
+SbBasicRequester >> rollbackTransaction [
 	| request |
 	request := self connection requestRollbackTransaction.
 	self connection send.
@@ -66,33 +66,34 @@ SbBoltRequester >> rollbackTransaction [
 ]
 
 { #category : #'running-cypher' }
-SbBoltRequester >> runCypher: cypherString [
-	| runRequest pullRequest status fieldNames records |
-	runRequest := self connection requestRunCypher: cypherString.
-	pullRequest := self connection requestPull.
-	self connection send.
-	
-	records := fieldNames := #().
-	status := self connection statusAfterRequest: runRequest.
-	
-	status isSuccess ifTrue: [ 
-		fieldNames := self connection fieldNames value.
-		records := pullRequest recordsOn: self connection.
-	].
-	
-	^ self
-		cypherResult: status fieldNames: fieldNames records: records from: cypherString
+SbBasicRequester >> runCypher: cypherString [
+	^ self runCyphers: (Array with: cypherString) 
 ]
 
 { #category : #'running-cypher' }
-SbBoltRequester >> transactCypher: cypherString [
+SbBasicRequester >> runCyphers: cypherStrings [
+	| calls |
+	calls := cypherStrings collect: [ :each | (SbCypherQueuedCall on: self connection) pushRequestsFor: each ].
+	self connection send.
+	^ calls collect: [ :each | each pullResult ]
+]
+
+{ #category : #'running-cypher' }
+SbBasicRequester >> transactCypher: cypherString [
 	^ self transactionDo: [ 
 		self runCypher: cypherString
 	]
 ]
 
+{ #category : #'running-cypher' }
+SbBasicRequester >> transactCyphers: cypherStrings [
+	^ self transactionDo: [ 
+		self runCyphers: cypherStrings
+	]
+]
+
 { #category : #transactions }
-SbBoltRequester >> transactionDo: aBlock [
+SbBasicRequester >> transactionDo: aBlock [
 	^ self basicTransactionDo: aBlock ifFailed: [ :status | status raiseIfError].
 	
 ]
