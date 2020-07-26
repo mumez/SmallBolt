@@ -31,7 +31,13 @@ SbBoltValue >> booleanValue [
 
 { #category : #accessing }
 SbBoltValue >> bytesValue [
-	^ self ffi getBytesOnValue: self
+	| sz rawBytes strm bytes |
+	sz := self ffi getSizeOnValue: self.
+	rawBytes := self ffi getBytesOnValue: self.
+	strm := rawBytes readStream.
+	bytes := ByteArray new: sz.
+	strm readInto: bytes startingAt: 1 count: sz.
+	^ bytes 
 ]
 
 { #category : #releasing }
@@ -99,7 +105,13 @@ SbBoltValue >> size [
 
 { #category : #accessing }
 SbBoltValue >> stringValue [
-	^ self ffi getStringOnValue: self
+	| sz rawString strm str |
+	sz := self ffi getSizeOnValue: self.
+	rawString := self ffi getStringOnValue: self.
+	strm := rawString readStream.
+	str := String new: sz.
+	strm readInto: str startingAt: 1 count: sz.
+	^ str 
 ]
 
 { #category : #accessing }
@@ -108,8 +120,8 @@ SbBoltValue >> structureCodeValue [
 ]
 
 { #category : #accessing }
-SbBoltValue >> structureValue [
-	^ self ffi getStructureOnValue: self
+SbBoltValue >> structureFieldValueAt: index [
+	^ self ffi getStructureFieldValueAt: index onValue: self
 ]
 
 { #category : #'private-printing' }
