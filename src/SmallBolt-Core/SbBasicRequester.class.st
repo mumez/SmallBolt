@@ -57,6 +57,11 @@ SbBasicRequester >> cypherResult: status fieldNames: fieldNames records: records
 		status: status fieldNames: fieldNames records: records cypher: cypherString
 ]
 
+{ #category : #private }
+SbBasicRequester >> flush [
+	self connection send
+]
+
 { #category : #transactions }
 SbBasicRequester >> rollbackTransaction [
 	| request |
@@ -67,14 +72,27 @@ SbBasicRequester >> rollbackTransaction [
 
 { #category : #'running-cypher' }
 SbBasicRequester >> runCypher: cypherString [
-	^ self runCyphers: (Array with: cypherString) 
+	^(self runCyphers: (Array with: cypherString)) at: 1
 ]
 
 { #category : #'running-cypher' }
 SbBasicRequester >> runCyphers: cypherStrings [
 	| calls |
 	calls := cypherStrings collect: [ :each | (SbCypherQueuedCall on: self connection) pushRequestsFor: each ].
-	self connection send.
+	self flush.
+	^ calls collect: [ :each | each pullResult ]
+]
+
+{ #category : #'running-cypher' }
+SbBasicRequester >> runCyphers: cypherStrings flushIf: aBlock [
+	| lastIndex calls |
+	lastIndex := cypherStrings size.
+	calls := OrderedCollection new.
+	cypherStrings withIndexDo: [ :idx :eachCypher |
+		calls add: (SbCypherQueuedCall on: self connection).
+		[(aBlock value: idx) and: [lastIndex ~= idx ]] ifTrue: [ self flush ]. 
+	].
+	self flush.
 	^ calls collect: [ :each | each pullResult ]
 ]
 

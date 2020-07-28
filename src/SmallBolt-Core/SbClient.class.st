@@ -123,6 +123,16 @@ SbClient >> requesterClass [
 	^ SbBasicRequester
 ]
 
+{ #category : #'running cypher' }
+SbClient >> runCypher: cypherString [
+	^self requester runCypher: cypherString
+]
+
+{ #category : #'running cypher' }
+SbClient >> runCyphers: cypherStrings [
+	^self requester runCyphers: cypherStrings 
+]
+
 { #category : #accessing }
 SbClient >> settings [
 	^settings ifNil: [ settings := SbSettings default ]
@@ -131,6 +141,16 @@ SbClient >> settings [
 { #category : #accessing }
 SbClient >> settings: anObject [
 	settings := anObject
+]
+
+{ #category : #'running cypher' }
+SbClient >> transactCypher: cypherString [
+	^self requester transactCypher: cypherString
+]
+
+{ #category : #'running cypher' }
+SbClient >> transactCyphers: cypherStrings [
+	^self requester transactCypher: cypherStrings
 ]
 
 { #category : #private }
