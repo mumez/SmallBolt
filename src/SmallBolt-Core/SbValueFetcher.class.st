@@ -50,7 +50,7 @@ SbValueFetcher >> asStructureSized: size from: aBoltValue [
 	1 to: size do: [ :idx |
 		fields add: (self fetchFrom: (aBoltValue structureFieldValueAt: idx - 1))
 	].
-	^ SbStructure typeCode: typeCode fields: fields asArray
+	^ (SbStructure typeCode: typeCode fields: fields asArray)
 ]
 
 { #category : #actions }

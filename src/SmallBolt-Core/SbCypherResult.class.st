@@ -20,6 +20,14 @@ SbCypherResult class >> status: status fieldNames: fieldNames records: records c
 		yourself
 ]
 
+{ #category : #enumeration }
+SbCypherResult >> collect: aBlock [
+	| col |
+	col := OrderedCollection new.
+	self do: [ :val | col add: (aBlock value: val) ].
+	^col
+]
+
 { #category : #accessing }
 SbCypherResult >> cypher [
 	^ cypher
@@ -30,6 +38,11 @@ SbCypherResult >> cypher: anObject [
 	cypher := anObject
 ]
 
+{ #category : #enumeration }
+SbCypherResult >> do: aBlock [
+	self fieldsDo: [ :nm :val | aBlock value: val ]
+]
+
 { #category : #accessing }
 SbCypherResult >> fieldNames [
 	^ fieldNames
@@ -38,6 +51,17 @@ SbCypherResult >> fieldNames [
 { #category : #accessing }
 SbCypherResult >> fieldNames: anObject [
 	fieldNames := anObject
+]
+
+{ #category : #enumeration }
+SbCypherResult >> fieldsDo: aBlock [
+	| names |
+	names := self fieldNames.
+	self records do: [:eachRow |
+		1 to: names size do: [:idx |
+			aBlock value: (names at: idx) value: (eachRow at: idx).	
+		]
+	]
 ]
 
 { #category : #accessing }

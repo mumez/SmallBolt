@@ -26,7 +26,7 @@ SbClientTestCase class >> initialize [
 { #category : #private }
 SbClientTestCase >> clientDo: aBlock [
 	| client |
-	client := SbClient new.
+	client := SbRawClient new.
 	[ client settings: self settings.
 	client connect.
 	aBlock value: client ]

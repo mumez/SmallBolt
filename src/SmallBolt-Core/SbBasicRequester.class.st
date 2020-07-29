@@ -2,7 +2,8 @@ Class {
 	#name : #SbBasicRequester,
 	#superclass : #Object,
 	#instVars : [
-		'connection'
+		'connection',
+		'valueFetcher'
 	],
 	#category : #'SmallBolt-Core'
 }
@@ -52,12 +53,6 @@ SbBasicRequester >> connection: anObject [
 ]
 
 { #category : #private }
-SbBasicRequester >> cypherResult: status fieldNames: fieldNames records: records from: cypherString [
-	^ SbCypherResult
-		status: status fieldNames: fieldNames records: records cypher: cypherString
-]
-
-{ #category : #private }
 SbBasicRequester >> flush [
 	self connection send
 ]
@@ -78,7 +73,7 @@ SbBasicRequester >> runCypher: cypherString [
 { #category : #'running-cypher' }
 SbBasicRequester >> runCyphers: cypherStrings [
 	| calls |
-	calls := cypherStrings collect: [ :each | (SbCypherQueuedCall on: self connection) pushRequestsFor: each ].
+	calls := cypherStrings collect: [ :each | (SbCypherQueuedCall on: self) pushRequestsFor: each ].
 	self flush.
 	^ calls collect: [ :each | each pullResult ]
 ]
@@ -89,7 +84,7 @@ SbBasicRequester >> runCyphers: cypherStrings flushIf: aBlock [
 	lastIndex := cypherStrings size.
 	calls := OrderedCollection new.
 	cypherStrings withIndexDo: [ :idx :eachCypher |
-		calls add: (SbCypherQueuedCall on: self connection).
+		calls add: (SbCypherQueuedCall on: self).
 		[(aBlock value: idx) and: [lastIndex ~= idx ]] ifTrue: [ self flush ]. 
 	].
 	self flush.
@@ -114,4 +109,14 @@ SbBasicRequester >> transactCyphers: cypherStrings [
 SbBasicRequester >> transactionDo: aBlock [
 	^ self basicTransactionDo: aBlock ifFailed: [ :status | status raiseIfError].
 	
+]
+
+{ #category : #accessing }
+SbBasicRequester >> valueFetcher [
+	^valueFetcher
+]
+
+{ #category : #accessing }
+SbBasicRequester >> valueFetcher: anObject [
+	valueFetcher := anObject
 ]

@@ -1,160 +1,179 @@
 Class {
-	#name : #SbClient,
+	#name : #SbRawClient,
 	#superclass : #SbObject,
 	#instVars : [
 		'settings',
 		'factory',
 		'configBuilder',
 		'connector',
-		'connection'
+		'connection',
+		'requester',
+		'valueFetcher'
 	],
 	#category : #'SmallBolt-Core'
 }
 
 { #category : #authentication }
-SbClient >> authenticate [
+SbRawClient >> authenticate [
 	^(SbAuthenticator for: self) authenticate
 ]
 
 { #category : #releasing }
-SbClient >> autoReleaseDo: aBlock [
+SbRawClient >> autoReleaseDo: aBlock [
 	^ [ aBlock cull: self factory ]
 		ensure: [ self releaseFactory ]
 ]
 
 { #category : #accessing }
-SbClient >> client [
+SbRawClient >> client [
 	^ self
 ]
 
 { #category : #accessing }
-SbClient >> configBuilder [
+SbRawClient >> configBuilder [
 	^configBuilder ifNil: [ configBuilder := self defaultConfigBuilder ]
 ]
 
 { #category : #accessing }
-SbClient >> configBuilder: aBlock [
+SbRawClient >> configBuilder: aBlock [
 	configBuilder := aBlock
 ]
 
 { #category : #connecting }
-SbClient >> connect [
+SbRawClient >> connect [
 	connection ifNil: [ connection := self tryConnect ].
 	^connection
 ]
 
 { #category : #accessing }
-SbClient >> connection [
+SbRawClient >> connection [
 	^connection 
 ]
 
 { #category : #accessing }
-SbClient >> connector [
+SbRawClient >> connector [
 	^ connector
 ]
 
 { #category : #factory }
-SbClient >> createAddress [
+SbRawClient >> createAddress [
 	^ self factory create: SbBoltAddress
 	
 ]
 
 { #category : #factory }
-SbClient >> createConfig [
+SbRawClient >> createConfig [
 	^ self factory createConfigBySetting: self configBuilder
 	
 ]
 
 { #category : #factory }
-SbClient >> createConnector [
+SbRawClient >> createConnector [
 	^ self factory createRetainConnector: self createAddress token: self authenticate config: self createConfig
 ]
 
+{ #category : #factory }
+SbRawClient >> createRequester [
+	^ (self requesterClass on: self connection)
+		valueFetcher: self valueFetcher;
+		yourself
+]
+
+{ #category : #factory }
+SbRawClient >> createValueFetcher [
+	^SbValueFetcher new
+]
+
 { #category : #defaults }
-SbClient >> defaultConfigBuilder [
+SbRawClient >> defaultConfigBuilder [
 	^ [ :config :clientSettings| 
 		config maxPoolSize: clientSettings maxPoolSize.
 	]
 ]
 
 { #category : #private }
-SbClient >> ensureConnector [
+SbRawClient >> ensureConnector [
 	connector
 		ifNil: [ connector := self autoReleaseDo: [ self createConnector ] ].
 	^ connector
 ]
 
 { #category : #accessing }
-SbClient >> factory [
+SbRawClient >> factory [
 	^factory ifNil: [ factory := SbExternalObjectFactory on: self settings ]
 ]
 
 { #category : #accessing }
-SbClient >> factory: anObject [
+SbRawClient >> factory: anObject [
 	factory := anObject
 ]
 
 { #category : #'initialization-release' }
-SbClient >> release [
+SbRawClient >> release [
 	self releaseFactory.
 	self releaseConnector.
-	configBuilder := connection := nil.
+	configBuilder := connection := requester := valueFetcher := nil.
 ]
 
 { #category : #releasing }
-SbClient >> releaseConnector [
+SbRawClient >> releaseConnector [
 	connector ifNotNil: [ connector destroy ].
 	connector := nil
 ]
 
 { #category : #releasing }
-SbClient >> releaseFactory [
+SbRawClient >> releaseFactory [
 	factory ifNotNil: [ factory autoRelease ].
 	factory := nil
 ]
 
 { #category : #accessing }
-SbClient >> requester [
-	^ self requesterClass on: self connection
+SbRawClient >> requester [
+	^ requester ifNil: [ requester := self createRequester ]
+]
+
+{ #category : #accessing }
+SbRawClient >> requester: anObject [
+	requester := anObject
 ]
 
 { #category : #factory }
-SbClient >> requesterClass [
+SbRawClient >> requesterClass [
 	^ SbBasicRequester
 ]
 
 { #category : #'running cypher' }
-SbClient >> runCypher: cypherString [
+SbRawClient >> runCypher: cypherString [
 	^self requester runCypher: cypherString
 ]
 
 { #category : #'running cypher' }
-SbClient >> runCyphers: cypherStrings [
+SbRawClient >> runCyphers: cypherStrings [
 	^self requester runCyphers: cypherStrings 
 ]
 
 { #category : #accessing }
-SbClient >> settings [
+SbRawClient >> settings [
 	^settings ifNil: [ settings := SbSettings default ]
 ]
 
 { #category : #accessing }
-SbClient >> settings: anObject [
+SbRawClient >> settings: anObject [
 	settings := anObject
 ]
 
 { #category : #'running cypher' }
-SbClient >> transactCypher: cypherString [
+SbRawClient >> transactCypher: cypherString [
 	^self requester transactCypher: cypherString
 ]
 
 { #category : #'running cypher' }
-SbClient >> transactCyphers: cypherStrings [
-	^self requester transactCypher: cypherStrings
+SbRawClient >> transactCyphers: cypherStrings [
+	^self requester transactCyphers: cypherStrings
 ]
 
 { #category : #private }
-SbClient >> tryConnect [
+SbRawClient >> tryConnect [
 	self ensureConnector.
 	^ self autoReleaseDo: [ :f | | status newConnection |
 		status := f create: SbBoltStatus.
@@ -164,8 +183,18 @@ SbClient >> tryConnect [
 	]
 ]
 
+{ #category : #accessing }
+SbRawClient >> valueFetcher [
+	^valueFetcher ifNil: [ valueFetcher := self createValueFetcher ]
+]
+
+{ #category : #accessing }
+SbRawClient >> valueFetcher: anObject [
+	valueFetcher := anObject 
+]
+
 { #category : #'error handling' }
-SbClient >> warnConnectionFailed: connectionStatus [
+SbRawClient >> warnConnectionFailed: connectionStatus [
 	| error connectionStateSymbol |
 	error := connectionStatus connectionStateSymbol.
 	connectionStateSymbol := connectionStatus error.

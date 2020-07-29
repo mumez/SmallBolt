@@ -2,10 +2,16 @@ Class {
 	#name : #SbGraphObject,
 	#superclass : #Object,
 	#instVars : [
-		'id'
+		'id',
+		'structure'
 	],
 	#category : #'SmallBolt-GraphModel'
 }
+
+{ #category : #'instance creation' }
+SbGraphObject class >> from: anSbStructure [
+	^self new structure: anSbStructure; yourself
+]
 
 { #category : #'instance creation' }
 SbGraphObject class >> id: anInteger [ 
@@ -113,4 +119,14 @@ SbGraphObject >> relationshipClass [
 
 { #category : #properties }
 SbGraphObject >> removePropertyAt: propName [
+]
+
+{ #category : #accessing }
+SbGraphObject >> structure [
+	^ structure
+]
+
+{ #category : #accessing }
+SbGraphObject >> structure: anObject [
+	structure := anObject
 ]

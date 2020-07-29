@@ -143,3 +143,8 @@ SbBoltValue >> value [
 SbBoltValue >> value: anObject [
 	value := anObject
 ]
+
+{ #category : #converting }
+SbBoltValue >> valueBy: aValueFetcher [
+	^ aValueFetcher fetchFrom: self	
+]
