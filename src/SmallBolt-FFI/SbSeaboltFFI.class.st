@@ -145,7 +145,7 @@ SbSeaboltFFI >> getBooleanOnValue: aBoltValue [
 
 { #category : #value }
 SbSeaboltFFI >> getBytesOnValue: aBoltValue [
-	^ self ffiCall: #( ByteArray BoltBytes_get(SbBoltValue aBoltValue) )
+	^ self ffiCall: #( ByteArray BoltBytes_get_all(SbBoltValue aBoltValue) )
 ]
 
 { #category : #status }
@@ -299,8 +299,8 @@ SbSeaboltFFI >> getStructureCodeOnValue: aBoltValue [
 ]
 
 { #category : #value }
-SbSeaboltFFI >> getStructureOnValue: aBoltValue [
-	^ self ffiCall: #( SBBoltValue BoltStructure_value(SbBoltValue aBoltValue) )
+SbSeaboltFFI >> getStructureFieldValueAt: index onValue: aBoltValue [
+	^ self ffiCall: #( SbBoltValue BoltStructure_value(SbBoltValue aBoltValue, int32 index) )
 ]
 
 { #category : #connection }

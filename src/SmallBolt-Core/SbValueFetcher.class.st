@@ -6,18 +6,19 @@ Class {
 
 { #category : #private }
 SbValueFetcher >> asArraySized: size from: aBoltValue [
-	| dict |
-	dict := Array new: size.
+	| array |
+	array := Array new: size.
 	1 to: size do: [ :idx |
-		dict at: 1 put: (self fetchFrom: (aBoltValue listValueAt: idx - 1))
+		array at: 1 put: (self fetchFrom: (aBoltValue listValueAt: idx - 1))
 	].
-	^dict
+	^array
 ]
 
 { #category : #private }
 SbValueFetcher >> asCompositeValueTyped: typeSymbol size: size from: aBoltValue [
 	typeSymbol = #BOLT_DICTIONARY ifTrue: [ ^ self asDictionarySized: size from: aBoltValue ].
 	typeSymbol = #BOLT_LIST ifTrue: [ ^ self asArraySized: size from: aBoltValue ].
+	typeSymbol = #BOLT_STRUCTURE ifTrue: [ ^ self asStructureSized: size from: aBoltValue ]
 ]
 
 { #category : #private }
@@ -39,6 +40,17 @@ SbValueFetcher >> asPrimitiveValueTyped: typeSymbol from: aBoltValue [
 	typeSymbol = #BOLT_BYTES ifTrue: [ ^ aBoltValue bytesValue ].
 	typeSymbol = #BOLT_NULL ifTrue: [ ^ nil ].
 	^ nil
+]
+
+{ #category : #private }
+SbValueFetcher >> asStructureSized: size from: aBoltValue [
+	| typeCode fields |
+	typeCode := aBoltValue structureCodeValue.
+	fields := OrderedCollection new: size.
+	1 to: size do: [ :idx |
+		fields add: (self fetchFrom: (aBoltValue structureFieldValueAt: idx - 1))
+	].
+	^ (SbStructure typeCode: typeCode fields: fields asArray)
 ]
 
 { #category : #actions }

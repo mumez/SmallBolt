@@ -2,7 +2,7 @@ Class {
 	#name : #SbCypherQueuedCall,
 	#superclass : #Object,
 	#instVars : [
-		'connection',
+		'requester',
 		'cypherString',
 		'runRequest',
 		'pullRequest'
@@ -11,18 +11,13 @@ Class {
 }
 
 { #category : #'instance creation' }
-SbCypherQueuedCall class >> on: aSbBoldConnection [
-	^ self new connection: aSbBoldConnection
+SbCypherQueuedCall class >> on: aSbRequester [
+	^ self new requester: aSbRequester
 ]
 
 { #category : #accessing }
 SbCypherQueuedCall >> connection [
-	^ connection
-]
-
-{ #category : #accessing }
-SbCypherQueuedCall >> connection: anObject [
-	connection := anObject
+	^ self requester connection
 ]
 
 { #category : #private }
@@ -48,7 +43,8 @@ SbCypherQueuedCall >> pullRequest [
 
 { #category : #accessing }
 SbCypherQueuedCall >> pullRequest: anObject [
-	pullRequest := anObject
+	pullRequest := anObject.
+	pullRequest valueFetcher: self valueFetcher.
 ]
 
 { #category : #actions }
@@ -74,6 +70,16 @@ SbCypherQueuedCall >> pushRequestsFor: aCypherString [
 ]
 
 { #category : #accessing }
+SbCypherQueuedCall >> requester [
+	^ requester
+]
+
+{ #category : #accessing }
+SbCypherQueuedCall >> requester: anObject [
+	requester := anObject
+]
+
+{ #category : #accessing }
 SbCypherQueuedCall >> runRequest [
 	^ runRequest
 ]
@@ -81,4 +87,9 @@ SbCypherQueuedCall >> runRequest [
 { #category : #accessing }
 SbCypherQueuedCall >> runRequest: anObject [
 	runRequest := anObject
+]
+
+{ #category : #accessing }
+SbCypherQueuedCall >> valueFetcher [
+	^ self requester valueFetcher
 ]
