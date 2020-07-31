@@ -4,18 +4,18 @@ Class {
 	#instVars : [
 		'status',
 		'fieldNames',
-		'records',
+		'fieldValues',
 		'cypher'
 	],
 	#category : #'SmallBolt-Core'
 }
 
 { #category : #'instance creation' }
-SbCypherResult class >> status: status fieldNames: fieldNames records: records cypher: cypherString [
+SbCypherResult class >> status: status fieldNames: fieldNames fieldValues: fieldValues cypher: cypherString [
 	^ self new
 		status: status;
 		fieldNames: fieldNames;
-		records: records;
+		fieldValues: fieldValues;
 		cypher: cypherString;
 		yourself
 ]
@@ -53,11 +53,21 @@ SbCypherResult >> fieldNames: anObject [
 	fieldNames := anObject
 ]
 
+{ #category : #accessing }
+SbCypherResult >> fieldValues [
+	^ fieldValues
+]
+
+{ #category : #accessing }
+SbCypherResult >> fieldValues: anObject [
+	fieldValues := anObject
+]
+
 { #category : #enumeration }
 SbCypherResult >> fieldsDo: aBlock [
 	| names |
 	names := self fieldNames.
-	self records do: [:eachRow |
+	self fieldValues do: [:eachRow |
 		1 to: names size do: [:idx |
 			aBlock value: (names at: idx) value: (eachRow at: idx).	
 		]
@@ -71,22 +81,6 @@ SbCypherResult >> printOn: aStream [
 	self fieldNames printOn: aStream.
 	aStream nextPutAll: ')'.
 	
-]
-
-{ #category : #accessing }
-SbCypherResult >> record [
-	self records ifEmpty: [ ^nil ].
-	^ self records first
-]
-
-{ #category : #accessing }
-SbCypherResult >> records [
-	^ records
-]
-
-{ #category : #accessing }
-SbCypherResult >> records: anObject [
-	records := anObject
 ]
 
 { #category : #accessing }
