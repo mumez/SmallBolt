@@ -58,8 +58,7 @@ SbCypherQueuedCall >> pullResult [
 		records := self pullRequest recordsOn: self connection.
 	].
 	
-	^ self
-		cypherResult: status fieldNames: fieldNames records: records from: self cypherString
+	^ self cypherResult: status fieldNames: fieldNames records: records from: self cypherString
 ]
 
 { #category : #actions }

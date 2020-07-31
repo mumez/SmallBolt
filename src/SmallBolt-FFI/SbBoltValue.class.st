@@ -82,7 +82,7 @@ SbBoltValue >> integerValue [
 
 { #category : #accessing }
 SbBoltValue >> listValueAt: index [
-	^ self ffi getListOnValue: self
+	^ self ffi getListValueAt: index onValue: self
 ]
 
 { #category : #printing }
