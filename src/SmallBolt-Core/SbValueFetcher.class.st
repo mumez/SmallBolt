@@ -8,8 +8,8 @@ Class {
 SbValueFetcher >> asArraySized: size from: aBoltValue [
 	| array |
 	array := Array new: size.
-	1 to: size do: [ :idx |
-		array at: 1 put: (self fetchFrom: (aBoltValue listValueAt: idx - 1))
+	0 to: size - 1 do: [ :idx |
+		array at: idx+1 put: (self fetchFrom: (aBoltValue listValueAt: idx))
 	].
 	^array
 ]

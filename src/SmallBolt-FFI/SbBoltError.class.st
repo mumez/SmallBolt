@@ -2,7 +2,8 @@ Class {
 	#name : #SbBoltError,
 	#superclass : #Error,
 	#instVars : [
-		'errorCode'
+		'errorCode',
+		'failureDetails'
 	],
 	#classInstVars : [
 		'errorCodes'
@@ -84,13 +85,28 @@ SbBoltError class >> isError: errorCode [
 ]
 
 { #category : #testing }
+SbBoltError class >> isFailure: errorCode [
+	^ errorCode = 16 "BOLT_SERVER_FAILURE"
+]
+
+{ #category : #testing }
 SbBoltError class >> isSuccess: errorCode [
 	^ (self isError: errorCode) not
 ]
 
 { #category : #private }
 SbBoltError >> buildMessageText [
-	^self errorSymbol , ' - ', self errorDescription 
+	^String streamContents: [ :strm | self buildMessageTextOn: strm ]
+]
+
+{ #category : #private }
+SbBoltError >> buildMessageTextOn: aStream [
+	aStream nextPutAll: (self errorSymbol , ' - ', self errorDescription).
+	self isFailure ifTrue: [ 
+		aStream space; nextPutAll: 'failureDetails: ( '.
+		self failureDetails printOn: aStream. 
+		aStream nextPutAll: ' )'
+	]
 ]
 
 { #category : #accessing }
@@ -119,8 +135,23 @@ SbBoltError >> errorSymbol [
 ]
 
 { #category : #accessing }
+SbBoltError >> failureDetails [
+	^ failureDetails
+]
+
+{ #category : #accessing }
+SbBoltError >> failureDetails: anObject [
+	failureDetails := anObject
+]
+
+{ #category : #accessing }
 SbBoltError >> ffi [
 	^ SbSeaboltFFI new
+]
+
+{ #category : #testing }
+SbBoltError >> isFailure [
+	^ self class isFailure: self errorCode
 ]
 
 { #category : #accessing }

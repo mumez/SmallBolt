@@ -64,6 +64,21 @@ SbCypherResult >> fieldsDo: aBlock [
 	]
 ]
 
+{ #category : #printing }
+SbCypherResult >> printOn: aStream [
+	aStream nextPutAll: self className.
+	aStream nextPutAll: ' ('.
+	self fieldNames printOn: aStream.
+	aStream nextPutAll: ')'.
+	
+]
+
+{ #category : #accessing }
+SbCypherResult >> record [
+	self records ifEmpty: [ ^nil ].
+	^ self records first
+]
+
 { #category : #accessing }
 SbCypherResult >> records [
 	^ records

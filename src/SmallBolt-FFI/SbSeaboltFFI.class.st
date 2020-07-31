@@ -229,8 +229,8 @@ SbSeaboltFFI >> getLastRequestOnConnection: aBoltConnection [
 ]
 
 { #category : #value }
-SbSeaboltFFI >> getListOnValue: aBoltValue [
-	^ self ffiCall: #( SbBoltValue BoltList_value(SbBoltValue aBoltValue) )
+SbSeaboltFFI >> getListValueAt: index onValue: aBoltValue [
+	^ self ffiCall: #( SbBoltValue BoltList_value(SbBoltValue aBoltValue, int32 index) )
 ]
 
 { #category : #connection }

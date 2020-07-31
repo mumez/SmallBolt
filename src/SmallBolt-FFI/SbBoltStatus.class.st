@@ -50,6 +50,11 @@ SbBoltStatus >> isSuccess [
 ]
 
 { #category : #actions }
-SbBoltStatus >> raiseIfError [
-	self isError ifTrue: [ self error signal ]
+SbBoltStatus >> raiseIfErrorOn: aSbConnection [
+	| err |
+	self isError ifFalse: [ ^ self ].
+	err := self error.
+	err isFailure
+		ifTrue: [ err failureDetails: aSbConnection failureDetails value].
+	err signal
 ]
