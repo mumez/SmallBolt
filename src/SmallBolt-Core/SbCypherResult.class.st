@@ -65,6 +65,12 @@ SbCypherResult >> fieldsDo: aBlock [
 ]
 
 { #category : #accessing }
+SbCypherResult >> record [
+	self records ifEmpty: [ ^nil ].
+	^ self records first
+]
+
+{ #category : #accessing }
 SbCypherResult >> records [
 	^ records
 ]

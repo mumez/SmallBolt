@@ -6,9 +6,7 @@ Class {
 		'factory',
 		'configBuilder',
 		'connector',
-		'connection',
-		'requester',
-		'valueFetcher'
+		'connection'
 	],
 	#category : #'SmallBolt-Core'
 }
@@ -112,7 +110,7 @@ SbRawClient >> factory: anObject [
 SbRawClient >> release [
 	self releaseFactory.
 	self releaseConnector.
-	configBuilder := connection := requester := valueFetcher := nil.
+	configBuilder := connection :=  nil.
 ]
 
 { #category : #releasing }
@@ -129,12 +127,7 @@ SbRawClient >> releaseFactory [
 
 { #category : #accessing }
 SbRawClient >> requester [
-	^ requester ifNil: [ requester := self createRequester ]
-]
-
-{ #category : #accessing }
-SbRawClient >> requester: anObject [
-	requester := anObject
+	^ self createRequester
 ]
 
 { #category : #factory }
@@ -185,12 +178,7 @@ SbRawClient >> tryConnect [
 
 { #category : #accessing }
 SbRawClient >> valueFetcher [
-	^valueFetcher ifNil: [ valueFetcher := self createValueFetcher ]
-]
-
-{ #category : #accessing }
-SbRawClient >> valueFetcher: anObject [
-	valueFetcher := anObject 
+	^self createValueFetcher
 ]
 
 { #category : #'error handling' }

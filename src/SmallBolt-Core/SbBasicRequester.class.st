@@ -107,7 +107,7 @@ SbBasicRequester >> transactCyphers: cypherStrings [
 
 { #category : #transactions }
 SbBasicRequester >> transactionDo: aBlock [
-	^ self basicTransactionDo: aBlock ifFailed: [ :status | status raiseIfError].
+	^ self basicTransactionDo: aBlock ifFailed: [ :status | status raiseIfErrorOn: self connection].
 	
 ]
 
