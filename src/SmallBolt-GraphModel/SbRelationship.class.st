@@ -12,7 +12,10 @@ Class {
 
 { #category : #'instance creation' }
 SbRelationship class >> fromUnbound: anUnboundRelationships [
-	^ self id: anUnboundRelationships id type: anUnboundRelationships type properties: anUnboundRelationships properties 
+	^ self
+		id: anUnboundRelationships id
+		type: anUnboundRelationships type
+		properties: anUnboundRelationships properties
 ]
 
 { #category : #'instance creation' }

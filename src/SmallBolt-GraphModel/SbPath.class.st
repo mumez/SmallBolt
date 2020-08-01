@@ -50,8 +50,14 @@ SbPath >> printElementHeaderOn: aStream [
 ]
 
 { #category : #printing }
+SbPath >> printOn: aStream [
+	super printOn: aStream.
+	self printPathOn: aStream
+]
+
+{ #category : #printing }
 SbPath >> printPathOn: aStream [
-	aStream printOn: self relationships
+	self relationships asArray printOn: aStream
 ]
 
 { #category : #accessing }
@@ -81,7 +87,7 @@ SbPath >> transmit [
 	self sequence pairsDo: [ :relId :nodeId | | unboundRel direction nextNode rel |
 		unboundRel := self unboundRelationships at: relId abs.
 		direction := relId > 0 ifTrue: [ #out ] ifFalse: [ #in ].
-		nextNode := self nodes at: nodeId.
+		nextNode := self nodes at: nodeId + 1.
 		rel := SbRelationship fromUnbound: unboundRel.
 		rel startNodeId: currentNode id endNodeId: nextNode id direction: direction.
 		self addRelationship: rel.
