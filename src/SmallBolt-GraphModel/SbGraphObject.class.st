@@ -3,6 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'id',
+		'properties',
 		'structure'
 	],
 	#category : #'SmallBolt-GraphModel'
@@ -10,15 +11,7 @@ Class {
 
 { #category : #'instance creation' }
 SbGraphObject class >> from: anSbStructure [
-	^self new structure: anSbStructure; yourself
-]
-
-{ #category : #'instance creation' }
-SbGraphObject class >> id: anInteger [ 
-	| inst |
-	inst := self new.
-	inst id: anInteger asInteger.
-	^inst
+	^self new initByStructure: anSbStructure; yourself
 ]
 
 { #category : #comparing }
@@ -26,21 +19,10 @@ SbGraphObject >> = other [
 	^ self class = other class and: [self id = other id]
 ]
 
-{ #category : #private }
-SbGraphObject >> asValueParameter: value [
-	^value isString ifTrue: [ '"',value,'"' ] ifFalse: [ value ].
-]
-
 { #category : #properties }
 SbGraphObject >> at: propName [ 
 	"shortcut"
 	^self propertyAt: propName
-]
-
-{ #category : #properties }
-SbGraphObject >> at: propName put: value [
-	"shortcut"
-	^self propertyAt: propName put: value
 ]
 
 { #category : #printing }
@@ -67,6 +49,17 @@ SbGraphObject >> id: anObject [
 	id := anObject
 ]
 
+{ #category : #'initialize - release' }
+SbGraphObject >> initByStructure: aSbStructure [
+	structure := aSbStructure.
+	self initByStructureFields: aSbStructure fields.
+]
+
+{ #category : #'initialize - release' }
+SbGraphObject >> initByStructureFields: fieldsArray [
+	self id: (fieldsArray at: 1).
+]
+
 { #category : #accessing }
 SbGraphObject >> name [
 	^ self propertyAt: 'name' 
@@ -77,18 +70,11 @@ SbGraphObject >> name: aString [
 	self propertyAt: 'name' put: aString 
 ]
 
-{ #category : #factory }
-SbGraphObject >> nodeClass [
-	^N4Node
-]
-
 { #category : #printing }
 SbGraphObject >> printElementHeaderOn: aStream [
 	aStream nextPutAll: self elementName.
-	aStream nextPut: $[.
-	aStream nextPutAll: self id printString.
-	aStream nextPut: $]
-	
+	aStream nextPut: $:.
+	aStream nextPutAll: self id printString
 ]
 
 { #category : #printing }
@@ -98,27 +84,16 @@ SbGraphObject >> printOn: aStream [
 
 { #category : #properties }
 SbGraphObject >> properties [
+	^ properties ifNil: [ properties := Dictionary new ]
 ]
 
 { #category : #properties }
-SbGraphObject >> properties: propAssocs [
+SbGraphObject >> properties: props [
+	properties := props
 ]
 
 { #category : #properties }
 SbGraphObject >> propertyAt: propName [ 
-]
-
-{ #category : #properties }
-SbGraphObject >> propertyAt: propName put: value [
-]
-
-{ #category : #factory }
-SbGraphObject >> relationshipClass [
-	^N4Relationship
-]
-
-{ #category : #properties }
-SbGraphObject >> removePropertyAt: propName [
 ]
 
 { #category : #accessing }

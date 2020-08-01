@@ -13,7 +13,7 @@ SbBoltRequest >> fetchOn: aSbBoltConnection [
 ]
 
 { #category : #actions }
-SbBoltRequest >> recordsOn: aSbBoltConnection [
+SbBoltRequest >> fieldValuesOn: aSbBoltConnection [
 	| values |
 	values := OrderedCollection new.
 	[(self fetchOn: aSbBoltConnection) > 0] whileTrue: [ 

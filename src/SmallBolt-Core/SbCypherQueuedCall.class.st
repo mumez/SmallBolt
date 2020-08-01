@@ -21,9 +21,9 @@ SbCypherQueuedCall >> connection [
 ]
 
 { #category : #private }
-SbCypherQueuedCall >> cypherResult: status fieldNames: fieldNames records: records from: aCypherString [
+SbCypherQueuedCall >> cypherResult: status fieldNames: fieldNames fieldValues: fieldValues from: aCypherString [
 	^ SbCypherResult
-		status: status fieldNames: fieldNames records: records cypher: aCypherString
+		status: status fieldNames: fieldNames fieldValues: fieldValues cypher: aCypherString
 ]
 
 { #category : #accessing }
@@ -49,16 +49,18 @@ SbCypherQueuedCall >> pullRequest: anObject [
 
 { #category : #actions }
 SbCypherQueuedCall >> pullResult [
-	| fieldNames records status |
-	records := fieldNames := #().
+	| fieldNames fieldValues status |
+	fieldValues := fieldNames := #().
 	status := self connection statusAfterRequest: self runRequest.
 	
 	status isSuccess ifTrue: [ 
 		fieldNames := self connection fieldNames value.
-		records := self pullRequest recordsOn: self connection.
+		fieldValues := self pullRequest fieldValuesOn: self connection.
+	] ifFalse: [
+		status raiseIfErrorOn: self connection
 	].
 	
-	^ self cypherResult: status fieldNames: fieldNames records: records from: self cypherString
+	^ self cypherResult: status fieldNames: fieldNames fieldValues: fieldValues from: self cypherString
 ]
 
 { #category : #actions }
