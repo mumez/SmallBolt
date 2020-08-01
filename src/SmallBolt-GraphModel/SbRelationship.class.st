@@ -10,31 +10,6 @@ Class {
 	#category : #'SmallBolt-GraphModel'
 }
 
-{ #category : #'instance creation' }
-SbRelationship class >> json: jsonObject [
-	| inst |
-	inst := self new.
-	inst id: (self portableUtil pickIdFrom: (jsonObject at: 'self')).
-	inst type: (jsonObject at: 'type').
-	inst startNodeId: (self portableUtil pickIdFrom: (jsonObject at: 'start')). 
-	inst endNodeId: (self portableUtil pickIdFrom: (jsonObject at: 'end')). 
-	
-	^inst
-]
-
-{ #category : #'instance creation' }
-SbRelationship class >> json: jsonObject for: startNode [
-	| inst |
-	inst := self new.
-	inst id: (self portableUtil pickIdFrom: (jsonObject at: 'self')).
-	inst type: (jsonObject at: 'type').
-	inst startNodeId: (self portableUtil pickIdFrom: (jsonObject at: 'start')). 
-	inst endNodeId: (self portableUtil pickIdFrom: (jsonObject at: 'end')). 
-	inst direction: ((inst startNodeId = startNode id) ifTrue: [#out] ifFalse: [#in]). 
-	inst db: startNode db.
-	^inst
-]
-
 { #category : #accessing }
 SbRelationship >> direction [
 	"Answer the value of direction"
@@ -51,7 +26,7 @@ SbRelationship >> direction: anObject [
 
 { #category : #printing }
 SbRelationship >> elementName [
-	^'rel'
+	^'R'
 ]
 
 { #category : #accessing }
@@ -71,6 +46,16 @@ SbRelationship >> endNodeId: anObject [
 	"Set the value of endNodeId"
 
 	endNodeId := anObject
+]
+
+{ #category : #'initailize-release' }
+SbRelationship >> initByStructureFields: fieldsArray [
+	super initByStructureFields: fieldsArray.
+	self startNodeId: (fieldsArray at: 2).
+	self endNodeId: (fieldsArray at: 3).
+	self type: (fieldsArray at: 4).
+	self properties: (fieldsArray at: 5).
+	
 ]
 
 { #category : #printing }

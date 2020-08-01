@@ -18,7 +18,15 @@ SbNode class >> json: jsonObject [
 
 { #category : #printing }
 SbNode >> elementName [
-	^'node'
+	^'N'
+]
+
+{ #category : #'initialize - release' }
+SbNode >> initByStructureFields: fieldsArray [
+	super initByStructureFields: fieldsArray.
+	self labels: (fieldsArray at: 2).
+	self properties: (fieldsArray at: 3).
+	
 ]
 
 { #category : #accessing }
@@ -35,4 +43,17 @@ SbNode >> labels [
 { #category : #accessing }
 SbNode >> labels: aCollection [
 	labels := aCollection
+]
+
+{ #category : #printing }
+SbNode >> printElementHeaderOn: aStream [
+	super printElementHeaderOn: aStream
+]
+
+{ #category : #printing }
+SbNode >> printOn: aStream [
+	self printElementHeaderOn: aStream.
+	self labels ifEmpty: [ ^self ].
+	aStream nextPutAll: self labels printString.
+	
 ]
