@@ -52,9 +52,27 @@ SbBasicRequester >> connection: anObject [
 	connection := anObject
 ]
 
+{ #category : #actions }
+SbBasicRequester >> discard [
+	| request |
+	request := self connection requestDiscard.
+	self connection send.
+	^ self connection statusAfterRequest: request
+	
+]
+
 { #category : #private }
 SbBasicRequester >> flush [
 	self connection send
+]
+
+{ #category : #actions }
+SbBasicRequester >> reset [
+	| request |
+	request := self connection requestReset.
+	self connection send.
+	^ self connection statusAfterRequest: request
+	
 ]
 
 { #category : #transactions }

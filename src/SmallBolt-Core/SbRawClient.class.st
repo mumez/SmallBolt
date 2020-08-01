@@ -89,6 +89,11 @@ SbRawClient >> defaultConfigBuilder [
 	]
 ]
 
+{ #category : #resetting }
+SbRawClient >> discardRequests [
+	^self requester discard
+]
+
 { #category : #private }
 SbRawClient >> ensureConnector [
 	connector
@@ -133,6 +138,11 @@ SbRawClient >> requester [
 { #category : #factory }
 SbRawClient >> requesterClass [
 	^ SbBasicRequester
+]
+
+{ #category : #resetting }
+SbRawClient >> resetRequests [
+	^self requester reset
 ]
 
 { #category : #'running cypher' }
