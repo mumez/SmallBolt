@@ -10,6 +10,24 @@ Class {
 	#category : #'SmallBolt-GraphModel'
 }
 
+{ #category : #'instance creation' }
+SbRelationship class >> fromUnbound: anUnboundRelationships [
+	^ self
+		id: anUnboundRelationships id
+		type: anUnboundRelationships type
+		properties: anUnboundRelationships properties
+]
+
+{ #category : #'instance creation' }
+SbRelationship class >> id: id type: type properties: properties [
+	| inst |
+	inst := self new.
+	inst id: id.
+	inst type: type.
+	inst properties: properties.	
+	^inst
+]
+
 { #category : #accessing }
 SbRelationship >> direction [
 	"Answer the value of direction"
@@ -27,11 +45,6 @@ SbRelationship >> direction: anObject [
 { #category : #printing }
 SbRelationship >> elementName [
 	^'R'
-]
-
-{ #category : #accessing }
-SbRelationship >> endNode [
-	^ self db nodeAt: self endNodeId
 ]
 
 { #category : #accessing }
@@ -78,11 +91,6 @@ SbRelationship >> printOn: aStream [
 ]
 
 { #category : #accessing }
-SbRelationship >> startNode [
-	^ self db nodeAt: self startNodeId
-]
-
-{ #category : #accessing }
 SbRelationship >> startNodeId [
 	"Answer the value of startNodeId"
 
@@ -94,6 +102,13 @@ SbRelationship >> startNodeId: anObject [
 	"Set the value of startNodeId"
 
 	startNodeId := anObject
+]
+
+{ #category : #'initailize-release' }
+SbRelationship >> startNodeId: startNodeIdInteger endNodeId: encNodeIdInteger direction: outOrInSymbol [
+	self startNodeId: startNodeIdInteger.
+	self endNodeId: encNodeIdInteger.
+	self direction: outOrInSymbol
 ]
 
 { #category : #accessing }
