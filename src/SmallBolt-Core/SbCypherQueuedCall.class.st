@@ -56,6 +56,8 @@ SbCypherQueuedCall >> pullResult [
 	status isSuccess ifTrue: [ 
 		fieldNames := self connection fieldNames value.
 		fieldValues := self pullRequest fieldValuesOn: self connection.
+	] ifFalse: [
+		status raiseIfErrorOn: self connection
 	].
 	
 	^ self cypherResult: status fieldNames: fieldNames fieldValues: fieldValues from: self cypherString
