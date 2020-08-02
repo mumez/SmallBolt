@@ -26,7 +26,7 @@ SbClientTestCase class >> initialize [
 { #category : #private }
 SbClientTestCase >> clientDo: aBlock [
 	| client |
-	client := SbRawClient new.
+	client := SbClient new.
 	[ client settings: self settings.
 	client connect.
 	aBlock value: client ]
@@ -36,6 +36,46 @@ SbClientTestCase >> clientDo: aBlock [
 { #category : #accessing }
 SbClientTestCase >> settings [
 	^self class defaultSettings
+]
+
+{ #category : #testing }
+SbClientTestCase >> testCypherGetNode [
+	| cypher result node props |
+	"Assuming Neo4j Movie sample schema"
+	cypher := 'MATCH (n:Movie{title:"The Matrix"})<--(m) RETURN n LIMIT 1'.
+	self clientDo: [ :cli |
+		result := cli runCypher: cypher.
+	].
+	self assert: (result fieldNames = (Array with: 'n')).
+	self assert: (result fieldValues size = 1).
+	node := result fieldValues first first.
+	
+	self assert: (node isKindOf: SbNode).
+	self assert: (node labels = #('Movie')).
+	props := node properties.
+	self assert: ((props at: 'title') = 'The Matrix').
+	self assert: ((props at: 'tagline') = 'Welcome to the Real World').
+	self assert: ((props at: 'released') = 1999).
+	
+]
+
+{ #category : #testing }
+SbClientTestCase >> testCypherGetRelationship [
+	| cypher result relationship props |
+	"Assuming Neo4j Movie sample schema"
+	cypher := 'MATCH (m:Movie{title:"The Matrix"})<-[r:ACTED_IN]-(n) RETURN m,r,n ORDER BY r.roles ASC LIMIT 1'.
+	self clientDo: [ :cli |
+		result := cli runCypher: cypher.
+	].
+	self assert: (result fieldNames = #('m' 'r' 'n')).
+	self assert: (result fieldValues size = 1).
+	relationship := result fieldValues first second.
+	
+	self assert: (relationship isKindOf: SbRelationship).
+	self assert: (relationship type = 'ACTED_IN').
+	props := relationship properties.
+	self assert: ((props at: 'roles') = #('Agent Smith')).
+	
 ]
 
 { #category : #testing }
