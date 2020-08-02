@@ -26,7 +26,7 @@ SbClientTestCase class >> initialize [
 { #category : #private }
 SbClientTestCase >> clientDo: aBlock [
 	| client |
-	client := SbRawClient new.
+	client := SbClient new.
 	[ client settings: self settings.
 	client connect.
 	aBlock value: client ]
@@ -39,6 +39,46 @@ SbClientTestCase >> settings [
 ]
 
 { #category : #testing }
+SbClientTestCase >> testCypherGetNode [
+	| cypher result node props |
+	"Assuming Neo4j Movie sample schema"
+	cypher := 'MATCH (n:Movie{title:"The Matrix"})<--(m) RETURN n LIMIT 1'.
+	self clientDo: [ :cli |
+		result := cli runCypher: cypher.
+	].
+	self assert: (result fieldNames = (Array with: 'n')).
+	self assert: (result fieldValues size = 1).
+	node := result fieldValues first first.
+	
+	self assert: (node isKindOf: SbNode).
+	self assert: (node labels = #('Movie')).
+	props := node properties.
+	self assert: ((props at: 'title') = 'The Matrix').
+	self assert: ((props at: 'tagline') = 'Welcome to the Real World').
+	self assert: ((props at: 'released') = 1999).
+	
+]
+
+{ #category : #testing }
+SbClientTestCase >> testCypherGetRelationship [
+	| cypher result relationship props |
+	"Assuming Neo4j Movie sample schema"
+	cypher := 'MATCH (m:Movie{title:"The Matrix"})<-[r:ACTED_IN]-(n) RETURN m,r,n ORDER BY r.roles ASC LIMIT 1'.
+	self clientDo: [ :cli |
+		result := cli runCypher: cypher.
+	].
+	self assert: (result fieldNames = #('m' 'r' 'n')).
+	self assert: (result fieldValues size = 1).
+	relationship := result fieldValues first second.
+	
+	self assert: (relationship isKindOf: SbRelationship).
+	self assert: (relationship type = 'ACTED_IN').
+	props := relationship properties.
+	self assert: ((props at: 'roles') = #('Agent Smith')).
+	
+]
+
+{ #category : #testing }
 SbClientTestCase >> testRunBasicCypher [
 	| cypher result |
 	cypher := 'UNWIND range(1, 10) AS n RETURN n'.
@@ -46,8 +86,8 @@ SbClientTestCase >> testRunBasicCypher [
 		result := cli runCypher: cypher.
 	].
 	self assert: (result fieldNames = (Array with: 'n')).
-	self assert: (result records size = 10).
-	self assert: ((result records collect: #first) asArray = #(1 2 3 4 5 6 7 8 9 10)).
+	self assert: (result fieldValues size = 10).
+	self assert: ((result fieldValues collect: #first) asArray = #(1 2 3 4 5 6 7 8 9 10)).
 	 
 	
 ]
@@ -63,11 +103,11 @@ SbClientTestCase >> testRunBasicCyphers [
 	result1 := results first.
 	result2 := results second.
 	self assert: (result1 fieldNames = (Array with: 'n')).
-	self assert: (result1 records size = 10).
-	self assert: ((result1 records collect: #first) asArray = #(1 2 3 4 5 6 7 8 9 10)).
+	self assert: (result1 fieldValues size = 10).
+	self assert: ((result1 fieldValues collect: #first) asArray = #(1 2 3 4 5 6 7 8 9 10)).
 	self assert: (result2 fieldNames = (Array with: 'x')).
-	self assert: (result2 records size = 12).
-	self assert: ((result2 records collect: #first) asArray = #(11 12 13 14 15 16 17 18 19 20 21 22)).
+	self assert: (result2 fieldValues size = 12).
+	self assert: ((result2 fieldValues collect: #first) asArray = #(11 12 13 14 15 16 17 18 19 20 21 22)).
 	 
 	
 ]

@@ -93,7 +93,7 @@ SbBasicRequester >> runCyphers: cypherStrings [
 	| calls |
 	calls := cypherStrings collect: [ :each | (SbCypherQueuedCall on: self) pushRequestsFor: each ].
 	self flush.
-	^ calls collect: [ :each | each pullResult ]
+	^ self safePullRequestsFrom: calls
 ]
 
 { #category : #'running-cypher' }
@@ -106,7 +106,15 @@ SbBasicRequester >> runCyphers: cypherStrings flushIf: aBlock [
 		[(aBlock value: idx) and: [lastIndex ~= idx ]] ifTrue: [ self flush ]. 
 	].
 	self flush.
-	^ calls collect: [ :each | each pullResult ]
+	^ self safePullRequestsFrom: calls
+]
+
+{ #category : #private }
+SbBasicRequester >> safePullRequestsFrom: calls [
+	^ [calls collect: [ :each | each pullResult ]] on: SbBoltError do: [ :ex |
+		self reset.
+		ex pass
+	]
 ]
 
 { #category : #'running-cypher' }
