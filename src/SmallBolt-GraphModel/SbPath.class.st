@@ -35,6 +35,11 @@ SbPath >> initByStructureFields: fieldsArray [
 ]
 
 { #category : #accessing }
+SbPath >> nodeAtId: nodeId [
+	^self nodes detect: [ :each | each id = nodeId ] ifNone: [  ]
+]
+
+{ #category : #accessing }
 SbPath >> nodes [
 	^ nodes
 ]
