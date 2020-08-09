@@ -111,6 +111,12 @@ SbRawClient >> factory: anObject [
 	factory := anObject
 ]
 
+{ #category : #testing }
+SbRawClient >> isConnected [
+	self connection ifNil: [ ^false ].
+	^self connection isReady
+]
+
 { #category : #'initialization-release' }
 SbRawClient >> release [
 	self releaseFactory.
