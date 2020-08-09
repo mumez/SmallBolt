@@ -41,7 +41,7 @@ SmClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
 	| settingsBlock |
 	settingsBlock := self clientSettingsMap at: newClient ifAbsent: [].
 	settingsBlock ifNotNil: [ 
-		settingsBlock value: newClient.
+		settingsBlock value: newClient settings.
 	]
 ]
 
@@ -54,7 +54,8 @@ SmClientSessionManager >> clientDo: aBlock [
 SmClientSessionManager >> clientDo: aBlock at: key [
 	| client result |
 	client := self getClientAt: key.
-	result := [ aBlock value: client settings ]
+	client connect.
+	result := [ aBlock value: client ]
 		ensure: [ self returnClient: client at: key ].
 	^ result
 ]
@@ -111,7 +112,8 @@ SmClientSessionManager >> newClientAt: clientKindKey [
 	| newClient |
 	newClient := self smallBoltClientClass new.
 	self applySettingsTo: newClient at: clientKindKey.
-	^ newClient connect.
+	newClient connect.
+	^newClient
 ]
 
 { #category : #actions }
@@ -122,6 +124,12 @@ SmClientSessionManager >> registerSetting: settingsBlock [
 { #category : #actions }
 SmClientSessionManager >> registerSetting: settingsBlock at: clientKindKey [ 
 	self clientSettingsMap at: clientKindKey put: settingsBlock
+]
+
+{ #category : #'initialize-release' }
+SmClientSessionManager >> release [
+	clientsMap keysAndValuesDo: [ :key :eachCol | eachCol do: [:each | each release]].
+	clientsMap := Dictionary new.
 ]
 
 { #category : #private }
@@ -147,5 +155,16 @@ SmClientSessionManager >> standBy: clientNumber setting: settingsBlock [
 { #category : #actions }
 SmClientSessionManager >> standBy: clientNumber setting: settingsBlock at: clientKindKey [
 	self registerSetting: settingsBlock at: clientKindKey.
-	[ clientNumber timesRepeat: [ self clientDo: [:cli |  ] at: clientKindKey ] ] fork
+	[ clientNumber timesRepeat: [ self standbyClientAt: clientKindKey ] ] fork.
+]
+
+{ #category : #private }
+SmClientSessionManager >> standbyClientAt: clientKindKey [
+	| clients |
+	^ lock
+		critical: [ clients := clientsMap
+				at: clientKindKey
+				ifAbsentPut: [ OrderedCollection new ].
+			clients size < self maxClientsPerKey
+				ifTrue: [ clients add: (self newClientAt: clientKindKey) ] ]
 ]

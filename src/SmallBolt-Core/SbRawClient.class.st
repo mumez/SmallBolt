@@ -117,6 +117,15 @@ SbRawClient >> isConnected [
 	^self connection isReady
 ]
 
+{ #category : #printing }
+SbRawClient >> printOn: aStream [
+	aStream nextPutAll: self className.
+	aStream nextPutAll: ' ('.
+	self connection printOn: aStream.
+	aStream nextPutAll: ')'.
+	
+]
+
 { #category : #'initialization-release' }
 SbRawClient >> release [
 	self releaseFactory.
