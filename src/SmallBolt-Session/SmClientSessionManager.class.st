@@ -47,14 +47,14 @@ SmClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
 
 { #category : #actions }
 SmClientSessionManager >> clientDo: aBlock [
-	^ self clientDo: aBlock at: #default 
+	^ self clientDo: aBlock at: self defaultClientKindKey
 ]
 
 { #category : #actions }
 SmClientSessionManager >> clientDo: aBlock at: key [
 	| client result |
 	client := self getClientAt: key.
-	result := [ aBlock value: client ]
+	result := [ aBlock value: client settings ]
 		ensure: [ self returnClient: client at: key ].
 	^ result
 ]
@@ -67,6 +67,11 @@ SmClientSessionManager >> clientSettingsMap [
 { #category : #accessing }
 SmClientSessionManager >> clientSettingsMap: aDictionary [
 	clientSettingsMap := aDictionary 
+]
+
+{ #category : #defaults }
+SmClientSessionManager >> defaultClientKindKey [
+	^#default
 ]
 
 { #category : #defaults }
@@ -109,8 +114,13 @@ SmClientSessionManager >> newClientAt: clientKindKey [
 	^ newClient connect.
 ]
 
-{ #category : #settings }
-SmClientSessionManager >> registerSettings: settingsBlock at: clientKindKey [ 
+{ #category : #actions }
+SmClientSessionManager >> registerSetting: settingsBlock [
+	self registerSetting: settingsBlock at: self defaultClientKindKey  
+]
+
+{ #category : #actions }
+SmClientSessionManager >> registerSetting: settingsBlock at: clientKindKey [ 
 	self clientSettingsMap at: clientKindKey put: settingsBlock
 ]
 
@@ -127,4 +137,15 @@ SmClientSessionManager >> returnClient: client at: clientKindKey [
 { #category : #factory }
 SmClientSessionManager >> smallBoltClientClass [
 	^ SbClient
+]
+
+{ #category : #actions }
+SmClientSessionManager >> standBy: clientNumber setting: settingsBlock [
+	self standBy: clientNumber setting: settingsBlock at: self defaultClientKindKey
+]
+
+{ #category : #actions }
+SmClientSessionManager >> standBy: clientNumber setting: settingsBlock at: clientKindKey [
+	self registerSetting: settingsBlock at: clientKindKey.
+	[ clientNumber timesRepeat: [ self clientDo: [:cli |  ] at: clientKindKey ] ] fork
 ]
