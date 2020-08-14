@@ -153,6 +153,11 @@ SmClientSessionManager >> smallBoltClientClass [
 ]
 
 { #category : #actions }
+SmClientSessionManager >> standBy: clientNumber [
+	self standBy: clientNumber setting: [:se |]
+]
+
+{ #category : #actions }
 SmClientSessionManager >> standBy: clientNumber setting: settingsBlock [
 	self standBy: clientNumber setting: settingsBlock at: self defaultClientKindKey
 ]
