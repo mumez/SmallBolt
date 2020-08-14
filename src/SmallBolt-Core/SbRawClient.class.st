@@ -111,6 +111,21 @@ SbRawClient >> factory: anObject [
 	factory := anObject
 ]
 
+{ #category : #testing }
+SbRawClient >> isConnected [
+	self connection ifNil: [ ^false ].
+	^self connection isReady
+]
+
+{ #category : #printing }
+SbRawClient >> printOn: aStream [
+	aStream nextPutAll: self className.
+	aStream nextPutAll: ' ('.
+	self connection printOn: aStream.
+	aStream nextPutAll: ')'.
+	
+]
+
 { #category : #'initialization-release' }
 SbRawClient >> release [
 	self releaseFactory.

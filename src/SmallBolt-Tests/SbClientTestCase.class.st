@@ -60,6 +60,34 @@ SbClientTestCase >> testCypherGetNode [
 ]
 
 { #category : #testing }
+SbClientTestCase >> testCypherGetPath [
+	| cypher result path relationship startNode endNode |
+	"Assuming Neo4j Movie sample schema"
+	cypher := 'MATCH p = (n:Movie{title:"The Matrix"})<-[r]-(m) RETURN p ORDER BY m.name LIMIT 2'.
+	self clientDo: [ :cli |
+		result := cli runCypher: cypher.
+	].
+	self assert: (result fieldNames = #('p')).
+	self assert: (result fieldValues size = 2).
+	path := result fieldValues first first.
+	
+	self assert: (path isKindOf: SbPath).
+	self assert: (path nodes size = 2).
+	self assert: (path relationships size = 1).
+	relationship := path relationships first.
+	self assert: (relationship type = 'ACTED_IN').
+	self assert: (relationship direction = #in).
+	self assert: ((relationship propertyAt: 'roles') = #('Trinity')).
+	startNode := path nodeAtId: relationship startNodeId.
+	endNode := path nodeAtId: relationship endNodeId.
+	self assert: (startNode label = 'Movie').
+	self assert: (endNode label = 'Person').
+	self assert: ((startNode propertyAt: 'title') = 'The Matrix').
+	self assert: ((endNode propertyAt: 'name') = 'Carrie-Anne Moss').
+	
+]
+
+{ #category : #testing }
 SbClientTestCase >> testCypherGetRelationship [
 	| cypher result relationship props |
 	"Assuming Neo4j Movie sample schema"
@@ -110,4 +138,33 @@ SbClientTestCase >> testRunBasicCyphers [
 	self assert: ((result2 fieldValues collect: #first) asArray = #(11 12 13 14 15 16 17 18 19 20 21 22)).
 	 
 	
+]
+
+{ #category : #testing }
+SbClientTestCase >> testWrongCypherResetRetry [
+	| wrongCypher cypher result path relationship startNode endNode |
+	"Assuming Neo4j Movie sample schema"
+	wrongCypher := 'MATCH p = (n:Movie{title:"The Matrix"})<-[r-(m) RETURN p LIMIT 2'.
+	cypher := 'MATCH p = (m)-[r:PRODUCED]->(n:Movie{title:"The Matrix"}) RETURN p ORDER BY m.name LIMIT 1'.
+	
+	self clientDo: [ :cli |
+		self should: [cli runCypher: wrongCypher] raise: SbBoltError.
+		result := cli runCypher: cypher.
+	].
+	self assert: (result fieldNames = #('p')).
+	self assert: (result fieldValues size = 1).
+	path := result fieldValues first first.
+	
+	self assert: (path isKindOf: SbPath).
+	self assert: (path nodes size = 2).
+	self assert: (path relationships size = 1).
+	relationship := path relationships first.
+	self assert: (relationship type = 'PRODUCED').
+	self assert: (relationship direction = #out).
+	startNode := path nodeAtId: relationship startNodeId.
+	endNode := path nodeAtId: relationship endNodeId.
+	self assert: (startNode label = 'Person').
+	self assert: (endNode label = 'Movie').
+	self assert: ((startNode propertyAt: 'name') = 'Joel Silver').
+	self assert: ((endNode propertyAt: 'title') = 'The Matrix').
 ]

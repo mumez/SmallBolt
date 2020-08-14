@@ -67,7 +67,7 @@ SbSettings >> authType: aSymbol [
 ]
 
 { #category : #defaults }
-SbSettings >> defaultRootUri [
+SbSettings >> defaultTargerUri [
 	"neo4j
 	neo4j+s
 	neo4j+ssc
@@ -75,12 +75,12 @@ SbSettings >> defaultRootUri [
 	bolt+s
 	bolt+ssc"
 	"bolt+routing://graph.example.com:7687"
-	^'bolt://localhost:7687'
+	^'bolt://127.0.0.1:7687'
 ]
 
 { #category : #accessing }
 SbSettings >> host [
-	^self parsedUriValues at: #host ifAbsent: [ 'localhost' ]
+	^self parsedUriValues at: #host ifAbsent: [ '127.0.0.1' ]
 ]
 
 { #category : #'accessing - dictionary' }
@@ -121,6 +121,16 @@ SbSettings >> isPlainTextTransport [
 { #category : #'accessing - dictionary' }
 SbSettings >> keys [
 	^self settingsDict keys
+]
+
+{ #category : #'accessing - session' }
+SbSettings >> maxClientsPerKey [
+	^ self at: #maxClientsPerKey ifAbsentPut: [10]
+]
+
+{ #category : #'accessing - session' }
+SbSettings >> maxClientsPerKey: anInteger [
+	self at: #maxClientsPerKey put: anInteger
 ]
 
 { #category : #accessing }
@@ -220,7 +230,7 @@ SbSettings >> settingsDict: anObject [
 
 { #category : #accessing }
 SbSettings >> targetUri [
-	^ self at: #targetUri ifAbsentPut: [self defaultRootUri]
+	^ self at: #targetUri ifAbsentPut: [self defaultTargerUri]
 ]
 
 { #category : #accessing }

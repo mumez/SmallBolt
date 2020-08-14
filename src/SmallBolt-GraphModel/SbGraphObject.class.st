@@ -93,7 +93,8 @@ SbGraphObject >> properties: props [
 ]
 
 { #category : #properties }
-SbGraphObject >> propertyAt: propName [ 
+SbGraphObject >> propertyAt: propName [
+	^ self properties at: propName ifAbsent: [  ]
 ]
 
 { #category : #accessing }
