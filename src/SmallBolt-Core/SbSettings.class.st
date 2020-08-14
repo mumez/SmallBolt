@@ -75,12 +75,12 @@ SbSettings >> defaultRootUri [
 	bolt+s
 	bolt+ssc"
 	"bolt+routing://graph.example.com:7687"
-	^'bolt://localhost:7687'
+	^'bolt://127.0.0.1:7687'
 ]
 
 { #category : #accessing }
 SbSettings >> host [
-	^self parsedUriValues at: #host ifAbsent: [ 'localhost' ]
+	^self parsedUriValues at: #host ifAbsent: [ '127.0.0.1' ]
 ]
 
 { #category : #'accessing - dictionary' }
