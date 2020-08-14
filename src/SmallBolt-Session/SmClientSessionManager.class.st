@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'lock',
 		'clientsMap',
-		'maxClientsPerKey',
+		'settings',
 		'clientSettingsMap'
 	],
 	#classInstVars : [
@@ -39,7 +39,7 @@ SmClientSessionManager class >> logger: anLogger [
 { #category : #private }
 SmClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
 	| settingsBlock |
-	settingsBlock := self clientSettingsMap at: newClient ifAbsent: [].
+	settingsBlock := self clientSettingsMap at: clientKindKey ifAbsent: [].
 	settingsBlock ifNotNil: [ 
 		settingsBlock value: newClient settings.
 	]
@@ -99,12 +99,7 @@ SmClientSessionManager >> initialize [
 
 { #category : #accessing }
 SmClientSessionManager >> maxClientsPerKey [
-	^maxClientsPerKey ifNil: [ maxClientsPerKey := self defaultMaxClientsPerKey ]
-]
-
-{ #category : #accessing }
-SmClientSessionManager >> maxClientsPerKey: anInteger [
-	maxClientsPerKey := anInteger 
+	^ self settings maxClientsPerKey 
 ]
 
 { #category : #private }
@@ -140,6 +135,16 @@ SmClientSessionManager >> returnClient: client at: clientKindKey [
 			clients size >= self maxClientsPerKey
 				ifTrue: [ client release ]
 				ifFalse: [ clients add: client ] ]
+]
+
+{ #category : #accessing }
+SmClientSessionManager >> settings [
+	^settings ifNil: [ settings := SbSettings default ]
+]
+
+{ #category : #accessing }
+SmClientSessionManager >> settings: aSbSettings [
+	settings := aSbSettings
 ]
 
 { #category : #factory }
