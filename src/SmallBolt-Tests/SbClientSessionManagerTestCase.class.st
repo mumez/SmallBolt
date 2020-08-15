@@ -4,10 +4,15 @@ Class {
 	#category : #'SmallBolt-Tests'
 }
 
+{ #category : #factory }
+SbClientSessionManagerTestCase >> sessionManagerClass [
+	^ SmClientSessionManager
+]
+
 { #category : #private }
 SbClientSessionManagerTestCase >> sessionManagerDo: aBlock [
 	| sessionManager |
-	sessionManager := SmClientSessionManager default.
+	sessionManager := self sessionManagerClass default.
 	[ sessionManager settings: self settings.
 	sessionManager standBy: 3.
 	aBlock value: sessionManager ]
