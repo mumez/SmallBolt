@@ -43,7 +43,13 @@ SbBoltConstants class >> connectionStateSymbolAt: anInteger [
 { #category : #'class initialization' }
 SbBoltConstants class >> initialize [
 	self initializeConfig.
-	self initializeConnectionState
+	self initializeConnectionState.
+	self initializeBoltTypes
+]
+
+{ #category : #'class initialization' }
+SbBoltConstants class >> initializeBoltTypes [
+	SbBoltType initialize
 ]
 
 { #category : #'class initialization' }
