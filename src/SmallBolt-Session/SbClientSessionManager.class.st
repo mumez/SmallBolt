@@ -1,5 +1,5 @@
 Class {
-	#name : #SmClientSessionManager,
+	#name : #SbClientSessionManager,
 	#superclass : #Object,
 	#instVars : [
 		'lock',
@@ -16,28 +16,28 @@ Class {
 }
 
 { #category : #'instance creation' }
-SmClientSessionManager class >> default [
+SbClientSessionManager class >> default [
 	^default ifNil: [ default := self new ]
 ]
 
 { #category : #'class initialization' }
-SmClientSessionManager class >> initialize [
+SbClientSessionManager class >> initialize [
 	default := nil.
 	logger := nil.
 ]
 
 { #category : #accessing }
-SmClientSessionManager class >> logger [
-	^logger ifNil: [ logger := SmLocalLogger new ]
+SbClientSessionManager class >> logger [
+	^logger ifNil: [ logger := SbLocalLogger new ]
 ]
 
 { #category : #accessing }
-SmClientSessionManager class >> logger: anLogger [
+SbClientSessionManager class >> logger: anLogger [
 	^logger := anLogger
 ]
 
 { #category : #private }
-SmClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
+SbClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
 	| settingsBlock |
 	settingsBlock := self clientSettingsMap at: clientKindKey ifAbsent: [].
 	settingsBlock ifNotNil: [ 
@@ -46,12 +46,12 @@ SmClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
 ]
 
 { #category : #actions }
-SmClientSessionManager >> clientDo: aBlock [
+SbClientSessionManager >> clientDo: aBlock [
 	^ self clientDo: aBlock at: self defaultClientKindKey
 ]
 
 { #category : #actions }
-SmClientSessionManager >> clientDo: aBlock at: key [
+SbClientSessionManager >> clientDo: aBlock at: key [
 	| client result |
 	client := self getClientAt: key.
 	client connect.
@@ -61,27 +61,27 @@ SmClientSessionManager >> clientDo: aBlock at: key [
 ]
 
 { #category : #accessing }
-SmClientSessionManager >> clientSettingsMap [
+SbClientSessionManager >> clientSettingsMap [
 	^clientSettingsMap ifNil: [ clientSettingsMap := Dictionary new ]
 ]
 
 { #category : #accessing }
-SmClientSessionManager >> clientSettingsMap: aDictionary [
+SbClientSessionManager >> clientSettingsMap: aDictionary [
 	clientSettingsMap := aDictionary 
 ]
 
 { #category : #defaults }
-SmClientSessionManager >> defaultClientKindKey [
+SbClientSessionManager >> defaultClientKindKey [
 	^#default
 ]
 
 { #category : #defaults }
-SmClientSessionManager >> defaultMaxClientsPerKey [
+SbClientSessionManager >> defaultMaxClientsPerKey [
 	^ 10
 ]
 
 { #category : #private }
-SmClientSessionManager >> getClientAt: clientKindKey [
+SbClientSessionManager >> getClientAt: clientKindKey [
 	| clients |
 	^ lock
 		critical: [ clients := clientsMap at: clientKindKey ifAbsentPut: [ OrderedCollection new ].
@@ -90,7 +90,7 @@ SmClientSessionManager >> getClientAt: clientKindKey [
 ]
 
 { #category : #'initialize-release' }
-SmClientSessionManager >> initialize [
+SbClientSessionManager >> initialize [
 	super initialize.
 	lock := Monitor new.
 	clientsMap := Dictionary new.
@@ -98,12 +98,12 @@ SmClientSessionManager >> initialize [
 ]
 
 { #category : #accessing }
-SmClientSessionManager >> maxClientsPerKey [
+SbClientSessionManager >> maxClientsPerKey [
 	^ self settings maxClientsPerKey 
 ]
 
 { #category : #private }
-SmClientSessionManager >> newClientAt: clientKindKey [
+SbClientSessionManager >> newClientAt: clientKindKey [
 	| newClient |
 	newClient := self smallBoltClientClass new.
 	self applySettingsTo: newClient at: clientKindKey.
@@ -112,23 +112,23 @@ SmClientSessionManager >> newClientAt: clientKindKey [
 ]
 
 { #category : #actions }
-SmClientSessionManager >> registerSetting: settingsBlock [
+SbClientSessionManager >> registerSetting: settingsBlock [
 	self registerSetting: settingsBlock at: self defaultClientKindKey  
 ]
 
 { #category : #actions }
-SmClientSessionManager >> registerSetting: settingsBlock at: clientKindKey [ 
+SbClientSessionManager >> registerSetting: settingsBlock at: clientKindKey [ 
 	self clientSettingsMap at: clientKindKey put: settingsBlock
 ]
 
 { #category : #'initialize-release' }
-SmClientSessionManager >> release [
+SbClientSessionManager >> release [
 	clientsMap keysAndValuesDo: [ :key :eachCol | eachCol do: [:each | each release]].
 	clientsMap := Dictionary new.
 ]
 
 { #category : #private }
-SmClientSessionManager >> returnClient: client at: clientKindKey [
+SbClientSessionManager >> returnClient: client at: clientKindKey [
 	lock
 		critical: [ | clients |
 			clients := clientsMap at: clientKindKey.
@@ -138,38 +138,38 @@ SmClientSessionManager >> returnClient: client at: clientKindKey [
 ]
 
 { #category : #accessing }
-SmClientSessionManager >> settings [
+SbClientSessionManager >> settings [
 	^settings ifNil: [ settings := SbSettings default ]
 ]
 
 { #category : #accessing }
-SmClientSessionManager >> settings: aSbSettings [
+SbClientSessionManager >> settings: aSbSettings [
 	settings := aSbSettings
 ]
 
 { #category : #factory }
-SmClientSessionManager >> smallBoltClientClass [
+SbClientSessionManager >> smallBoltClientClass [
 	^ SbClient
 ]
 
 { #category : #actions }
-SmClientSessionManager >> standBy: clientNumber [
+SbClientSessionManager >> standBy: clientNumber [
 	self standBy: clientNumber setting: [:se |]
 ]
 
 { #category : #actions }
-SmClientSessionManager >> standBy: clientNumber setting: settingsBlock [
+SbClientSessionManager >> standBy: clientNumber setting: settingsBlock [
 	self standBy: clientNumber setting: settingsBlock at: self defaultClientKindKey
 ]
 
 { #category : #actions }
-SmClientSessionManager >> standBy: clientNumber setting: settingsBlock at: clientKindKey [
+SbClientSessionManager >> standBy: clientNumber setting: settingsBlock at: clientKindKey [
 	self registerSetting: settingsBlock at: clientKindKey.
 	[ clientNumber timesRepeat: [ self standbyClientAt: clientKindKey ] ] fork.
 ]
 
 { #category : #private }
-SmClientSessionManager >> standbyClientAt: clientKindKey [
+SbClientSessionManager >> standbyClientAt: clientKindKey [
 	| clients |
 	^ lock
 		critical: [ clients := clientsMap

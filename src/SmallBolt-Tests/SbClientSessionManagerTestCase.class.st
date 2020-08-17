@@ -6,7 +6,7 @@ Class {
 
 { #category : #factory }
 SbClientSessionManagerTestCase >> sessionManagerClass [
-	^ SmClientSessionManager
+	^ SbClientSessionManager
 ]
 
 { #category : #private }
@@ -51,7 +51,8 @@ SbClientSessionManagerTestCase >> testConcurrentSessions [
 	20 atRandom milliSeconds wait.
 	sema signal.
 	]. 
-
+	
+	100 milliSeconds wait.
 	10 timesRepeat: [procOne fork. procTwo fork].
 	20 timesRepeat: [sema wait].
 	

@@ -6,5 +6,5 @@ Class {
 
 { #category : #factory }
 SbFixedSessionManagerTestCase >> sessionManagerClass [
-	^ SmFixedSessionManager
+	^ SbFixedSessionManager
 ]

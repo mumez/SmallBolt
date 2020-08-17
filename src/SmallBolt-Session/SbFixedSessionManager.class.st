@@ -1,11 +1,11 @@
 Class {
-	#name : #SmFixedSessionManager,
-	#superclass : #SmClientSessionManager,
+	#name : #SbFixedSessionManager,
+	#superclass : #SbClientSessionManager,
 	#category : #'SmallBolt-Session'
 }
 
 { #category : #private }
-SmFixedSessionManager >> getClientAt: clientKindKey [
+SbFixedSessionManager >> getClientAt: clientKindKey [
 	| clients |
 	clients := lock
 		critical: [ clientsMap
@@ -18,14 +18,14 @@ SmFixedSessionManager >> getClientAt: clientKindKey [
 ]
 
 { #category : #private }
-SmFixedSessionManager >> returnClient: client at: clientKindKey [
+SbFixedSessionManager >> returnClient: client at: clientKindKey [
 	| clients |
 	clients := lock critical: [ clientsMap at: clientKindKey ].
 	clients nextPut: client
 ]
 
 { #category : #private }
-SmFixedSessionManager >> standbyClientAt: clientKindKey [
+SbFixedSessionManager >> standbyClientAt: clientKindKey [
 	| clients |
 	clients := lock
 		critical:
