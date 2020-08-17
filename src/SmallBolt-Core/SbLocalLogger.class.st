@@ -1,5 +1,5 @@
 Class {
-	#name : #SmLocalLogger,
+	#name : #SbLocalLogger,
 	#superclass : #Object,
 	#instVars : [
 		'logLevel'
@@ -11,95 +11,95 @@ Class {
 }
 
 { #category : #accessing }
-SmLocalLogger class >> defaultLogLevel [
+SbLocalLogger class >> defaultLogLevel [
 	^defaultLogLevel ifNil: [ defaultLogLevel := 2]
 ]
 
 { #category : #accessing }
-SmLocalLogger class >> defaultLogLevel: anInteger [
+SbLocalLogger class >> defaultLogLevel: anInteger [
 	^defaultLogLevel := anInteger
 ]
 
 { #category : #'class initialization' }
-SmLocalLogger class >> initialize [
+SbLocalLogger class >> initialize [
 	defaultLogLevel := nil
 ]
 
 { #category : #actions }
-SmLocalLogger >> debug: record [
+SbLocalLogger >> debug: record [
 	"Use Nagare-logger for production"
 	self shouldLogDebug ifFalse: [ ^self ].
 	self log: record tag: 'DEBUG'
 ]
 
 { #category : #actions }
-SmLocalLogger >> error: record [
+SbLocalLogger >> error: record [
 	"Use Nagare-logger for production"
 	self shouldLogError ifFalse: [ ^self ].
 	self log: record tag: 'ERROR'
 ]
 
 { #category : #actions }
-SmLocalLogger >> info: record [
+SbLocalLogger >> info: record [
 	"Use Nagare-logger for production"
 	self shouldLogInfo ifFalse: [ ^self ].
 	self log: record tag: 'INFO'
 ]
 
 { #category : #'initialize-release' }
-SmLocalLogger >> initialize [
+SbLocalLogger >> initialize [
 	logLevel := nil
 ]
 
 { #category : #acccessing }
-SmLocalLogger >> isDebugging [
+SbLocalLogger >> isDebugging [
 	^self logLevel > 0
 ]
 
 { #category : #acccessing }
-SmLocalLogger >> isDebugging: aBoolean [
+SbLocalLogger >> isDebugging: aBoolean [
 	| level |
 	level := aBoolean ifTrue: [self defaultLogLevel] ifFalse: [0].
 	self logLevel: level
 ]
 
 { #category : #private }
-SmLocalLogger >> log: record tag: tagString [
+SbLocalLogger >> log: record tag: tagString [
 	Transcript cr; show: tagString, ':', record asString
 ]
 
 { #category : #acccessing }
-SmLocalLogger >> logLevel [
+SbLocalLogger >> logLevel [
 	^logLevel ifNil: [logLevel := self class defaultLogLevel ]
 ]
 
 { #category : #acccessing }
-SmLocalLogger >> logLevel: anInteger [
+SbLocalLogger >> logLevel: anInteger [
 	logLevel := anInteger
 ]
 
 { #category : #testing }
-SmLocalLogger >> shouldLogDebug [
+SbLocalLogger >> shouldLogDebug [
 	^self logLevel >= 3
 ]
 
 { #category : #testing }
-SmLocalLogger >> shouldLogError [
+SbLocalLogger >> shouldLogError [
 	^self logLevel >= 1
 ]
 
 { #category : #testing }
-SmLocalLogger >> shouldLogInfo [
+SbLocalLogger >> shouldLogInfo [
 	^self logLevel >= 4
 ]
 
 { #category : #testing }
-SmLocalLogger >> shouldLogWarn [
+SbLocalLogger >> shouldLogWarn [
 	^self logLevel >= 2
 ]
 
 { #category : #actions }
-SmLocalLogger >> warn: record [
+SbLocalLogger >> warn: record [
 	"Use Nagare-logger for production"
 	self shouldLogWarn ifFalse: [ ^self ].
 	self log: record tag: 'WARN'
