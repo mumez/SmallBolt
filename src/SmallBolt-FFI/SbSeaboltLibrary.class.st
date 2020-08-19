@@ -17,7 +17,7 @@ SbSeaboltLibrary class >> initialize [
 
 { #category : #accessing }
 SbSeaboltLibrary class >> libraryName [
-	^ libraryName ifNil: [ libraryName := 'seabolt' ]
+	^ libraryName ifNil: [ libraryName := 'libseabolt' ]
 ]
 
 { #category : #accessing }
@@ -38,6 +38,13 @@ SbSeaboltLibrary class >> libraryVersion [
 { #category : #accessing }
 SbSeaboltLibrary class >> libraryVersion: anObject [
 	libraryVersion := anObject
+]
+
+{ #category : #utilities }
+SbSeaboltLibrary class >> useMsvcSharedLibrary [
+	<script>
+	self libraryName: 'seabolt'
+	
 ]
 
 { #category : #private }
