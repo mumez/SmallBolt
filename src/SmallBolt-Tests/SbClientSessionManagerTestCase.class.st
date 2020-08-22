@@ -12,7 +12,7 @@ SbClientSessionManagerTestCase >> sessionManagerClass [
 { #category : #private }
 SbClientSessionManagerTestCase >> sessionManagerDo: aBlock [
 	| sessionManager |
-	sessionManager := self sessionManagerClass default.
+	sessionManager := self sessionManagerClass new.
 	[ sessionManager settings: self settings.
 	sessionManager standBy: 3.
 	aBlock value: sessionManager ]
