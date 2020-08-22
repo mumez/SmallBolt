@@ -154,7 +154,9 @@ SbClientSessionManager >> smallBoltClientClass [
 
 { #category : #actions }
 SbClientSessionManager >> standBy: clientNumber [
-	self standBy: clientNumber setting: [:se |]
+	self standBy: clientNumber setting: [:se |
+		se 	extractFrom: self settings
+	]
 ]
 
 { #category : #actions }

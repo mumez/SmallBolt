@@ -78,6 +78,13 @@ SbSettings >> defaultTargerUri [
 	^'bolt://127.0.0.1:7687'
 ]
 
+{ #category : #extracting }
+SbSettings >> extractFrom: otherSettings [
+	otherSettings keysAndValuesDo: [ :k :v |
+		self at: k put: v	
+	]
+]
+
 { #category : #accessing }
 SbSettings >> host [
 	^self parsedUriValues at: #host ifAbsent: [ '127.0.0.1' ]
@@ -121,6 +128,11 @@ SbSettings >> isPlainTextTransport [
 { #category : #'accessing - dictionary' }
 SbSettings >> keys [
 	^self settingsDict keys
+]
+
+{ #category : #'accessing - dictionary' }
+SbSettings >> keysAndValuesDo: block [
+	^self settingsDict keysAndValuesDo: block
 ]
 
 { #category : #'accessing - session' }
