@@ -37,7 +37,9 @@ Metacello new
   load.
 ```
 
-You also need to put a SeaBolt shared library. Please download it from [Seabolt releases](https://github.com/neo4j-drivers/seabolt/releases) section.
+You also need to put a SeaBolt shared library. 
+Pre-built libraries are in [shared-libraries](./shared-libraries/) directory.
+Otherwise, you can download from [Seabolt releases](https://github.com/neo4j-drivers/seabolt/releases) section (linked OpenSSL is a bit older, so I do not recommend).
 
 
 ## Performance
