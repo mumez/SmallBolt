@@ -72,9 +72,7 @@ SbRawClient >> createConnector [
 
 { #category : #factory }
 SbRawClient >> createRequester [
-	^ (self requesterClass on: self connection)
-		valueFetcher: self valueFetcher;
-		yourself
+	^ self requesterClass for: self
 ]
 
 { #category : #factory }
@@ -115,6 +113,23 @@ SbRawClient >> factory: anObject [
 SbRawClient >> isConnected [
 	self connection ifNil: [ ^false ].
 	^self connection isReady
+]
+
+{ #category : #accessing }
+SbRawClient >> logger [
+	^ self class logger
+]
+
+{ #category : #'error handling' }
+SbRawClient >> notifyConnectionFailed: connectionStatus [
+	| error connectionStateSymbol |
+	connectionStateSymbol := connectionStatus connectionStateSymbol.
+	error := connectionStatus error.
+	error tag: connectionStateSymbol.
+	self logger error: error.
+	self settings shouldRaiseErrorOnConnectionFailed ifTrue: [ 
+		error signal
+	]
 ]
 
 { #category : #printing }
@@ -196,7 +211,7 @@ SbRawClient >> tryConnect [
 	^ self autoReleaseDo: [ :f | | status newConnection |
 		status := f create: SbBoltStatus.
 		newConnection := self connector acquireConnectionWithMode: self settings accessMode toStatus: status.
-		newConnection isReady ifFalse: [ self warnConnectionFailed: status. ^ nil].
+		newConnection isReady ifFalse: [ self notifyConnectionFailed: status. ^ nil].
 		newConnection
 	]
 ]
@@ -204,12 +219,4 @@ SbRawClient >> tryConnect [
 { #category : #accessing }
 SbRawClient >> valueFetcher [
 	^self createValueFetcher
-]
-
-{ #category : #'error handling' }
-SbRawClient >> warnConnectionFailed: connectionStatus [
-	| error connectionStateSymbol |
-	error := connectionStatus connectionStateSymbol.
-	connectionStateSymbol := connectionStatus error.
-	{ error. connectionStateSymbol } inspect
 ]
