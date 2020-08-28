@@ -1,6 +1,6 @@
 Class {
 	#name : #SbBasicRequester,
-	#superclass : #Object,
+	#superclass : #SbObject,
 	#instVars : [
 		'connection',
 		'valueFetcher'
@@ -9,18 +9,20 @@ Class {
 }
 
 { #category : #'instance creation' }
-SbBasicRequester class >> on: aSbBoldConnection [
-	^ self new connection: aSbBoldConnection
+SbBasicRequester class >> for: aSbBoltClient [
+	^ (super for: aSbBoltClient)
+		initByClient: aSbBoltClient;
+		yourself
 ]
 
 { #category : #transactions }
 SbBasicRequester >> basicTransactionDo: aBlock ifFailed: failureBlock [
 	| status ret |
 	status := self beginTransaction.
-	status isSuccess ifFalse: [ ^ failureBlock value: status ].
-	ret := [aBlock cull: self] on: Error do: [:ex | ex inspect.  ^ failureBlock value: self rollbackTransaction].
+	status isSuccess ifFalse: [ ^ failureBlock value: status value: nil].
+	ret := [aBlock cull: self] on: Error do: [:ex | ^ failureBlock value: self rollbackTransaction value: ex ].
 	status := self commitTransaction.
-	status isSuccess ifFalse: [ ^ failureBlock value: status ].
+	status isSuccess ifFalse: [ ^ failureBlock value: status value: nil].
 	^ ret
 	
 ]
@@ -64,6 +66,21 @@ SbBasicRequester >> discard [
 { #category : #private }
 SbBasicRequester >> flush [
 	self connection send
+]
+
+{ #category : #'initialize - release' }
+SbBasicRequester >> initByClient: aSbBoltClient [
+	self
+		connection: aSbBoltClient connection;
+		valueFetcher: aSbBoltClient valueFetcher
+]
+
+{ #category : #'error handling' }
+SbBasicRequester >> notifyTransactionFailed: anError [
+	self logger error: anError.
+	self settings shouldRaiseErrorOnTransactionFailed ifTrue: [ 
+		anError pass	
+	]
 ]
 
 { #category : #actions }
@@ -133,7 +150,11 @@ SbBasicRequester >> transactCyphers: cypherStrings [
 
 { #category : #transactions }
 SbBasicRequester >> transactionDo: aBlock [
-	^ self basicTransactionDo: aBlock ifFailed: [ :status | ].
+	^ self basicTransactionDo: aBlock ifFailed: [ :status :error | 
+		error ifNotNil: [ 
+			self notifyTransactionFailed: error
+		]	
+	].
 	
 ]
 
