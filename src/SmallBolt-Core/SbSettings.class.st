@@ -241,6 +241,26 @@ SbSettings >> settingsDict: anObject [
 ]
 
 { #category : #accessing }
+SbSettings >> shouldRaiseErrorOnConnectionFailed [
+	^ self at: #shouldRaiseErrorOnConnectionFailed ifAbsentPut: [true]
+]
+
+{ #category : #accessing }
+SbSettings >> shouldRaiseErrorOnConnectionFailed: aBoolean [
+	^ self at: #shouldRaiseErrorOnConnectionFailed: put: aBoolean
+]
+
+{ #category : #accessing }
+SbSettings >> shouldRaiseErrorOnTransactionFailed [
+	^ self at: #shouldRaiseErrorOnTransactionFailed ifAbsentPut: [false]
+]
+
+{ #category : #accessing }
+SbSettings >> shouldRaiseErrorOnTransactionFailed: aBoolean [
+	^ self at: #shouldRaiseErrorOnTransactionFailed put: aBoolean
+]
+
+{ #category : #accessing }
 SbSettings >> targetUri [
 	^ self at: #targetUri ifAbsentPut: [self defaultTargerUri]
 ]

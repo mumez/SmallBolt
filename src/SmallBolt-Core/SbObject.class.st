@@ -32,7 +32,18 @@ SbObject class >> for: aSbClient [
 
 { #category : #'class initialization' }
 SbObject class >> initialize [
-	ffi := nil
+	ffi := nil.
+	logger := nil.
+]
+
+{ #category : #accessing }
+SbObject class >> logger [
+	^logger ifNil: [ logger := SbLocalLogger new ]
+]
+
+{ #category : #accessing }
+SbObject class >> logger: anObject [
+	logger := anObject
 ]
 
 { #category : #releasing }
@@ -60,6 +71,11 @@ SbObject >> factory [
 { #category : #accessing }
 SbObject >> ffi [
 	^self class ffi
+]
+
+{ #category : #accessing }
+SbObject >> logger [
+	^self client logger
 ]
 
 { #category : #accessing }
