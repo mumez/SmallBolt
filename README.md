@@ -37,10 +37,9 @@ Metacello new
   load.
 ```
 
-You also need to put a SeaBolt shared library. 
-Pre-built libraries are in [shared-libraries](./shared-libraries/) directory.
-Otherwise, you can download from [Seabolt releases](https://github.com/neo4j-drivers/seabolt/releases) section (linked OpenSSL is a bit older, so I do not recommend).
-
+You also need to put a Seabolt shared library (libseabolt).
+The latest pre-built libraries are in [shared-libraries](./shared-libraries/) directory.
+The libraries tagged with #stable are located at [stable release]([https://github.com/mumez/Smallbolt/releases/stable]). BaselineOfSmallBolt will  automatically download the appropriate library from the [release]([https://github.com/mumez/Smallbolt/releases/stable]) according to the current platform.
 
 ## Performance
 
