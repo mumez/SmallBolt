@@ -66,6 +66,19 @@ SbSettings >> authType: aSymbol [
 	self at: #authType put: aSymbol
 ]
 
+{ #category : #'accessing - session' }
+SbSettings >> clientKindKey [
+	^ self at: #clientKindKey ifAbsentPut: [#default]
+]
+
+{ #category : #'accessing - session' }
+SbSettings >> clientKindKey: aSymbol [
+	aSymbol ifNil: [
+		^ self removeKey: #clientKindKey
+	].
+	self at: #clientKindKey put: aSymbol asSymbol
+]
+
 { #category : #defaults }
 SbSettings >> defaultTargerUri [
 	"neo4j
@@ -223,6 +236,11 @@ SbSettings >> realm [
 { #category : #authentication }
 SbSettings >> realm: aString [
 	self at: #realm put: aString
+]
+
+{ #category : #'accessing - dictionary' }
+SbSettings >> removeKey: key [
+	^self settingsDict removeKey: key ifAbsent:[]
 ]
 
 { #category : #accessing }
