@@ -5,7 +5,8 @@ Class {
 		'lock',
 		'clientsMap',
 		'settings',
-		'clientSettingsMap'
+		'clientSettingsMap',
+		'clientKindKey'
 	],
 	#classInstVars : [
 		'default',
@@ -47,7 +48,7 @@ SbClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
 
 { #category : #actions }
 SbClientSessionManager >> clientDo: aBlock [
-	^ self clientDo: aBlock at: self defaultClientKindKey
+	^ self clientDo: aBlock at: self clientKindKey
 ]
 
 { #category : #actions }
@@ -58,6 +59,16 @@ SbClientSessionManager >> clientDo: aBlock at: key [
 	result := [ aBlock value: client ]
 		ensure: [ self returnClient: client at: key ].
 	^ result
+]
+
+{ #category : #accessing }
+SbClientSessionManager >> clientKindKey [
+	^ clientKindKey ifNil: [ clientKindKey := self defaultClientKindKey ]
+]
+
+{ #category : #accessing }
+SbClientSessionManager >> clientKindKey: aSymbol [
+	clientKindKey := aSymbol 
 ]
 
 { #category : #accessing }
@@ -72,12 +83,7 @@ SbClientSessionManager >> clientSettingsMap: aDictionary [
 
 { #category : #defaults }
 SbClientSessionManager >> defaultClientKindKey [
-	^#default
-]
-
-{ #category : #defaults }
-SbClientSessionManager >> defaultMaxClientsPerKey [
-	^ 10
+	^self settings clientKindKey
 ]
 
 { #category : #private }
@@ -113,7 +119,7 @@ SbClientSessionManager >> newClientAt: clientKindKey [
 
 { #category : #actions }
 SbClientSessionManager >> registerSetting: settingsBlock [
-	self registerSetting: settingsBlock at: self defaultClientKindKey  
+	self registerSetting: settingsBlock at: self clientKindKey  
 ]
 
 { #category : #actions }
@@ -161,7 +167,7 @@ SbClientSessionManager >> standBy: clientNumber [
 
 { #category : #actions }
 SbClientSessionManager >> standBy: clientNumber setting: settingsBlock [
-	self standBy: clientNumber setting: settingsBlock at: self defaultClientKindKey
+	self standBy: clientNumber setting: settingsBlock at: self clientKindKey
 ]
 
 { #category : #actions }
