@@ -117,6 +117,15 @@ SbClientSessionManager >> newClientAt: clientKindKey [
 	^newClient
 ]
 
+{ #category : #'startup-shutdown' }
+SbClientSessionManager >> onImageQuit [
+]
+
+{ #category : #'startup-shutdown' }
+SbClientSessionManager >> onImageResume [
+	self release
+]
+
 { #category : #actions }
 SbClientSessionManager >> registerSetting: settingsBlock [
 	self registerSetting: settingsBlock at: self clientKindKey  

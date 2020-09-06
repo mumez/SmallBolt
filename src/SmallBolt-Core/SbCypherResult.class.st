@@ -74,6 +74,11 @@ SbCypherResult >> fieldsDo: aBlock [
 	]
 ]
 
+{ #category : #'accessing-convenience' }
+SbCypherResult >> firstFieldValues [
+	^self fieldValues collect: [ :each | each at: 1 ]
+]
+
 { #category : #printing }
 SbCypherResult >> printOn: aStream [
 	aStream nextPutAll: self className.
