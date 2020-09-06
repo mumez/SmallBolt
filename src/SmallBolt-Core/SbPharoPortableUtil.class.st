@@ -32,3 +32,15 @@ SbPharoPortableUtil >> parseUriScheme: usiScheme [
 	tokens size = 1 ifTrue: [ ^ Array with: tokens first with: '' ].
 	^ tokens asArray
 ]
+
+{ #category : #'startup - shutdown' }
+SbPharoPortableUtil >> registerAsStartupAndShutdownHandler: aClass [
+	SessionManager default
+		registerNetworkClassNamed: aClass name
+]
+
+{ #category : #'startup - shutdown' }
+SbPharoPortableUtil >> unregisterAsStartupAndShutdownHandler: aClass [
+	SessionManager default
+		unregisterClassNamed: aClass name
+]
