@@ -29,6 +29,11 @@ SbSeaboltFFIFactory class >> defaultFfiClass: anObject [
 	defaultFfiClass := anObject
 ]
 
+{ #category : #accessing }
+SbSeaboltFFIFactory class >> ffi [
+	^ SbSeaboltFFI new
+]
+
 { #category : #'class initialization' }
 SbSeaboltFFIFactory class >> initialize [
 	defaultFfiClass := nil.
@@ -49,6 +54,6 @@ SbSeaboltFFIFactory class >> isStartupCompleted: aBoolean [
 SbSeaboltFFIFactory class >> release [
 	<script>
 	self isStartupCompleted ifFalse: [ ^ self ].
-	self ffi shutDown.
+	SbSeaboltFFI shutdown.
 	self isStartupCompleted: false
 ]

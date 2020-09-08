@@ -28,6 +28,12 @@ SbSeaboltFFI class >> newStringHolder [
 	^StringHolderType new
 ]
 
+{ #category : #utility }
+SbSeaboltFFI class >> shutdown [
+	<script>
+	self new shutdown
+]
+
 { #category : #connector }
 SbSeaboltFFI >> acquireConnection: connector mode: accessMode status: status [
 	^ self ffiCall: #( SbBoltConnection BoltConnector_acquire(SbBoltConnector connector, int32 accessMode, SbBoltStatus status) )
