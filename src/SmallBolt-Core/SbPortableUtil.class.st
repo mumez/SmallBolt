@@ -90,7 +90,8 @@ SbPortableUtil >> shutDown: isImageQuitting [
 
 { #category : #'startup-shutdown' }
 SbPortableUtil >> startUp: isImageResuming [
-	^self allSessionManagerInstances do: [ :each |  
+	SbSeaboltFFIFactory create.
+	self allSessionManagerInstances do: [ :each |  
 		isImageResuming ifTrue: [ each onImageResume]
 	]
 ]

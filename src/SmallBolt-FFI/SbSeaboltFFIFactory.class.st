@@ -29,11 +29,6 @@ SbSeaboltFFIFactory class >> defaultFfiClass: anObject [
 	defaultFfiClass := anObject
 ]
 
-{ #category : #accessing }
-SbSeaboltFFIFactory class >> ffi [
-	^ SbSeaboltFFI new
-]
-
 { #category : #'class initialization' }
 SbSeaboltFFIFactory class >> initialize [
 	defaultFfiClass := nil.
