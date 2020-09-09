@@ -5,7 +5,8 @@ Class {
 		'client'
 	],
 	#classInstVars : [
-		'ffi'
+		'ffi',
+		'logger'
 	],
 	#category : #'SmallBolt-Core'
 }

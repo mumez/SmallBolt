@@ -82,14 +82,16 @@ SbPortableUtil >> registerAsStartupAndShutdownHandler: aClass [
 
 { #category : #'startup-shutdown' }
 SbPortableUtil >> shutDown: isImageQuitting [
-	^self allSessionManagerInstances do: [ :each |  
+	SbSeaboltFFIFactory release.
+	self allSessionManagerInstances do: [ :each |  
 		isImageQuitting ifTrue: [ each onImageQuit]
 	]
 ]
 
 { #category : #'startup-shutdown' }
 SbPortableUtil >> startUp: isImageResuming [
-	^self allSessionManagerInstances do: [ :each |  
+	SbSeaboltFFIFactory create.
+	self allSessionManagerInstances do: [ :each |  
 		isImageResuming ifTrue: [ each onImageResume]
 	]
 ]

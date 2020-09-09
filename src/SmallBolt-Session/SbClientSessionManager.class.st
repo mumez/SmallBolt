@@ -119,11 +119,11 @@ SbClientSessionManager >> newClientAt: clientKindKey [
 
 { #category : #'startup-shutdown' }
 SbClientSessionManager >> onImageQuit [
+	self release
 ]
 
 { #category : #'startup-shutdown' }
 SbClientSessionManager >> onImageResume [
-	self release
 ]
 
 { #category : #actions }

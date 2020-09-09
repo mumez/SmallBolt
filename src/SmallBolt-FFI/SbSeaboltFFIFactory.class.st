@@ -49,6 +49,6 @@ SbSeaboltFFIFactory class >> isStartupCompleted: aBoolean [
 SbSeaboltFFIFactory class >> release [
 	<script>
 	self isStartupCompleted ifFalse: [ ^ self ].
-	self ffi shutDown.
+	SbSeaboltFFI shutdown.
 	self isStartupCompleted: false
 ]
