@@ -30,6 +30,11 @@ SbBoltValue >> booleanValue [
 ]
 
 { #category : #accessing }
+SbBoltValue >> booleanValue: aBoolean [
+	^ self ffi setBoolean: aBoolean onValue: self
+]
+
+{ #category : #accessing }
 SbBoltValue >> bytesValue [
 	| sz rawBytes strm bytes |
 	sz := self ffi getSizeOnValue: self.
@@ -38,6 +43,11 @@ SbBoltValue >> bytesValue [
 	bytes := ByteArray new: sz.
 	strm readInto: bytes startingAt: 1 count: sz.
 	^ bytes 
+]
+
+{ #category : #accessing }
+SbBoltValue >> bytesValue: aByteArray [
+	^ self ffi setBytes: aByteArray onValue: self
 ]
 
 { #category : #releasing }
@@ -76,8 +86,18 @@ SbBoltValue >> floatValue [
 ]
 
 { #category : #accessing }
+SbBoltValue >> floatValue: aFloat [
+	^ self ffi setFloat: aFloat onValue: self
+]
+
+{ #category : #accessing }
 SbBoltValue >> integerValue [
 	^ self ffi getIntegerOnValue: self
+]
+
+{ #category : #accessing }
+SbBoltValue >> integerValue: anInteger [
+	^ self ffi setInteger: anInteger onValue: self
 ]
 
 { #category : #accessing }
@@ -98,6 +118,12 @@ SbBoltValue >> printStringOnConnection: aBoltConnection [
 	^self basicPrintStringOnConnection: aBoltConnection bufferLength: 2048
 ]
 
+{ #category : #'setting value' }
+SbBoltValue >> setValue: anObject [
+	value := nil.
+	^ SbValueInjector new inject: anObject into: self
+]
+
 { #category : #accessing }
 SbBoltValue >> size [
 	^ self ffi getSizeOnValue: self
@@ -112,6 +138,11 @@ SbBoltValue >> stringValue [
 	str := String new: sz.
 	strm readInto: str startingAt: 1 count: sz.
 	^ str 
+]
+
+{ #category : #accessing }
+SbBoltValue >> stringValue: aString [
+	^ self ffi setString: aString onValue: self
 ]
 
 { #category : #accessing }
@@ -137,11 +168,6 @@ SbBoltValue >> type [
 { #category : #converting }
 SbBoltValue >> value [
 	^ value ifNil: [ value := self fetchValue ]
-]
-
-{ #category : #accessing }
-SbBoltValue >> value: anObject [
-	value := anObject
 ]
 
 { #category : #converting }
