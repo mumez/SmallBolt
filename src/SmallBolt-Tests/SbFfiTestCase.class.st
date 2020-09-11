@@ -29,6 +29,22 @@ SbFfiTestCase >> testCreateConfig [
 ]
 
 { #category : #testing }
+SbFfiTestCase >> testSetGetDictionaryBoltValue [
+	| boltValue dict |
+	[ boltValue := SbBoltValue create.
+	dict := Dictionary new.
+	dict at: 'a' put: 1.
+	dict at: 'b' put: 2.
+	dict at: 'c' put: 3.
+	boltValue value: dict.
+	self assert: (boltValue value keys asSortedCollection asArray = #('a' 'b' 'c')).
+	boltValue value keysAndValuesDo: [ :k :v |
+		self assert: (v = (dict at: k))
+	]
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ]
+]
+
+{ #category : #testing }
 SbFfiTestCase >> testSetGetListBoltValue [
 	| boltValue |
 	[ boltValue := SbBoltValue create.

@@ -30,7 +30,16 @@ SbValueInjector >> setCollectionValues: anObject to: aSbValue [
 
 { #category : #private }
 SbValueInjector >> setDictionaryValues: anObject to: aSbValue [
-	
+	| size index |
+	size := anObject size.
+	aSbValue dictionarySize: size.
+	index := 0.
+	anObject keysAndValuesDo: [ :key :stValue | | sbValue |
+		aSbValue dictionaryStringKeyAt: index put: key.
+		sbValue := aSbValue dictionaryValueAt: index.
+		self inject: stValue into: sbValue.
+		index := index + 1.
+	].
 ]
 
 { #category : #private }

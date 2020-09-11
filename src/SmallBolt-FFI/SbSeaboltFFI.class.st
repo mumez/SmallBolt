@@ -416,6 +416,11 @@ SbSeaboltFFI >> setBytes: byteArray sized: size onValue: aBoltValue [
 SbSeaboltFFI >> setDictionaryKey: keyString at: index onValue: aBoltValue [
 	| size |
 	size := keyString size.
+	^ self setDictionaryKey: keyString sized: size at: index onValue: aBoltValue
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setDictionaryKey: keyString sized: size at: index onValue: aBoltValue [
 	^ self ffiCall: #( int32 BoltDictionary_set_key(SbBoltValue aBoltValue, int32 index, String keyString, int32 size) )
 ]
 
