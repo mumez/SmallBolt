@@ -186,8 +186,16 @@ SbRawClient >> runCypher: cypherString arguments: arguments [
 ]
 
 { #category : #'running cypher' }
-SbRawClient >> runCyphers: cypherStrings [
-	^self requester runCyphers: cypherStrings 
+SbRawClient >> runCyphers: cypherStringOrAssocs [
+	^self requester runCyphers: cypherStringOrAssocs 
+]
+
+{ #category : #'running cypher' }
+SbRawClient >> runCyphersBy: aStatementsAppenderBlock [
+	| appender |
+	appender := SbCypherStatementAppender new.
+	aStatementsAppenderBlock value: appender.
+	^self runCyphers: appender statements
 ]
 
 { #category : #accessing }
@@ -208,6 +216,14 @@ SbRawClient >> transactCypher: cypherString [
 { #category : #'running cypher' }
 SbRawClient >> transactCyphers: cypherStrings [
 	^self requester transactCyphers: cypherStrings
+]
+
+{ #category : #'running cypher' }
+SbRawClient >> transactCyphersBy: aStatementsAppenderBlock [
+	| appender |
+	appender := SbCypherStatementAppender new.
+	aStatementsAppenderBlock value: appender.
+	^self transactCyphers: appender statements
 ]
 
 { #category : #private }
