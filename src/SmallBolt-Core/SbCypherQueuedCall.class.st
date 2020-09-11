@@ -70,6 +70,13 @@ SbCypherQueuedCall >> pushRequestsFor: aCypherString [
 	self pullRequest:  (self connection requestPull).
 ]
 
+{ #category : #actions }
+SbCypherQueuedCall >> pushRequestsFor: aCypherString parameters: paramsDict [
+	self cypherString: aCypherString.
+	self runRequest: (self connection requestRunCypher: aCypherString parameters: paramsDict).
+	self pullRequest:  (self connection requestPull).
+]
+
 { #category : #accessing }
 SbCypherQueuedCall >> requester [
 	^ requester
