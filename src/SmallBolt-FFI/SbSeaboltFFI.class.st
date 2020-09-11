@@ -490,6 +490,11 @@ SbSeaboltFFI >> setRunCypher: cypherString onConnection: aBoltConnection [
 SbSeaboltFFI >> setRunCypherParameter: paramNameString at: index onConnection: aBoltConnection [
 	| paramNameSize |
 	paramNameSize := paramNameString asString size.
+	^ self setRunCypherParameter: paramNameString sized: paramNameSize at: index onConnection: aBoltConnection
+]
+
+{ #category : #connection }
+SbSeaboltFFI >> setRunCypherParameter: paramNameString sized: paramNameSize at: index onConnection: aBoltConnection [
 	^ self ffiCall: #( SbBoltValue BoltConnection_set_run_cypher_parameter(SbBoltConnection aBoltConnection, int32 index, String paramNameString, int64 paramNameSize) )
 ]
 

@@ -4,6 +4,7 @@ Class {
 	#instVars : [
 		'requester',
 		'cypherString',
+		'cypherArguments',
 		'runRequest',
 		'pullRequest'
 	],
@@ -18,6 +19,16 @@ SbCypherQueuedCall class >> on: aSbRequester [
 { #category : #accessing }
 SbCypherQueuedCall >> connection [
 	^ self requester connection
+]
+
+{ #category : #accessing }
+SbCypherQueuedCall >> cypherArguments [
+	^ cypherArguments
+]
+
+{ #category : #accessing }
+SbCypherQueuedCall >> cypherArguments: anObject [
+	cypherArguments := anObject
 ]
 
 { #category : #private }
@@ -64,9 +75,24 @@ SbCypherQueuedCall >> pullResult [
 ]
 
 { #category : #actions }
-SbCypherQueuedCall >> pushRequestsFor: aCypherString [
+SbCypherQueuedCall >> pushRequestsFor: aCyperStringOrCypherAssoc [
+	aCyperStringOrCypherAssoc isString ifTrue: [ ^ self pushRequestsForCypher: aCyperStringOrCypherAssoc ].
+	^ self pushRequestsForCypher: aCyperStringOrCypherAssoc key arguments: aCyperStringOrCypherAssoc value
+]
+
+{ #category : #actions }
+SbCypherQueuedCall >> pushRequestsForCypher: aCypherString [
 	self cypherString: aCypherString.
+	self cypherArguments: nil.
 	self runRequest: (self connection requestRunCypher: aCypherString).
+	self pullRequest:  (self connection requestPull).
+]
+
+{ #category : #actions }
+SbCypherQueuedCall >> pushRequestsForCypher: aCypherString arguments: argsDict [
+	self cypherString: aCypherString.
+	self cypherArguments: argsDict.
+	self runRequest: (self connection requestRunCypher: aCypherString parameters: argsDict).
 	self pullRequest:  (self connection requestPull).
 ]
 

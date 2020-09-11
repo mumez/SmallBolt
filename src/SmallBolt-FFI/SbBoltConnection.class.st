@@ -159,6 +159,13 @@ SbBoltConnection >> requestRunCypher: cypherString [
 ]
 
 { #category : #requesting }
+SbBoltConnection >> requestRunCypher: cypherString parameters: paramsDict [
+	self setRunCypher: cypherString parameters: paramsDict.
+	self loadRunRequest.
+	^ self getLastRequest
+]
+
+{ #category : #requesting }
 SbBoltConnection >> requestRunTransactionTimeout: timeout [
 	self setRunTransactionTimeout: timeout.
 	self loadRunRequest.
@@ -183,6 +190,18 @@ SbBoltConnection >> setRunCypher: cypherString [
 { #category : #actions }
 SbBoltConnection >> setRunCypher: cypherString numberOfParameters: numberOfParameters [
 	^self ffi setRunCypher: cypherString asString numberOfParameters: numberOfParameters onConnection: self
+]
+
+{ #category : #actions }
+SbBoltConnection >> setRunCypher: cypherString parameters: paramsDict [
+	| index |
+	self ffi setRunCypher: cypherString asString numberOfParameters: paramsDict size onConnection: self.
+	index := 0.
+	paramsDict keysAndValuesDo: [ :key :stValue | | sbValue |
+		sbValue := self setRunCypherParameterName: key at: index.
+		sbValue value: stValue.
+		index := index + 1. 
+	]
 ]
 
 { #category : #actions }
