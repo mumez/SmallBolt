@@ -14,4 +14,6 @@ SbValueInjector >> inject: anObject into: aSbValue [
 	anObject isString ifTrue: [ ^ aSbValue stringValue: anObject].
 	
 	(anObject == true or: [ anObject == false ]) ifTrue: [ ^ aSbValue booleanValue: anObject]. 
+	(anObject isKindOf: ByteArray) ifTrue: [ ^ aSbValue bytesValue: anObject].
+	
 ]

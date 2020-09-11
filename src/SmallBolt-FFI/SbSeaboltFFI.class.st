@@ -398,16 +398,17 @@ SbSeaboltFFI >> setBeginTransactionTimeout: timeout onConnection: aBoltConnectio
 ]
 
 { #category : #value }
-SbSeaboltFFI >> setBoolean: aBoolean onValue: aBoltValue [
-	| data |
-	data := aBoolean ifTrue: [1] ifFalse: [0].
-	^ self ffiCall: #( void BoltValue_format_as_Boolean(SbBoltValue aBoltValue, double data) )
+SbSeaboltFFI >> setBoolean: booleanNumber onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Boolean(SbBoltValue aBoltValue, char booleanNumber) )
 ]
 
 { #category : #value }
 SbSeaboltFFI >> setBytes: byteArray onValue: aBoltValue [
-	| size |
-	size := byteArray size.
+	^ self setBytes: byteArray sized: byteArray size onValue: aBoltValue
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setBytes: byteArray sized: size onValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_Bytes(SbBoltValue aBoltValue, ByteArray byteArray, int32 size) )
 ]
 
@@ -504,8 +505,11 @@ SbSeaboltFFI >> setScheme: anInteger onConfig: aBoltConfig [
 
 { #category : #value }
 SbSeaboltFFI >> setString: aString onValue: aBoltValue [
-	| size |
-	size := aString size.
+	^self setString: aString sized: aString size onValue: aBoltValue
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setString: aString sized: size onValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_String(SbBoltValue aBoltValue, String aString, int32 size) )
 ]
 

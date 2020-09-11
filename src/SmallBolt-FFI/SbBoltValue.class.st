@@ -31,7 +31,9 @@ SbBoltValue >> booleanValue [
 
 { #category : #accessing }
 SbBoltValue >> booleanValue: aBoolean [
-	^ self ffi setBoolean: aBoolean onValue: self
+	| booleanNumber |
+	booleanNumber := aBoolean == true ifTrue: [ 1 ] ifFalse: [ 0 ].
+	^ self ffi setBoolean: booleanNumber onValue: self
 ]
 
 { #category : #accessing }
@@ -39,7 +41,7 @@ SbBoltValue >> bytesValue [
 	| sz rawBytes strm bytes |
 	sz := self ffi getSizeOnValue: self.
 	rawBytes := self ffi getBytesOnValue: self.
-	strm := rawBytes readStream.
+	strm := rawBytes fromCString asByteArray readStream.
 	bytes := ByteArray new: sz.
 	strm readInto: bytes startingAt: 1 count: sz.
 	^ bytes 
