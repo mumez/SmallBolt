@@ -60,6 +60,28 @@ SbClientTestCase >> testCypherGetNode [
 ]
 
 { #category : #testing }
+SbClientTestCase >> testCypherGetNodeWithArgument [
+	| cypher args result node props |
+	"Assuming Neo4j Movie sample schema"
+	cypher := 'MATCH (n:Movie) WHERE n.title = $name RETURN n'.
+	args := {'name'->'The Matrix'} asDictionary.
+	self clientDo: [ :cli |
+		result := cli runCypher: cypher arguments: args.
+	].
+	self assert: (result fieldNames = (Array with: 'n')).
+	self assert: (result fieldValues size = 1).
+	node := result firstFieldValues first.
+	
+	self assert: (node isKindOf: SbNode).
+	self assert: (node labels = #('Movie')).
+	props := node properties.
+	self assert: ((props at: 'title') = 'The Matrix').
+	self assert: ((props at: 'tagline') = 'Welcome to the Real World').
+	self assert: ((props at: 'released') = 1999).
+	
+]
+
+{ #category : #testing }
 SbClientTestCase >> testCypherGetPath [
 	| cypher result path relationship startNode endNode |
 	"Assuming Neo4j Movie sample schema"
