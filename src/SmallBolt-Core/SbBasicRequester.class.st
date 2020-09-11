@@ -101,14 +101,14 @@ SbBasicRequester >> rollbackTransaction [
 ]
 
 { #category : #'running-cypher' }
-SbBasicRequester >> runCypher: cypherString [
-	^(self runCyphers: (Array with: cypherString)) at: 1
+SbBasicRequester >> runCypher: cypherStatement [
+	^(self runCyphers: (Array with: cypherStatement)) at: 1
 ]
 
 { #category : #'running-cypher' }
-SbBasicRequester >> runCyphers: cypherStrings [
+SbBasicRequester >> runCyphers: cypherStatements [
 	| calls |
-	calls := cypherStrings collect: [ :each | (SbCypherQueuedCall on: self) pushRequestsFor: each ].
+	calls := cypherStatements collect: [ :each | (SbCypherQueuedCall on: self) pushRequestsFor: each ].
 	self flush.
 	^ self safePullRequestsFrom: calls
 ]
@@ -118,8 +118,8 @@ SbBasicRequester >> runCyphers: cypherStrings flushIf: aBlock [
 	| lastIndex calls |
 	lastIndex := cypherStrings size.
 	calls := OrderedCollection new.
-	cypherStrings withIndexDo: [ :idx :eachCypher |
-		calls add: (SbCypherQueuedCall on: self).
+	cypherStrings withIndexDo: [ :idx :eachCypherStatement |
+		calls add: ((SbCypherQueuedCall on: self) pushRequestsFor: eachCypherStatement).
 		[(aBlock value: idx) and: [lastIndex ~= idx ]] ifTrue: [ self flush ]. 
 	].
 	self flush.

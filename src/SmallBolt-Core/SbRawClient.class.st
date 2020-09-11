@@ -181,6 +181,11 @@ SbRawClient >> runCypher: cypherString [
 ]
 
 { #category : #'running cypher' }
+SbRawClient >> runCypher: cypherString arguments: arguments [
+	^self requester runCypher: (cypherString -> arguments)
+]
+
+{ #category : #'running cypher' }
 SbRawClient >> runCyphers: cypherStrings [
 	^self requester runCyphers: cypherStrings 
 ]
