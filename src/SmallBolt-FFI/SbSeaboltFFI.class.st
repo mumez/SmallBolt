@@ -397,6 +397,53 @@ SbSeaboltFFI >> setBeginTransactionTimeout: timeout onConnection: aBoltConnectio
 	^ self ffiCall: #( int32 BoltConnection_set_begin_tx_timeout(SbBoltConnection aBoltConnection, int64 timeout) )
 ]
 
+{ #category : #value }
+SbSeaboltFFI >> setBoolean: booleanNumber onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Boolean(SbBoltValue aBoltValue, char booleanNumber) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setBytes: byteArray onValue: aBoltValue [
+	^ self setBytes: byteArray sized: byteArray size onValue: aBoltValue
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setBytes: byteArray sized: size onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Bytes(SbBoltValue aBoltValue, ByteArray byteArray, int32 size) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setDictionaryKey: keyString at: index onValue: aBoltValue [
+	| size |
+	size := keyString size.
+	^ self setDictionaryKey: keyString sized: size at: index onValue: aBoltValue
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setDictionaryKey: keyString sized: size at: index onValue: aBoltValue [
+	^ self ffiCall: #( int32 BoltDictionary_set_key(SbBoltValue aBoltValue, int32 index, String keyString, int32 size) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setDictionarySize: size onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Dictionary(SbBoltValue aBoltValue, int32 size) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setFloat: data onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Float(SbBoltValue aBoltValue, double data) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setInteger: data onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Integer(SbBoltValue aBoltValue, int64 data) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setListSize: size onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_List(SbBoltValue aBoltValue, int32 size) )
+]
+
 { #category : #config }
 SbSeaboltFFI >> setMaxConnectionAcquisitionTime: anInteger onConfig: aBoltConfig [
 	^ self ffiCall: #( void BoltConfig_set_max_connection_acquisition_time(SbBoltConfig aBoltConfig , int32 anInteger) )
@@ -410,6 +457,11 @@ SbSeaboltFFI >> setMaxConnectionLifeTime: anInteger onConfig: aBoltConfig [
 { #category : #config }
 SbSeaboltFFI >> setMaxPoolSize: anInteger onConfig: aBoltConfig [
 	^ self ffiCall: #( void BoltConfig_set_max_pool_size(SbBoltConfig aBoltConfig , int32 anInteger) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setNilOnValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Null(SbBoltValue aBoltValue) )
 ]
 
 { #category : #connection }
@@ -454,6 +506,21 @@ SbSeaboltFFI >> setRunTransactionTimeout: timeout onConnection: aBoltConnection 
 { #category : #config }
 SbSeaboltFFI >> setScheme: anInteger onConfig: aBoltConfig [
 	^ self ffiCall: #( void BoltConfig_set_scheme(SbBoltConfig aBoltConfig , int32 anInteger) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setString: aString onValue: aBoltValue [
+	^self setString: aString sized: aString size onValue: aBoltValue
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setString: aString sized: size onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_String(SbBoltValue aBoltValue, String aString, int32 size) )
+]
+
+{ #category : #value }
+SbSeaboltFFI >> setStructureCode: code size: size onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_Structure(SbBoltValue aBoltValue, int32 code, int32 size) )
 ]
 
 { #category : #config }
