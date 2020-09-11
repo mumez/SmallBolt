@@ -29,6 +29,17 @@ SbFfiTestCase >> testCreateConfig [
 ]
 
 { #category : #testing }
+SbFfiTestCase >> testSetGetListBoltValue [
+	| boltValue |
+	[ boltValue := SbBoltValue create.
+	boltValue value: #(4 5 6).
+	self assert: boltValue value = #(4 5 6).
+	boltValue value: #('Smalltalk' 'Pharo' 'Squeak' 'Cuis' 'VW').
+	self assert: boltValue value = #('Smalltalk' 'Pharo' 'Squeak' 'Cuis' 'VW').
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ]
+]
+
+{ #category : #testing }
 SbFfiTestCase >> testSetGetPrimitiveBoltValue [
 	| boltValue |
 	[ boltValue := SbBoltValue create.

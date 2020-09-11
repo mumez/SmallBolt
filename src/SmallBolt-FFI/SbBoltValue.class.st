@@ -63,8 +63,18 @@ SbBoltValue >> dictionaryKeyAt: index [
 ]
 
 { #category : #accessing }
+SbBoltValue >> dictionarySize: size [
+	^ self ffi setDictionarySize: size onValue: self
+]
+
+{ #category : #accessing }
 SbBoltValue >> dictionaryStringKeyAt: index [
 	^ self ffi getDictionaryStringKeyAt: index onValue: self
+]
+
+{ #category : #accessing }
+SbBoltValue >> dictionaryStringKeyAt: index put: keyString [
+	^ self ffi setDictionaryKey: keyString at: index onValue: self
 ]
 
 { #category : #accessing }
@@ -100,6 +110,11 @@ SbBoltValue >> integerValue [
 { #category : #accessing }
 SbBoltValue >> integerValue: anInteger [
 	^ self ffi setInteger: anInteger onValue: self
+]
+
+{ #category : #accessing }
+SbBoltValue >> listSize: size [
+	^ self ffi setListSize: size onValue: self
 ]
 
 { #category : #accessing }
