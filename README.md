@@ -2,7 +2,7 @@
 
 [Neo4j](https://neo4j.com/) bolt driver for Pharo Smalltalk, based on [Seabolt](https://github.com/neo4j-drivers/seabolt).
 
-## Example
+## Examples
 
 ### Simple cypher execution
 
@@ -27,6 +27,20 @@ sessionManager clientDo: [ :cli |
   Transcript cr; show: result fieldValues.
 ].
 ```
+
+### Execute cypher with arguments
+
+```Smalltalk
+sessionManager := SbClientSessionManager default.
+sessionManager standBy: 3 setting: [:settings | settings password: 'neoneo'].
+cypher := 'MATCH (n:Movie) WHERE n.title = $name RETURN n'.
+args := {'name'->'The Matrix'} asDictionary.
+sessionManager clientDo: [ :cli | 
+  result := cli runCypher: cypher arguments: args.
+  Transcript cr; show: result firstFieldValues first properties.
+].
+```
+
 
 ## Installation
 
