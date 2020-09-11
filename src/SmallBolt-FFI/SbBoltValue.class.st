@@ -170,6 +170,11 @@ SbBoltValue >> value [
 	^ value ifNil: [ value := self fetchValue ]
 ]
 
+{ #category : #'setting value' }
+SbBoltValue >> value: anObject [
+	^self setValue: anObject 
+]
+
 { #category : #converting }
 SbBoltValue >> valueBy: aValueFetcher [
 	^ aValueFetcher fetchFrom: self	
