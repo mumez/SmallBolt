@@ -292,6 +292,16 @@ SbSettings >> targetUri: aString [
 ]
 
 { #category : #accessing }
+SbSettings >> traceLibraryLogOnTranscript [
+	^ self at: #traceLibraryLogOnTranscript ifAbsentPut: [false]
+]
+
+{ #category : #accessing }
+SbSettings >> traceLibraryLogOnTranscript: aBoolean [
+	^ self at: #traceLibraryLogOnTranscript put: aBoolean
+]
+
+{ #category : #accessing }
 SbSettings >> userAgent [
 	^self parsedUriValues at: #userAgent ifAbsent: [ 'SmallBolt/1' ]
 ]

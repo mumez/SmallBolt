@@ -6,7 +6,8 @@ Class {
 		'factory',
 		'configBuilder',
 		'connector',
-		'connection'
+		'connection',
+		'libraryLogger'
 	],
 	#category : #'SmallBolt-Core'
 }
@@ -71,6 +72,12 @@ SbRawClient >> createConnector [
 ]
 
 { #category : #factory }
+SbRawClient >> createLibraryLogger [
+	^ self factory create: SbBoltLog
+	
+]
+
+{ #category : #factory }
 SbRawClient >> createRequester [
 	^ self requesterClass for: self
 ]
@@ -84,6 +91,9 @@ SbRawClient >> createValueFetcher [
 SbRawClient >> defaultConfigBuilder [
 	^ [ :config :clientSettings| 
 		config maxPoolSize: clientSettings maxPoolSize.
+		clientSettings traceLibraryLogOnTranscript ifTrue: [ 
+			self prepareAllToTranscriptLibraryLogger.
+		]
 	]
 ]
 
@@ -116,6 +126,11 @@ SbRawClient >> isConnected [
 ]
 
 { #category : #accessing }
+SbRawClient >> libraryLogger [
+	^libraryLogger
+]
+
+{ #category : #accessing }
 SbRawClient >> logger [
 	^ self class logger
 ]
@@ -130,6 +145,12 @@ SbRawClient >> notifyConnectionFailed: connectionStatus [
 	self settings shouldRaiseErrorOnConnectionFailed ifTrue: [ 
 		error signal
 	]
+]
+
+{ #category : #logging }
+SbRawClient >> prepareAllToTranscriptLibraryLogger [
+	^ self createLibraryLogger allToTranscript
+	
 ]
 
 { #category : #printing }
