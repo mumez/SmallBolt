@@ -476,7 +476,7 @@ SbSeaboltFFI >> setListSize: size onValue: aBoltValue [
 
 { #category : #config }
 SbSeaboltFFI >> setLog: aBoltLog onConfig: aBoltConfig [
-	^ self ffiCall: #( void BoltConfig_set_log(SbBoltLog aBoltLog , String aString) )
+	^ self ffiCall: #( void BoltConfig_set_log(SbBoltConfig aBoltConfig, SbBoltLog aBoltLog) )
 ]
 
 { #category : #config }
