@@ -92,7 +92,7 @@ SbRawClient >> defaultConfigBuilder [
 	^ [ :config :clientSettings| 
 		config maxPoolSize: clientSettings maxPoolSize.
 		clientSettings traceLibraryLogOnTranscript ifTrue: [ 
-			self prepareAllToTranscriptLibraryLogger.
+			config log: self prepareAllToTranscriptLibraryLogger.
 		]
 	]
 ]
