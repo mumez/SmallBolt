@@ -149,7 +149,8 @@ SbRawClient >> notifyConnectionFailed: connectionStatus [
 
 { #category : #logging }
 SbRawClient >> prepareAllToTranscriptLibraryLogger [
-	^ self createLibraryLogger allToTranscript
+	libraryLogger ifNotNil: [ ^self ].
+	^ libraryLogger := self createLibraryLogger allToTranscript
 	
 ]
 
