@@ -29,6 +29,22 @@ SbFfiTestCase >> testCreateConfig [
 ]
 
 { #category : #testing }
+SbFfiTestCase >> testCreateLog [
+	| log cb |
+	log := SbBoltLog create.
+	cb := log createTranscriptLogCallback.
+	log infoCallback: cb.
+	log debugCallback: cb.
+	log warningCallback: cb.
+	log errorCallback: cb.
+	self assert: (log infoCallback = cb).
+	self assert: (log debugCallback = cb).
+	self assert: (log warningCallback = cb).
+	self assert: (log errorCallback = cb).
+	log destroy.
+]
+
+{ #category : #testing }
 SbFfiTestCase >> testSetGetDictionaryBoltValue [
 	| boltValue dict |
 	[ boltValue := SbBoltValue create.

@@ -15,6 +15,16 @@ SbBoltConfig >> destroy [
 ]
 
 { #category : #accessing }
+SbBoltConfig >> log [
+	^ self ffi getLogOnConfig: self
+]
+
+{ #category : #accessing }
+SbBoltConfig >> log: aSbBoltLog [
+	self ffi	setLog: aSbBoltLog onConfig: self
+]
+
+{ #category : #accessing }
 SbBoltConfig >> maxConnectionAcquisitionTime [
 	^ self ffi getMaxConnectionAcquisitionTimeOnConfig: self
 ]

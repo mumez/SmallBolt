@@ -90,6 +90,11 @@ SbSeaboltFFI >> createConnector: address token: authToken config: config [
 	^ self ffiCall: #( SbBoltConnector BoltConnector_create(SbBoltAddress address, SbBoltValue authToken, SbBoltConfig config) )
 ]
 
+{ #category : #logging }
+SbSeaboltFFI >> createLog: aState [
+	^ self ffiCall: #( SbBoltLog BoltLog_create(void* aState) )
+]
+
 { #category : #status }
 SbSeaboltFFI >> createStatus [
 	^ self ffiCall: #( SbBoltStatus BoltStatus_create() )
@@ -113,6 +118,11 @@ SbSeaboltFFI >> destroyConfig: aBoltConfig [
 { #category : #connector }
 SbSeaboltFFI >> destroyConnector: connector [
 	^ self ffiCall: #( void BoltConnector_destroy(SbBoltConnector connector) )
+]
+
+{ #category : #logging }
+SbSeaboltFFI >> destroyLog: aBoltLog [
+	^ self ffiCall: #( void BoltLog_destroy(SbBoltLog aBoltLog ) )
 ]
 
 { #category : #status }
@@ -248,6 +258,11 @@ SbSeaboltFFI >> getListValueAt: index onValue: aBoltValue [
 { #category : #connection }
 SbSeaboltFFI >> getLocalEndpointOnConnection: aBoltConnection [
 	^ self ffiCall: #( SbBoltAddress BoltConnection_local_endpoint(SbBoltConnection aBoltConnection) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> getLogOnConfig: aBoltConfig [
+	^ self ffiCall: #( SbBoltLog BoltConfig_get_log(SbBoltConfig aBoltConfig) )
 ]
 
 { #category : #config }
@@ -412,6 +427,11 @@ SbSeaboltFFI >> setBytes: byteArray sized: size onValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_Bytes(SbBoltValue aBoltValue, ByteArray byteArray, int32 size) )
 ]
 
+{ #category : #logging }
+SbSeaboltFFI >> setDebugCallback: aBoltLogCallback onLog: aBoltLog [
+	^ self ffiCall: #( void BoltLog_set_debug_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
+]
+
 { #category : #value }
 SbSeaboltFFI >> setDictionaryKey: keyString at: index onValue: aBoltValue [
 	| size |
@@ -429,9 +449,19 @@ SbSeaboltFFI >> setDictionarySize: size onValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_Dictionary(SbBoltValue aBoltValue, int32 size) )
 ]
 
+{ #category : #logging }
+SbSeaboltFFI >> setErrorCallback: aBoltLogCallback onLog: aBoltLog [
+	^ self ffiCall: #( void BoltLog_set_error_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
+]
+
 { #category : #value }
 SbSeaboltFFI >> setFloat: data onValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_Float(SbBoltValue aBoltValue, double data) )
+]
+
+{ #category : #logging }
+SbSeaboltFFI >> setInfoCallback: aBoltLogCallback onLog: aBoltLog [
+	^ self ffiCall: #( void BoltLog_set_info_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
 ]
 
 { #category : #value }
@@ -442,6 +472,11 @@ SbSeaboltFFI >> setInteger: data onValue: aBoltValue [
 { #category : #value }
 SbSeaboltFFI >> setListSize: size onValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_List(SbBoltValue aBoltValue, int32 size) )
+]
+
+{ #category : #config }
+SbSeaboltFFI >> setLog: aBoltLog onConfig: aBoltConfig [
+	^ self ffiCall: #( void BoltConfig_set_log(SbBoltConfig aBoltConfig, SbBoltLog aBoltLog) )
 ]
 
 { #category : #config }
@@ -536,6 +571,11 @@ SbSeaboltFFI >> setTransport: anInteger onConfig: aBoltConfig [
 { #category : #config }
 SbSeaboltFFI >> setUserAgent: aString onConfig: aBoltConfig [
 	^ self ffiCall: #( void BoltConfig_set_user_agent(SbBoltConfig aBoltConfig , String aString) )
+]
+
+{ #category : #logging }
+SbSeaboltFFI >> setWarningCallback: aBoltLogCallback onLog: aBoltLog [
+	^ self ffiCall: #( void BoltLog_set_warning_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
 ]
 
 { #category : #'startup - shutdown' }
