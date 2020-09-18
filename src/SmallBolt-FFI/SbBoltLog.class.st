@@ -1,12 +1,18 @@
 Class {
 	#name : #SbBoltLog,
 	#superclass : #SbExternalObject,
+	#instVars : [
+		'warningCallback',
+		'infoCallback',
+		'errorCallback',
+		'debugCallback'
+	],
 	#category : #'SmallBolt-FFI'
 }
 
 { #category : #'instance creation' }
 SbBoltLog class >> create [
-	^self createWith: 0
+	^self createWith: ''
 ]
 
 { #category : #'instance creation' }
@@ -40,8 +46,14 @@ SbBoltLog >> debugBy: aBlock [
 ]
 
 { #category : #accessing }
+SbBoltLog >> debugCallback [
+	^ debugCallback
+]
+
+{ #category : #accessing }
 SbBoltLog >> debugCallback: aSbBoltLogCallback [
-	self ffi	setDebugCallback: aSbBoltLogCallback onLog: self
+	self ffi	setDebugCallback: aSbBoltLogCallback onLog: self.
+	debugCallback := aSbBoltLogCallback
 ]
 
 { #category : #convenience }
@@ -60,8 +72,14 @@ SbBoltLog >> errorBy: aBlock [
 ]
 
 { #category : #accessing }
+SbBoltLog >> errorCallback [
+	^ errorCallback
+]
+
+{ #category : #accessing }
 SbBoltLog >> errorCallback: aSbBoltLogCallback [
-	self ffi	setErrorCallback: aSbBoltLogCallback onLog: self
+	self ffi	setErrorCallback: aSbBoltLogCallback onLog: self.
+	errorCallback := aSbBoltLogCallback
 ]
 
 { #category : #convenience }
@@ -75,8 +93,14 @@ SbBoltLog >> infoBy: aBlock [
 ]
 
 { #category : #accessing }
+SbBoltLog >> infoCallback [
+	^ infoCallback
+]
+
+{ #category : #accessing }
 SbBoltLog >> infoCallback: aSbBoltLogCallback [
-	self ffi	setInfoCallback: aSbBoltLogCallback onLog: self
+	self ffi	setInfoCallback: aSbBoltLogCallback onLog: self.
+	infoCallback := aSbBoltLogCallback
 ]
 
 { #category : #convenience }
@@ -95,6 +119,12 @@ SbBoltLog >> warnToTranscript [
 ]
 
 { #category : #accessing }
+SbBoltLog >> warningCallback [
+	^ warningCallback
+]
+
+{ #category : #accessing }
 SbBoltLog >> warningCallback: aSbBoltLogCallback [
-	self ffi	setWarningCallback: aSbBoltLogCallback onLog: self
+	self ffi	setWarningCallback: aSbBoltLogCallback onLog: self.
+	warningCallback := aSbBoltLogCallback
 ]

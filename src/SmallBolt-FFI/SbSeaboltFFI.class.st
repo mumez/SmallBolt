@@ -428,7 +428,7 @@ SbSeaboltFFI >> setBytes: byteArray sized: size onValue: aBoltValue [
 ]
 
 { #category : #logging }
-SbSeaboltFFI >> setDebugCallback: aBoltLogCallback onLog: aBoltConfig [
+SbSeaboltFFI >> setDebugCallback: aBoltLogCallback onLog: aBoltLog [
 	^ self ffiCall: #( void BoltLog_set_debug_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
 ]
 
@@ -450,7 +450,7 @@ SbSeaboltFFI >> setDictionarySize: size onValue: aBoltValue [
 ]
 
 { #category : #logging }
-SbSeaboltFFI >> setErrorCallback: aBoltLogCallback onLog: aBoltConfig [
+SbSeaboltFFI >> setErrorCallback: aBoltLogCallback onLog: aBoltLog [
 	^ self ffiCall: #( void BoltLog_set_error_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
 ]
 
@@ -460,7 +460,7 @@ SbSeaboltFFI >> setFloat: data onValue: aBoltValue [
 ]
 
 { #category : #logging }
-SbSeaboltFFI >> setInfoCallback: aBoltLogCallback onLog: aBoltConfig [
+SbSeaboltFFI >> setInfoCallback: aBoltLogCallback onLog: aBoltLog [
 	^ self ffiCall: #( void BoltLog_set_info_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
 ]
 
@@ -574,7 +574,7 @@ SbSeaboltFFI >> setUserAgent: aString onConfig: aBoltConfig [
 ]
 
 { #category : #logging }
-SbSeaboltFFI >> setWarningCallback: aBoltLogCallback onLog: aBoltConfig [
+SbSeaboltFFI >> setWarningCallback: aBoltLogCallback onLog: aBoltLog [
 	^ self ffiCall: #( void BoltLog_set_warning_func(SbBoltLog aBoltLog , SbBoltLogCallback aBoltLogCallback) )
 ]
 
