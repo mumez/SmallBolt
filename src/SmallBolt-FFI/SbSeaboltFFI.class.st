@@ -590,5 +590,5 @@ SbSeaboltFFI >> startup [
 
 { #category : #value }
 SbSeaboltFFI >> toString: dest fromValue: aBoltValue length: length onConnection: aSbBoldConnection [
-	^ self ffiCall: #( int32 BoltValue_to_string(SbBoltValue aBoltValue, StringHolderType dest, int32 length, BoltConnection aSbBoldConnection) )
+	^ self ffiCall: #( int32 BoltValue_to_string(SbBoltValue aBoltValue, StringHolderType dest, int32 length, SbBoltConnection aSbBoldConnection) )
 ]
