@@ -16,8 +16,8 @@ SbBoltValue class >> create [
 SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: bufferLength [
 	| strOut actualLength |
 	strOut := self ffi class newStringHolder.
-	actualLength := self ffi 
-		toString: strOut length: bufferLength onConnection: self.
+	actualLength := self  
+		toString: strOut length: bufferLength onConnection: aBoltConnection.
 	actualLength > bufferLength ifTrue: [ 
 		^self basicPrintStringOnConnection: aBoltConnection bufferLength: actualLength + 1.
 	].
