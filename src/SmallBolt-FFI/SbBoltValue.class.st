@@ -52,6 +52,14 @@ SbBoltValue >> bytesValue: aByteArray [
 	^ self ffi setBytes: aByteArray onValue: self
 ]
 
+{ #category : #printing }
+SbBoltValue >> debugShortString [
+	| strOut |
+	strOut := self ffi class newStringHolder.
+	self ffi toString: strOut fromValue: self length: 2048.
+	^strOut value readString
+]
+
 { #category : #releasing }
 SbBoltValue >> destroy [
 	self ffi destroyValue: self
