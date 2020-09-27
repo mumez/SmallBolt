@@ -14,14 +14,14 @@ SbBoltValue class >> create [
 
 { #category : #'private-printing' }
 SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: bufferLength [
-	| strOut actualLength |
-	strOut := self ffi class newAutoReleasePointer: 512.
+	| strAddress actualLength |
+	strAddress := self ffi class newAutoReleasePointer: bufferLength.
 	actualLength := self  
-		toString: strOut length: bufferLength onConnection: aBoltConnection.
+		toString: strAddress length: bufferLength onConnection: aBoltConnection.
 	actualLength > bufferLength ifTrue: [ 
 		^self basicPrintStringOnConnection: aBoltConnection bufferLength: actualLength + 1.
 	].
-	^strOut value readString
+	^strAddress readString
 ]
 
 { #category : #accessing }
