@@ -597,5 +597,5 @@ SbSeaboltFFI >> toString: dest fromValue: aBoltValue length: length [
 
 { #category : #value }
 SbSeaboltFFI >> toString: dest fromValue: aBoltValue length: length onConnection: aSbBoltConnection [
-	^ self ffiCall: #( int32 BoltValue_to_string(SbBoltValue aBoltValue, void* dest, int32 length, SbBoltConnection aSbBoltConnection) )
+	^ self ffiCall: #( int32 BoltValue_to_string(SbBoltValue aBoltValue, char* dest, int32 length, SbBoltConnection aSbBoltConnection) )
 ]
