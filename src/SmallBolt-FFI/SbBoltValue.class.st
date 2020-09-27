@@ -15,7 +15,7 @@ SbBoltValue class >> create [
 { #category : #'private-printing' }
 SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: bufferLength [
 	| strOut actualLength |
-	strOut := self ffi class newStringHolder.
+	strOut := self ffi class newAutoReleasePointer: 512.
 	actualLength := self  
 		toString: strOut length: bufferLength onConnection: aBoltConnection.
 	actualLength > bufferLength ifTrue: [ 
@@ -54,10 +54,10 @@ SbBoltValue >> bytesValue: aByteArray [
 
 { #category : #printing }
 SbBoltValue >> debugShortString [
-	| strOut |
-	strOut := self ffi class newStringHolder.
-	self ffi toString: strOut fromValue: self length: 2048.
-	^strOut value readString
+	| strAddress size |
+	strAddress := self ffi class newAutoReleasePointer: 1024.
+	size := self ffi toString: strAddress fromValue: self length: 1024.
+	^strAddress readString
 ]
 
 { #category : #releasing }
@@ -128,14 +128,6 @@ SbBoltValue >> listSize: size [
 { #category : #accessing }
 SbBoltValue >> listValueAt: index [
 	^ self ffi getListValueAt: index onValue: self
-]
-
-{ #category : #printing }
-SbBoltValue >> printStringLimitedTo: limit onConnection: aBoltConnection [
-	| strOut |
-	strOut := self ffi class newStringHolder.
-	self toString: strOut length: limit onConnection: self.
-	^strOut value readString
 ]
 
 { #category : #printing }
