@@ -16,8 +16,7 @@ SbBoltValue class >> create [
 SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: bufferLength [
 	| strAddress actualLength |
 	strAddress := self ffi class newAutoReleasePointer: bufferLength.
-	actualLength := self  
-		toString: strAddress length: bufferLength onConnection: aBoltConnection.
+	actualLength := self toString: strAddress length: bufferLength onConnection: aBoltConnection.
 	actualLength > bufferLength ifTrue: [ 
 		^self basicPrintStringOnConnection: aBoltConnection bufferLength: actualLength + 1.
 	].
@@ -54,10 +53,21 @@ SbBoltValue >> bytesValue: aByteArray [
 
 { #category : #printing }
 SbBoltValue >> debugShortString [
+	"longer string will be truncated"
 	| strAddress size |
-	strAddress := self ffi class newAutoReleasePointer: 1024.
-	size := self ffi toString: strAddress fromValue: self length: 1024.
-	^strAddress readString
+	strAddress := self ffi class newAutoReleasePointer: 64.
+	size := self ffi toString: strAddress fromValue: self length: 64.
+	^ strAddress readString
+]
+
+{ #category : #printing }
+SbBoltValue >> debugString [
+	^ self basicPrintStringOnConnection: nil bufferLength: 256
+]
+
+{ #category : #printing }
+SbBoltValue >> debugStringOnConnection: aBoltConnection [
+	^ self basicPrintStringOnConnection: aBoltConnection bufferLength: 256
 ]
 
 { #category : #releasing }
@@ -130,11 +140,6 @@ SbBoltValue >> listValueAt: index [
 	^ self ffi getListValueAt: index onValue: self
 ]
 
-{ #category : #printing }
-SbBoltValue >> printStringOnConnection: aBoltConnection [
-	^self basicPrintStringOnConnection: aBoltConnection bufferLength: 2048
-]
-
 { #category : #'setting value' }
 SbBoltValue >> setValue: anObject [
 	value := nil.
@@ -174,6 +179,9 @@ SbBoltValue >> structureFieldValueAt: index [
 
 { #category : #'private-printing' }
 SbBoltValue >> toString: dest length: length onConnection: aSbBoldConnection [
+	aSbBoldConnection ifNil: [ 
+		^ self ffi toString: dest fromValue: self length: length.
+	].
 	^ self ffi toString: dest fromValue: self length: length onConnection: aSbBoldConnection
 ]
 
