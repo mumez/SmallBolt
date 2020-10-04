@@ -74,10 +74,9 @@ SbBoltType class >> structure [
 ]
 
 { #category : #testing }
-SbBoltType >> isComposite [
-	^ #(
-	#BOLT_STRUCTURE BOLT_DICTIONARY BOLT_LIST
-	) includes: self typeSymbol
+SbBoltType >> isComposite [ 
+	^{BOLT_STRUCTURE. BOLT_DICTIONARY. BOLT_LIST}
+	 includes: self 
 ]
 
 { #category : #testing }

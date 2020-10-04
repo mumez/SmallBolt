@@ -127,7 +127,7 @@ SbRawClient >> isConnected [
 
 { #category : #accessing }
 SbRawClient >> libraryLogger [
-	^libraryLogger
+	^libraryLogger ifNil: [ libraryLogger := self createLibraryLogger ]
 ]
 
 { #category : #accessing }
