@@ -8,9 +8,6 @@ FFIExternalObject subclass: #SeaboltStatus
 Class {
 	#name : #SbSeaboltFFI,
 	#superclass : #Object,
-	#classVars : [
-		'StringHolderType'
-	],
 	#pools : [
 		'SbBoltConstants'
 	],
