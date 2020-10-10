@@ -8,9 +8,6 @@ FFIExternalObject subclass: #SeaboltStatus
 Class {
 	#name : #SbSeaboltFFI,
 	#superclass : #Object,
-	#classVars : [
-		'StringHolderType'
-	],
 	#pools : [
 		'SbBoltConstants'
 	],
@@ -20,12 +17,12 @@ Class {
 { #category : #'class initialization' }
 SbSeaboltFFI class >> initialize [
 	"self initialize"
-	StringHolderType := FFIExternalValueHolder ofType: 'char*'.
+	
 ]
 
 { #category : #factory }
-SbSeaboltFFI class >> newStringHolder [
-	^StringHolderType new
+SbSeaboltFFI class >> newAutoReleasePointer: size [
+	^ (ExternalAddress allocate: 1024) autoRelease.
 ]
 
 { #category : #utility }
@@ -589,6 +586,13 @@ SbSeaboltFFI >> startup [
 ]
 
 { #category : #value }
-SbSeaboltFFI >> toString: dest fromValue: aBoltValue length: length onConnection: aSbBoldConnection [
-	^ self ffiCall: #( int32 BoltValue_to_string(SbBoltValue aBoltValue, StringHolderType dest, int32 length, BoltConnection aSbBoldConnection) )
+SbSeaboltFFI >> toString: dest fromValue: aBoltValue length: length [
+	| conn |
+	conn := SbBoltConnection null.
+	^ self toString: dest fromValue: aBoltValue length: length onConnection: conn
+]
+
+{ #category : #value }
+SbSeaboltFFI >> toString: dest fromValue: aBoltValue length: length onConnection: aSbBoltConnection [
+	^ self ffiCall: #( int32 BoltValue_to_string(SbBoltValue aBoltValue, char* dest, int32 length, SbBoltConnection aSbBoltConnection) )
 ]

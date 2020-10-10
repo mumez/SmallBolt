@@ -14,14 +14,13 @@ SbBoltValue class >> create [
 
 { #category : #'private-printing' }
 SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: bufferLength [
-	| strOut actualLength |
-	strOut := self ffi class newStringHolder.
-	actualLength := self ffi 
-		toString: strOut length: bufferLength onConnection: self.
+	| strAddress actualLength |
+	strAddress := self ffi class newAutoReleasePointer: bufferLength.
+	actualLength := self toString: strAddress length: bufferLength onConnection: aBoltConnection.
 	actualLength > bufferLength ifTrue: [ 
 		^self basicPrintStringOnConnection: aBoltConnection bufferLength: actualLength + 1.
 	].
-	^strOut value readString
+	^strAddress readString
 ]
 
 { #category : #accessing }
@@ -50,6 +49,25 @@ SbBoltValue >> bytesValue [
 { #category : #accessing }
 SbBoltValue >> bytesValue: aByteArray [
 	^ self ffi setBytes: aByteArray onValue: self
+]
+
+{ #category : #printing }
+SbBoltValue >> debugShortString [
+	"longer string will be truncated"
+	| strAddress size |
+	strAddress := self ffi class newAutoReleasePointer: 64.
+	size := self ffi toString: strAddress fromValue: self length: 64.
+	^ strAddress readString
+]
+
+{ #category : #printing }
+SbBoltValue >> debugString [
+	^ self basicPrintStringOnConnection: nil bufferLength: 256
+]
+
+{ #category : #printing }
+SbBoltValue >> debugStringOnConnection: aBoltConnection [
+	^ self basicPrintStringOnConnection: aBoltConnection bufferLength: 256
 ]
 
 { #category : #releasing }
@@ -122,19 +140,6 @@ SbBoltValue >> listValueAt: index [
 	^ self ffi getListValueAt: index onValue: self
 ]
 
-{ #category : #printing }
-SbBoltValue >> printStringLimitedTo: limit onConnection: aBoltConnection [
-	| strOut |
-	strOut := self ffi class newStringHolder.
-	self toString: strOut length: limit onConnection: self.
-	^strOut value readString
-]
-
-{ #category : #printing }
-SbBoltValue >> printStringOnConnection: aBoltConnection [
-	^self basicPrintStringOnConnection: aBoltConnection bufferLength: 2048
-]
-
 { #category : #'setting value' }
 SbBoltValue >> setValue: anObject [
 	value := nil.
@@ -174,6 +179,9 @@ SbBoltValue >> structureFieldValueAt: index [
 
 { #category : #'private-printing' }
 SbBoltValue >> toString: dest length: length onConnection: aSbBoldConnection [
+	aSbBoldConnection ifNil: [ 
+		^ self ffi toString: dest fromValue: self length: length.
+	].
 	^ self ffi toString: dest fromValue: self length: length onConnection: aSbBoldConnection
 ]
 
