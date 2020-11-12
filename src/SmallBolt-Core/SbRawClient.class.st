@@ -236,6 +236,11 @@ SbRawClient >> transactCypher: cypherString [
 ]
 
 { #category : #'running cypher' }
+SbRawClient >> transactCypher: cypherString arguments: arguments [
+	^self requester transactCypher: (cypherString -> arguments)
+]
+
+{ #category : #'running cypher' }
 SbRawClient >> transactCyphers: cypherStrings [
 	^self requester transactCyphers: cypherStrings
 ]
