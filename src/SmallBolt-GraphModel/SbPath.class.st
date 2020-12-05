@@ -34,6 +34,11 @@ SbPath >> initByStructureFields: fieldsArray [
 	self transmit 
 ]
 
+{ #category : #testing }
+SbPath >> isPath [
+	^true
+]
+
 { #category : #accessing }
 SbPath >> nodeAtId: nodeId [
 	^self nodes detect: [ :each | each id = nodeId ] ifNone: [  ]
@@ -57,6 +62,7 @@ SbPath >> printElementHeaderOn: aStream [
 { #category : #printing }
 SbPath >> printOn: aStream [
 	super printOn: aStream.
+	aStream space.
 	self printPathOn: aStream
 ]
 
