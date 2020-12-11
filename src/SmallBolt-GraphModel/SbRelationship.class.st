@@ -71,6 +71,16 @@ SbRelationship >> initByStructureFields: fieldsArray [
 	
 ]
 
+{ #category : #testing }
+SbRelationship >> isRelationship [
+	^true
+]
+
+{ #category : #testing }
+SbRelationship >> isUnbound [
+	^false
+]
+
 { #category : #printing }
 SbRelationship >> printOn: aStream [
 	self printElementHeaderOn: aStream.

@@ -19,6 +19,16 @@ SbUnboundRelationship >> initByStructureFields: fieldsArray [
 	
 ]
 
+{ #category : #testing }
+SbUnboundRelationship >> isRelationship [
+	^true
+]
+
+{ #category : #testing }
+SbUnboundRelationship >> isUnbound [
+	^true
+]
+
 { #category : #accessing }
 SbUnboundRelationship >> type [
 	^ type

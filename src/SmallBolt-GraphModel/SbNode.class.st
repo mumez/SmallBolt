@@ -29,6 +29,11 @@ SbNode >> initByStructureFields: fieldsArray [
 	
 ]
 
+{ #category : #testing }
+SbNode >> isNode [
+	^true
+]
+
 { #category : #accessing }
 SbNode >> label [
 	^ (self labels ifEmpty: [#(nil)]) at: 1.

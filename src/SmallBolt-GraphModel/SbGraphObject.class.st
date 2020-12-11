@@ -60,6 +60,21 @@ SbGraphObject >> initByStructureFields: fieldsArray [
 	self id: (fieldsArray at: 1).
 ]
 
+{ #category : #testing }
+SbGraphObject >> isNode [
+	^false
+]
+
+{ #category : #testing }
+SbGraphObject >> isPath [
+	^false
+]
+
+{ #category : #testing }
+SbGraphObject >> isRelationship [
+	^false
+]
+
 { #category : #accessing }
 SbGraphObject >> name [
 	^ self propertyAt: 'name' 
