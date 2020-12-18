@@ -204,7 +204,7 @@ SbRawClient >> runCypher: cypherString [
 
 { #category : #'running cypher' }
 SbRawClient >> runCypher: cypherString arguments: arguments [
-	^self requester runCypher: (cypherString -> arguments)
+	^self requester runCypher: (cypherString -> arguments asDictionary)
 ]
 
 { #category : #'running cypher' }
@@ -237,7 +237,7 @@ SbRawClient >> transactCypher: cypherString [
 
 { #category : #'running cypher' }
 SbRawClient >> transactCypher: cypherString arguments: arguments [
-	^self requester transactCypher: (cypherString -> arguments)
+	^self requester transactCypher: (cypherString -> arguments asDictionary)
 ]
 
 { #category : #'running cypher' }
