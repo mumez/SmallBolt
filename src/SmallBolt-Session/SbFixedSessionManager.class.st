@@ -5,31 +5,31 @@ Class {
 }
 
 { #category : #private }
-SbFixedSessionManager >> getClientAt: clientKindKey [
+SbFixedSessionManager >> getClientAt: aClientKindKey [
 	| clients |
 	clients := lock
 		critical: [ clientsMap
-				at: clientKindKey
+				at: aClientKindKey
 				ifAbsentPut: [ | queue |
 					queue := SharedQueue new.
-					queue nextPut: (self newClientAt: clientKindKey).
+					queue nextPut: (self newClientAt: aClientKindKey).
 					queue ] ].
 	^ clients next
 ]
 
 { #category : #private }
-SbFixedSessionManager >> returnClient: client at: clientKindKey [
+SbFixedSessionManager >> returnClient: client at: aClientKindKey [
 	| clients |
-	clients := lock critical: [ clientsMap at: clientKindKey ].
+	clients := lock critical: [ clientsMap at: aClientKindKey ].
 	clients nextPut: client
 ]
 
 { #category : #private }
-SbFixedSessionManager >> standbyClientAt: clientKindKey [
+SbFixedSessionManager >> standbyClientAt: aClientKindKey [
 	| clients |
 	clients := lock
 		critical:
-			[ clientsMap at: clientKindKey ifAbsentPut: [ SharedQueue new ] ].
+			[ clientsMap at: aClientKindKey ifAbsentPut: [ SharedQueue new ] ].
 	clients size < self maxClientsPerKey
-		ifTrue: [ clients nextPut: (self newClientAt: clientKindKey) ]
+		ifTrue: [ clients nextPut: (self newClientAt: aClientKindKey) ]
 ]
