@@ -95,7 +95,8 @@ SbSettings >> defaultTargerUri [
 SbSettings >> extractFrom: otherSettings [
 	otherSettings keysAndValuesDo: [ :k :v |
 		self at: k put: v	
-	]
+	].
+	self refreshParsedUriValues
 ]
 
 { #category : #accessing }
@@ -238,6 +239,11 @@ SbSettings >> realm: aString [
 	self at: #realm put: aString
 ]
 
+{ #category : #private }
+SbSettings >> refreshParsedUriValues [
+	self parseUri: self targetUri
+]
+
 { #category : #'accessing - dictionary' }
 SbSettings >> removeKey: key [
 	^self settingsDict removeKey: key ifAbsent:[]
@@ -285,10 +291,11 @@ SbSettings >> targetUri [
 
 { #category : #accessing }
 SbSettings >> targetUri: aString [
+	| urlString |
+	urlString := aString ifNil: [ self defaultTargerUri ].
 	self parsedUriValues: nil.
-	self at: #targetUri put: aString.
-	aString ifNotNil: [ self parseUri: aString ].
-	^aString
+	self at: #targetUri put: urlString.
+	self refreshParsedUriValues.
 ]
 
 { #category : #accessing }

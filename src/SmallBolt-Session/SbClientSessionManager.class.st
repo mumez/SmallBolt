@@ -38,9 +38,9 @@ SbClientSessionManager class >> logger: anLogger [
 ]
 
 { #category : #private }
-SbClientSessionManager >> applySettingsTo: newClient at: clientKindKey [
+SbClientSessionManager >> applySettingsTo: newClient at: aClientKindKey [
 	| settingsBlock |
-	settingsBlock := self clientSettingsMap at: clientKindKey ifAbsent: [].
+	settingsBlock := self clientSettingsMap at: aClientKindKey ifAbsent: [].
 	settingsBlock ifNotNil: [ 
 		settingsBlock value: newClient settings.
 	]
@@ -87,11 +87,11 @@ SbClientSessionManager >> defaultClientKindKey [
 ]
 
 { #category : #private }
-SbClientSessionManager >> getClientAt: clientKindKey [
+SbClientSessionManager >> getClientAt: aClientKindKey [
 	| clients |
 	^ lock
 		critical: [ clients := clientsMap at: clientKindKey ifAbsentPut: [ OrderedCollection new ].
-			clients ifEmpty: [ clients add: (self newClientAt: clientKindKey) ].
+			clients ifEmpty: [ clients add: (self newClientAt: aClientKindKey) ].
 			clients removeFirst ]
 ]
 
@@ -109,10 +109,10 @@ SbClientSessionManager >> maxClientsPerKey [
 ]
 
 { #category : #private }
-SbClientSessionManager >> newClientAt: clientKindKey [
+SbClientSessionManager >> newClientAt: aClientKindKey [
 	| newClient |
 	newClient := self smallBoltClientClass new.
-	self applySettingsTo: newClient at: clientKindKey.
+	self applySettingsTo: newClient at: aClientKindKey.
 	newClient connect.
 	^newClient
 ]
@@ -132,8 +132,8 @@ SbClientSessionManager >> registerSetting: settingsBlock [
 ]
 
 { #category : #actions }
-SbClientSessionManager >> registerSetting: settingsBlock at: clientKindKey [ 
-	self clientSettingsMap at: clientKindKey put: settingsBlock
+SbClientSessionManager >> registerSetting: settingsBlock at: aClientKindKey [ 
+	self clientSettingsMap at: aClientKindKey put: settingsBlock
 ]
 
 { #category : #'initialize-release' }
@@ -143,10 +143,10 @@ SbClientSessionManager >> release [
 ]
 
 { #category : #private }
-SbClientSessionManager >> returnClient: client at: clientKindKey [
+SbClientSessionManager >> returnClient: client at: aClientKindKey [
 	lock
 		critical: [ | clients |
-			clients := clientsMap at: clientKindKey.
+			clients := clientsMap at: aClientKindKey.
 			clients size >= self maxClientsPerKey
 				ifTrue: [ client release ]
 				ifFalse: [ clients add: client ] ]
@@ -180,18 +180,18 @@ SbClientSessionManager >> standBy: clientNumber setting: settingsBlock [
 ]
 
 { #category : #actions }
-SbClientSessionManager >> standBy: clientNumber setting: settingsBlock at: clientKindKey [
-	self registerSetting: settingsBlock at: clientKindKey.
-	[ clientNumber timesRepeat: [ self standbyClientAt: clientKindKey ] ] fork.
+SbClientSessionManager >> standBy: clientNumber setting: settingsBlock at: aClientKindKey [
+	self registerSetting: settingsBlock at: aClientKindKey.
+	[ clientNumber timesRepeat: [ self standbyClientAt: aClientKindKey ] ] fork.
 ]
 
 { #category : #private }
-SbClientSessionManager >> standbyClientAt: clientKindKey [
+SbClientSessionManager >> standbyClientAt: aClientKindKey [
 	| clients |
 	^ lock
 		critical: [ clients := clientsMap
-				at: clientKindKey
+				at: aClientKindKey
 				ifAbsentPut: [ OrderedCollection new ].
 			clients size < self maxClientsPerKey
-				ifTrue: [ clients add: (self newClientAt: clientKindKey) ] ]
+				ifTrue: [ clients add: (self newClientAt: aClientKindKey) ] ]
 ]
