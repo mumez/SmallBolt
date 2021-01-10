@@ -37,6 +37,12 @@ SbClientSessionManager class >> logger: anLogger [
 	^logger := anLogger
 ]
 
+{ #category : #releasing }
+SbClientSessionManager class >> releaseAll [
+	<script>
+	^self allSubInstancesDo: [ :each | each release ]
+]
+
 { #category : #private }
 SbClientSessionManager >> applySettingsTo: newClient at: aClientKindKey [
 	| settingsBlock |
@@ -140,6 +146,7 @@ SbClientSessionManager >> registerSetting: settingsBlock at: aClientKindKey [
 SbClientSessionManager >> release [
 	clientsMap keysAndValuesDo: [ :key :eachCol | eachCol do: [:each | each release]].
 	clientsMap := Dictionary new.
+	settings := nil.
 ]
 
 { #category : #private }
@@ -170,7 +177,7 @@ SbClientSessionManager >> smallBoltClientClass [
 { #category : #actions }
 SbClientSessionManager >> standBy: clientNumber [
 	self standBy: clientNumber setting: [:se |
-		se 	extractFrom: self settings
+		se extractFrom: self settings
 	]
 ]
 
