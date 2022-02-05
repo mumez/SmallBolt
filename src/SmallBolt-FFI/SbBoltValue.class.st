@@ -46,7 +46,7 @@ SbBoltValue >> bytesValue [
 { #category : #accessing }
 SbBoltValue >> bytesValue: aByteArray [
 	self shouldAvoidAutoUtf8Codec ifTrue: [ 
-		^self ffi setRawBytes: aByteArray sized: aByteArray size + 1 onValue: self
+		^ self ffi setRawBytes: aByteArray sized: aByteArray size + 1 onValue: self
 	].
 	^ self ffi setBytes: aByteArray onValue: self
 ]
@@ -179,7 +179,7 @@ SbBoltValue >> rawStringValue [
 	| sz rawBytesPointer |
 	sz := self ffi getSizeOnValue: self.
 	rawBytesPointer := self ffi getRawStringOnValue: self.
-	^ (rawBytesPointer asByteArraySized: sz) utf8Decoded
+	^ (rawBytesPointer asByteArraySized: sz + 1) utf8Decoded
 	
 ]
 
@@ -203,11 +203,13 @@ SbBoltValue >> size [
 SbBoltValue >> stringValue [
 	| sz rawString strm str |
 	sz := self ffi getSizeOnValue: self.
-	rawString := self ffi getStringOnValue: self.
+	rawString := [self ffi getStringOnValue: self] on: Error do: [:ex | ex inspect.
+		^ self rawStringValue
+	].
 	strm := rawString readStream.
 	str := String new: sz.
 	strm readInto: str startingAt: 1 count: sz.
-	^ str readStream upTo: 0 asCharacter.
+	^ str readStream upTo:  0 asCharacter
 ]
 
 { #category : #accessing }
