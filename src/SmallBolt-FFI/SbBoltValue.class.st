@@ -25,7 +25,7 @@ SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: buffe
 
 { #category : #accessing }
 SbBoltValue >> booleanValue [
-	^ self ffi getBooleanOnValue: self
+	^ (self ffi getBooleanOnValue: self) asInteger
 ]
 
 { #category : #accessing }
@@ -142,17 +142,6 @@ SbBoltValue >> legacyBytesValue [
 	^ bytes 
 ]
 
-{ #category : #'private-accessing' }
-SbBoltValue >> legacyStringValue [
-	| sz rawString strm str |
-	sz := self ffi getSizeOnValue: self.
-	rawString := self ffi getStringOnValue: self.
-	strm := rawString readStream.
-	str := String new: sz.
-	strm readInto: str startingAt: 1 count: sz.
-	^ str
-]
-
 { #category : #accessing }
 SbBoltValue >> listSize: size [
 	^ self ffi setListSize: size onValue: self
@@ -174,12 +163,12 @@ SbBoltValue >> rawBytesValue [
 ]
 
 { #category : #'private-accessing' }
-SbBoltValue >> rawStringValue [
+SbBoltValue >> rawStringValueSized: size [
 	"For Pharo 9+"
-	| sz rawBytesPointer |
-	sz := self ffi getSizeOnValue: self.
+	| rawBytesPointer |
+	size isZero ifTrue: [ ^ '' ].
 	rawBytesPointer := self ffi getRawStringOnValue: self.
-	^ (rawBytesPointer asByteArraySized: sz + 1) utf8Decoded
+	^ (rawBytesPointer asByteArraySized: size + 1) utf8Decoded
 	
 ]
 
@@ -203,8 +192,8 @@ SbBoltValue >> size [
 SbBoltValue >> stringValue [
 	| sz rawString strm str |
 	sz := self ffi getSizeOnValue: self.
-	rawString := [self ffi getStringOnValue: self] on: Error do: [:ex | ex inspect.
-		^ self rawStringValue
+	rawString := [self ffi getStringOnValue: self] on: Error do: [:ex |
+		^ self rawStringValueSized: sz.
 	].
 	strm := rawString readStream.
 	str := String new: sz.

@@ -159,7 +159,7 @@ SbSeaboltFFI >> getAddressOnConnection: aBoltConnection [
 
 { #category : #value }
 SbSeaboltFFI >> getBooleanOnValue: aBoltValue [
-	^ self ffiCall: #( short BoltBoolean_get(SbBoltValue aBoltValue) )
+	^ self ffiCall: #( char BoltBoolean_get(SbBoltValue aBoltValue) )
 ]
 
 { #category : #value }
