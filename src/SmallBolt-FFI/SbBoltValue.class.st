@@ -201,17 +201,20 @@ SbBoltValue >> size [
 
 { #category : #accessing }
 SbBoltValue >> stringValue [
-	self shouldAvoidAutoUtf8Codec ifTrue: [ 
-		^ self rawStringValue 
-	 ].
-	^self legacyStringValue
+	| sz rawString strm str |
+	sz := self ffi getSizeOnValue: self.
+	rawString := self ffi getStringOnValue: self.
+	strm := rawString readStream.
+	str := String new: sz.
+	strm readInto: str startingAt: 1 count: sz.
+	^ str readStream upTo: 0 asCharacter.
 ]
 
 { #category : #accessing }
 SbBoltValue >> stringValue: aString [
-	self shouldAvoidAutoUtf8Codec ifTrue: [ | encodedBytes |
+	(self shouldAvoidAutoUtf8Codec and: [aString isWideString]) ifTrue: [ | encodedBytes |
 		encodedBytes := aString utf8Encoded pinInMemory; yourself.
-		^self ffi setRawString: encodedBytes sized: encodedBytes size + 1 onValue: self
+		^self ffi setRawString: encodedBytes, 0 asCharacter asString sized: encodedBytes + 1 onValue: self
 	].
 	^ self ffi setString: aString onValue: self
 ]
