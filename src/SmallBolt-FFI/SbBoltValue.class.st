@@ -37,14 +37,17 @@ SbBoltValue >> booleanValue: aBoolean [
 
 { #category : #accessing }
 SbBoltValue >> bytesValue [
-	self portableUtil smalltalkMajorVersion <=8 ifTrue: [ 
-		^self legacyBytesValue 
+	self shouldAvoidAutoUtf8Codec ifTrue: [ 
+		^ self rawBytesValue 
 	 ].
-	^self rawBytesValue 
+	^self legacyBytesValue 
 ]
 
 { #category : #accessing }
 SbBoltValue >> bytesValue: aByteArray [
+	self shouldAvoidAutoUtf8Codec ifTrue: [ 
+		^self ffi setRawBytes: aByteArray sized: aByteArray size + 1 onValue: self
+	].
 	^ self ffi setBytes: aByteArray onValue: self
 ]
 
@@ -186,6 +189,11 @@ SbBoltValue >> setValue: anObject [
 	^ SbValueInjector new inject: anObject into: self
 ]
 
+{ #category : #testing }
+SbBoltValue >> shouldAvoidAutoUtf8Codec [
+	^ self portableUtil smalltalkMajorVersion >= 9
+]
+
 { #category : #accessing }
 SbBoltValue >> size [
 	^ self ffi getSizeOnValue: self
@@ -193,15 +201,15 @@ SbBoltValue >> size [
 
 { #category : #accessing }
 SbBoltValue >> stringValue [
-	self portableUtil smalltalkMajorVersion <=8 ifTrue: [ 
-		^self legacyStringValue 
+	self shouldAvoidAutoUtf8Codec ifTrue: [ 
+		^ self rawStringValue 
 	 ].
-	^self rawStringValue 
+	^self legacyStringValue
 ]
 
 { #category : #accessing }
 SbBoltValue >> stringValue: aString [
-	aString isWideString ifTrue: [ | encodedBytes |
+	self shouldAvoidAutoUtf8Codec ifTrue: [ | encodedBytes |
 		encodedBytes := aString utf8Encoded pinInMemory; yourself.
 		^self ffi setRawString: encodedBytes sized: encodedBytes size + 1 onValue: self
 	].
