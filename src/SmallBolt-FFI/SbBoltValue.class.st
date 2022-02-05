@@ -139,6 +139,17 @@ SbBoltValue >> legacyBytesValue [
 	^ bytes 
 ]
 
+{ #category : #'private-accessing' }
+SbBoltValue >> legacyStringValue [
+	| sz rawString strm str |
+	sz := self ffi getSizeOnValue: self.
+	rawString := self ffi getStringOnValue: self.
+	strm := rawString readStream.
+	str := String new: sz.
+	strm readInto: str startingAt: 1 count: sz.
+	^ str
+]
+
 { #category : #accessing }
 SbBoltValue >> listSize: size [
 	^ self ffi setListSize: size onValue: self
@@ -159,6 +170,16 @@ SbBoltValue >> rawBytesValue [
 	
 ]
 
+{ #category : #'private-accessing' }
+SbBoltValue >> rawStringValue [
+	"For Pharo 9+"
+	| sz rawBytesPointer |
+	sz := self ffi getSizeOnValue: self.
+	rawBytesPointer := self ffi getRawStringOnValue: self.
+	^ (rawBytesPointer asByteArraySized: sz) utf8Decoded
+	
+]
+
 { #category : #'setting value' }
 SbBoltValue >> setValue: anObject [
 	value := nil.
@@ -172,20 +193,17 @@ SbBoltValue >> size [
 
 { #category : #accessing }
 SbBoltValue >> stringValue [
-	| sz rawString strm str |
-	sz := self ffi getSizeOnValue: self.
-	rawString := self ffi getStringOnValue: self.
-	strm := rawString readStream.
-	str := String new: sz.
-	strm readInto: str startingAt: 1 count: sz.
-	^ str readStream upTo: 0 asCharacter.
+	self portableUtil smalltalkMajorVersion <=8 ifTrue: [ 
+		^self legacyStringValue 
+	 ].
+	^self rawStringValue 
 ]
 
 { #category : #accessing }
 SbBoltValue >> stringValue: aString [
 	aString isWideString ifTrue: [ | encodedBytes |
 		encodedBytes := aString utf8Encoded pinInMemory; yourself.
-		^self ffi setRawString: encodedBytes sized: encodedBytes size onValue: self
+		^self ffi setRawString: encodedBytes sized: encodedBytes size + 1 onValue: self
 	].
 	^ self ffi setString: aString onValue: self
 ]
