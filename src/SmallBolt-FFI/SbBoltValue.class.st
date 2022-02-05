@@ -37,13 +37,10 @@ SbBoltValue >> booleanValue: aBoolean [
 
 { #category : #accessing }
 SbBoltValue >> bytesValue [
-	| sz rawBytes strm bytes |
-	sz := self ffi getSizeOnValue: self.
-	rawBytes := self ffi getBytesOnValue: self.
-	strm := rawBytes fromCString asByteArray readStream.
-	bytes := ByteArray new: sz.
-	strm readInto: bytes startingAt: 1 count: sz.
-	^ bytes 
+	self portableUtil smalltalkMajorVersion <=8 ifTrue: [ 
+		^self legacyBytesValue 
+	 ].
+	^self rawBytesValue 
 ]
 
 { #category : #accessing }
@@ -130,6 +127,18 @@ SbBoltValue >> integerValue: anInteger [
 	^ self ffi setInteger: anInteger onValue: self
 ]
 
+{ #category : #'private-accessing' }
+SbBoltValue >> legacyBytesValue [
+	"For Pharo 8"
+	| sz rawBytes strm bytes |
+	sz := self ffi getSizeOnValue: self.
+	rawBytes := self ffi getBytesOnValue: self.
+	strm := rawBytes fromCString asByteArray readStream.
+	bytes := ByteArray new: sz.
+	strm readInto: bytes startingAt: 1 count: sz.
+	^ bytes 
+]
+
 { #category : #accessing }
 SbBoltValue >> listSize: size [
 	^ self ffi setListSize: size onValue: self
@@ -138,6 +147,16 @@ SbBoltValue >> listSize: size [
 { #category : #accessing }
 SbBoltValue >> listValueAt: index [
 	^ self ffi getListValueAt: index onValue: self
+]
+
+{ #category : #'private-accessing' }
+SbBoltValue >> rawBytesValue [
+	"For Pharo 9+"
+	| sz rawBytesPointer |
+	sz := self ffi getSizeOnValue: self.
+	rawBytesPointer := self ffi getRawStringOnValue: self.
+	^ (rawBytesPointer asByteArraySized: sz)
+	
 ]
 
 { #category : #'setting value' }
@@ -159,11 +178,15 @@ SbBoltValue >> stringValue [
 	strm := rawString readStream.
 	str := String new: sz.
 	strm readInto: str startingAt: 1 count: sz.
-	^ str 
+	^ str readStream upTo: 0 asCharacter.
 ]
 
 { #category : #accessing }
 SbBoltValue >> stringValue: aString [
+	aString isWideString ifTrue: [ | encodedBytes |
+		encodedBytes := aString utf8Encoded pinInMemory; yourself.
+		^self ffi setRawString: encodedBytes sized: encodedBytes size onValue: self
+	].
 	^ self ffi setString: aString onValue: self
 ]
 

@@ -88,6 +88,11 @@ SbPortableUtil >> shutDown: isImageQuitting [
 	]
 ]
 
+{ #category : #testing }
+SbPortableUtil >> smalltalkMajorVersion [
+	^ 0
+]
+
 { #category : #'startup-shutdown' }
 SbPortableUtil >> startUp: isImageResuming [
 	SbSeaboltFFIFactory create.

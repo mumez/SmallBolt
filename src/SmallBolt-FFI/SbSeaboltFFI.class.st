@@ -287,6 +287,11 @@ SbSeaboltFFI >> getPortOnAddress: aBoltAddress [
 	^ self ffiCall: #( String BoltAddress_port(SbBoltAddress aBoltAddress) )
 ]
 
+{ #category : #value }
+SbSeaboltFFI >> getRawStringOnValue: aBoltValue [
+	^ self ffiCall: #( void* BoltString_get(SbBoltValue aBoltValue) )
+]
+
 { #category : #connection }
 SbSeaboltFFI >> getRemoteEndpointOnConnection: aBoltConnection [
 	^ self ffiCall: #( SbBoltAddress BoltConnection_remote_endpoint(SbBoltConnection aBoltConnection) )
@@ -496,6 +501,11 @@ SbSeaboltFFI >> setNilOnValue: aBoltValue [
 	^ self ffiCall: #( void BoltValue_format_as_Null(SbBoltValue aBoltValue) )
 ]
 
+{ #category : #value }
+SbSeaboltFFI >> setRawString: aString sized: size onValue: aBoltValue [
+	^ self ffiCall: #( void BoltValue_format_as_String(SbBoltValue aBoltValue, void* aString, int32 size) )
+]
+
 { #category : #connection }
 SbSeaboltFFI >> setRunBookmarkList: bookmarkList onConnection: aBoltConnection [
 	^ self ffiCall: #( int32 BoltConnection_set_run_bookmarks(SbBoltConnection aBoltConnection, BoltValue bookmarkList) )
@@ -547,7 +557,7 @@ SbSeaboltFFI >> setScheme: anInteger onConfig: aBoltConfig [
 
 { #category : #value }
 SbSeaboltFFI >> setString: aString onValue: aBoltValue [
-	^self setString: aString sized: aString size onValue: aBoltValue
+	^self setString: aString, (0 asCharacter asString) sized: aString size + 1 onValue: aBoltValue
 ]
 
 { #category : #value }

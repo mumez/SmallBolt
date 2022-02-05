@@ -39,6 +39,11 @@ SbPharoPortableUtil >> registerAsStartupAndShutdownHandler: aClass [
 		registerNetworkClassNamed: aClass name
 ]
 
+{ #category : #testing }
+SbPharoPortableUtil >> smalltalkMajorVersion [
+	^ SystemVersion current major
+]
+
 { #category : #'startup - shutdown' }
 SbPharoPortableUtil >> unregisterAsStartupAndShutdownHandler: aClass [
 	SessionManager default
