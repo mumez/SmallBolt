@@ -523,9 +523,14 @@ SbSeaboltFFI >> setRunCypher: cypherString cypherSize: cypherSize numberOfParame
 
 { #category : #connection }
 SbSeaboltFFI >> setRunCypher: cypherString numberOfParameters: numberOfParameters onConnection: aBoltConnection [
-	| cypherSize |
-	cypherSize := cypherString asString size.
-	^ self setRunCypher: cypherString cypherSize: cypherSize numberOfParameters: numberOfParameters onConnection: aBoltConnection
+	| targetString encodedBytes |
+	targetString := cypherString asString.
+	targetString isWideString ifFalse: [ 
+		^ self setRunCypher: targetString cypherSize: targetString size numberOfParameters: numberOfParameters onConnection: aBoltConnection
+	].
+	encodedBytes := targetString utf8Encoded.
+	^ self setRunRawCypher: encodedBytes cypherSize: encodedBytes size numberOfParameters: numberOfParameters onConnection: aBoltConnection
+	
 ]
 
 { #category : #connection }
@@ -543,6 +548,11 @@ SbSeaboltFFI >> setRunCypherParameter: paramNameString at: index onConnection: a
 { #category : #connection }
 SbSeaboltFFI >> setRunCypherParameter: paramNameString sized: paramNameSize at: index onConnection: aBoltConnection [
 	^ self ffiCall: #( SbBoltValue BoltConnection_set_run_cypher_parameter(SbBoltConnection aBoltConnection, int32 index, String paramNameString, int64 paramNameSize) )
+]
+
+{ #category : #connection }
+SbSeaboltFFI >> setRunRawCypher: cypherString cypherSize: cypherSize numberOfParameters: numberOfParameters onConnection: aBoltConnection [
+	^ self ffiCall: #( int32 BoltConnection_set_run_cypher(SbBoltConnection aBoltConnection, void* cypherString, int64 cypherSize, int32 numberOfParameters) )
 ]
 
 { #category : #connection }
