@@ -153,7 +153,8 @@ SbBasicRequester >> transactionDo: aBlock [
 	^ self basicTransactionDo: aBlock ifFailed: [ :status :error | 
 		error ifNotNil: [ 
 			self notifyTransactionFailed: error
-		]	
+		]
+		error
 	].
 	
 ]

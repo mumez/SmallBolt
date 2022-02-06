@@ -45,6 +45,20 @@ SbFfiTestCase >> testCreateLog [
 ]
 
 { #category : #testing }
+SbFfiTestCase >> testSetGetByteArray [
+	| boltValue |
+	[ boltValue := SbBoltValue create.
+	boltValue value: #[1 2 3 4 5 6 7 8 9].
+	self assert: boltValue value = #[1 2 3 4 5 6 7 8 9].
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ].
+
+	[ boltValue := SbBoltValue create.
+	boltValue value: 'abcdefghijklmn' asByteArray.
+	self assert: boltValue value = 'abcdefghijklmn' asByteArray.
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ].
+]
+
+{ #category : #testing }
 SbFfiTestCase >> testSetGetDictionaryBoltValue [
 	| boltValue dict |
 	[ boltValue := SbBoltValue create.
@@ -88,4 +102,18 @@ SbFfiTestCase >> testSetGetPrimitiveBoltValue [
 	boltValue value: #[1 2 3].
 	self assert: boltValue value = #[1 2 3]. 
 	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ]
+]
+
+{ #category : #testing }
+SbFfiTestCase >> testSetGetString [
+	| boltValue |
+	[ boltValue := SbBoltValue create.
+	boltValue value: 'あいうええおあお、かきくけけこかこ。'.
+	self assert: boltValue value = 'あいうええおあお、かきくけけこかこ。'.
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ].
+
+	[ boltValue := SbBoltValue create.
+	boltValue value: 'abcdefghijklmn'.
+	self assert: boltValue value = 'abcdefghijklmn'.
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ].
 ]
