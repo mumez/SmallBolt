@@ -155,8 +155,8 @@ SbClientSessionManager >> returnClient: client at: aClientKindKey [
 		critical: [
 			clientsMap at: aClientKindKey ifPresent: [:clients |
 				clients size >= self maxClientsPerKey
-				ifTrue: [ client release ]
-				ifFalse: [ clients add: client ]
+					ifTrue: [ client release ]
+					ifFalse: [ clients add: client ]
 			]]
 ]
 

@@ -157,6 +157,7 @@ SbBoltValue >> rawBytesValue [
 	"For Pharo 9+"
 	| sz rawBytesPointer |
 	sz := self ffi getSizeOnValue: self.
+	sz isZero ifTrue: [ ^ #[] ].
 	rawBytesPointer := self ffi getRawStringOnValue: self.
 	^ (rawBytesPointer asByteArraySized: sz)
 	
@@ -198,7 +199,7 @@ SbBoltValue >> stringValue [
 	strm := rawString readStream.
 	str := String new: sz.
 	strm readInto: str startingAt: 1 count: sz.
-	^ str readStream upTo:  0 asCharacter
+	^ str readStream upTo: 0 asCharacter
 ]
 
 { #category : #accessing }
