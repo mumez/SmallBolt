@@ -46,7 +46,7 @@ SbBoltValue >> bytesValue [
 { #category : #accessing }
 SbBoltValue >> bytesValue: aByteArray [
 	self shouldAvoidAutoUtf8Codec ifTrue: [ 
-		^ self ffi setRawBytes: aByteArray sized: aByteArray size + 1 onValue: self
+		^ self ffi setRawBytes: aByteArray sized: aByteArray size onValue: self
 	].
 	^ self ffi setBytes: aByteArray onValue: self
 ]
@@ -168,7 +168,7 @@ SbBoltValue >> rawStringValueSized: size [
 	| rawBytesPointer |
 	size isZero ifTrue: [ ^ '' ].
 	rawBytesPointer := self ffi getRawStringOnValue: self.
-	^ (rawBytesPointer asByteArraySized: size + 1) utf8Decoded
+	^ (rawBytesPointer asByteArraySized: size) utf8Decoded
 	
 ]
 
@@ -205,7 +205,7 @@ SbBoltValue >> stringValue [
 SbBoltValue >> stringValue: aString [
 	(self shouldAvoidAutoUtf8Codec and: [aString isWideString]) ifTrue: [ | encodedBytes |
 		encodedBytes := aString utf8Encoded.
-		^ self ffi setRawString: encodedBytes sized: encodedBytes size + 1 onValue: self
+		^ self ffi setRawString: encodedBytes sized: encodedBytes size onValue: self
 	].
 	^ self ffi setString: aString onValue: self
 ]
