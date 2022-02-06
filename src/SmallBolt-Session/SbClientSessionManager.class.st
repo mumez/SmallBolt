@@ -152,11 +152,12 @@ SbClientSessionManager >> release [
 { #category : #private }
 SbClientSessionManager >> returnClient: client at: aClientKindKey [
 	lock
-		critical: [ | clients |
-			clients := clientsMap at: aClientKindKey.
-			clients size >= self maxClientsPerKey
-				ifTrue: [ client release ]
-				ifFalse: [ clients add: client ] ]
+		critical: [
+			clientsMap at: aClientKindKey ifPresent: [:clients |
+				clients size >= self maxClientsPerKey
+					ifTrue: [ client release ]
+					ifFalse: [ clients add: client ]
+			]]
 ]
 
 { #category : #accessing }

@@ -25,7 +25,7 @@ SbBoltValue >> basicPrintStringOnConnection: aBoltConnection bufferLength: buffe
 
 { #category : #accessing }
 SbBoltValue >> booleanValue [
-	^ self ffi getBooleanOnValue: self
+	^ (self ffi getBooleanOnValue: self) asInteger
 ]
 
 { #category : #accessing }
@@ -37,17 +37,17 @@ SbBoltValue >> booleanValue: aBoolean [
 
 { #category : #accessing }
 SbBoltValue >> bytesValue [
-	| sz rawBytes strm bytes |
-	sz := self ffi getSizeOnValue: self.
-	rawBytes := self ffi getBytesOnValue: self.
-	strm := rawBytes fromCString asByteArray readStream.
-	bytes := ByteArray new: sz.
-	strm readInto: bytes startingAt: 1 count: sz.
-	^ bytes 
+	self shouldAvoidAutoUtf8Codec ifTrue: [ 
+		^ self rawBytesValue 
+	 ].
+	^self legacyBytesValue 
 ]
 
 { #category : #accessing }
 SbBoltValue >> bytesValue: aByteArray [
+	self shouldAvoidAutoUtf8Codec ifTrue: [ 
+		^ self ffi setRawBytes: aByteArray sized: aByteArray size onValue: self
+	].
 	^ self ffi setBytes: aByteArray onValue: self
 ]
 
@@ -130,6 +130,18 @@ SbBoltValue >> integerValue: anInteger [
 	^ self ffi setInteger: anInteger onValue: self
 ]
 
+{ #category : #'private-accessing' }
+SbBoltValue >> legacyBytesValue [
+	"For Pharo 8"
+	| sz rawBytes strm bytes |
+	sz := self ffi getSizeOnValue: self.
+	rawBytes := self ffi getBytesOnValue: self.
+	strm := rawBytes fromCString asByteArray readStream.
+	bytes := ByteArray new: sz.
+	strm readInto: bytes startingAt: 1 count: sz.
+	^ bytes 
+]
+
 { #category : #accessing }
 SbBoltValue >> listSize: size [
 	^ self ffi setListSize: size onValue: self
@@ -140,10 +152,36 @@ SbBoltValue >> listValueAt: index [
 	^ self ffi getListValueAt: index onValue: self
 ]
 
+{ #category : #'private-accessing' }
+SbBoltValue >> rawBytesValue [
+	"For Pharo 9+"
+	| sz rawBytesPointer |
+	sz := self ffi getSizeOnValue: self.
+	sz isZero ifTrue: [ ^ #[] ].
+	rawBytesPointer := self ffi getRawStringOnValue: self.
+	^ (rawBytesPointer asByteArraySized: sz)
+	
+]
+
+{ #category : #'private-accessing' }
+SbBoltValue >> rawStringValueSized: size [
+	"For Pharo 9+"
+	| rawBytesPointer |
+	size isZero ifTrue: [ ^ '' ].
+	rawBytesPointer := self ffi getRawStringOnValue: self.
+	^ (rawBytesPointer asByteArraySized: size) utf8Decoded
+	
+]
+
 { #category : #'setting value' }
 SbBoltValue >> setValue: anObject [
 	value := nil.
 	^ SbValueInjector new inject: anObject into: self
+]
+
+{ #category : #testing }
+SbBoltValue >> shouldAvoidAutoUtf8Codec [
+	^ self portableUtil smalltalkMajorVersion >= 9
 ]
 
 { #category : #accessing }
@@ -155,15 +193,21 @@ SbBoltValue >> size [
 SbBoltValue >> stringValue [
 	| sz rawString strm str |
 	sz := self ffi getSizeOnValue: self.
-	rawString := self ffi getStringOnValue: self.
+	rawString := [self ffi getStringOnValue: self] on: Error do: [:ex |
+		^ self rawStringValueSized: sz.
+	].
 	strm := rawString readStream.
 	str := String new: sz.
 	strm readInto: str startingAt: 1 count: sz.
-	^ str 
+	^ str readStream upTo: 0 asCharacter
 ]
 
 { #category : #accessing }
 SbBoltValue >> stringValue: aString [
+	(self shouldAvoidAutoUtf8Codec and: [aString isWideString]) ifTrue: [ | encodedBytes |
+		encodedBytes := aString utf8Encoded.
+		^ self ffi setRawString: encodedBytes sized: encodedBytes size onValue: self
+	].
 	^ self ffi setString: aString onValue: self
 ]
 

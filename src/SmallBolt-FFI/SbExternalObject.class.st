@@ -60,6 +60,11 @@ SbExternalObject >> initWithSettings: aSbSettings [
 ]
 
 { #category : #accessing }
+SbExternalObject >> portableUtil [
+	^SbPortableUtil default
+]
+
+{ #category : #accessing }
 SbExternalObject >> settings [
 	^ settings
 ]
