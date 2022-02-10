@@ -106,7 +106,7 @@ SbFfiTestCase >> testSetGetPrimitiveBoltValue [
 
 { #category : #testing }
 SbFfiTestCase >> testSetGetString [
-	| boltValue |
+	| boltValue nbsp |
 	[ boltValue := SbBoltValue create.
 	boltValue value: 'あいうええおあお、かきくけけこかこ。'.
 	self assert: boltValue value = 'あいうええおあお、かきくけけこかこ。'.
@@ -115,5 +115,11 @@ SbFfiTestCase >> testSetGetString [
 	[ boltValue := SbBoltValue create.
 	boltValue value: 'abcdefghijklmn'.
 	self assert: boltValue value = 'abcdefghijklmn'.
+	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ].
+
+	nbsp := (Character value: 160) asString.
+	[ boltValue := SbBoltValue create.
+	boltValue value: 'abcdefghijklmn', nbsp.
+	self assert: boltValue value = ('abcdefghijklmn', nbsp).
 	] ensure: [ boltValue ifNotNil: [ boltValue destroy ] ].
 ]
