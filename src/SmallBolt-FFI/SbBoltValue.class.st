@@ -204,7 +204,7 @@ SbBoltValue >> stringValue [
 
 { #category : #accessing }
 SbBoltValue >> stringValue: aString [
-	(self shouldAvoidAutoUtf8Codec and: [aString isWideString]) ifTrue: [ | encodedBytes |
+	self shouldAvoidAutoUtf8Codec ifTrue: [ | encodedBytes |
 		encodedBytes := aString utf8Encoded.
 		^ self ffi setRawString: encodedBytes sized: encodedBytes size onValue: self
 	].

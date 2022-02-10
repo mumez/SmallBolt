@@ -525,9 +525,6 @@ SbSeaboltFFI >> setRunCypher: cypherString cypherSize: cypherSize numberOfParame
 SbSeaboltFFI >> setRunCypher: cypherString numberOfParameters: numberOfParameters onConnection: aBoltConnection [
 	| targetString encodedBytes |
 	targetString := cypherString asString.
-	targetString isWideString ifFalse: [ 
-		^ self setRunCypher: targetString cypherSize: targetString size numberOfParameters: numberOfParameters onConnection: aBoltConnection
-	].
 	encodedBytes := targetString utf8Encoded.
 	^ self setRunRawCypher: encodedBytes cypherSize: encodedBytes size numberOfParameters: numberOfParameters onConnection: aBoltConnection
 	
