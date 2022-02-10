@@ -172,13 +172,13 @@ SbRawClient >> release [
 
 { #category : #releasing }
 SbRawClient >> releaseConnector [
-	connector ifNotNil: [ connector destroy ].
+	(connector notNil and: [connector isNull not]) ifTrue: [ connector destroy ].
 	connector := nil
 ]
 
 { #category : #releasing }
 SbRawClient >> releaseFactory [
-	factory ifNotNil: [ factory autoRelease ].
+	(factory notNil and: [factory isNull not]) ifTrue:[ factory autoRelease ].
 	factory := nil
 ]
 
