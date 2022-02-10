@@ -120,6 +120,11 @@ SbRawClient >> factory: anObject [
 ]
 
 { #category : #testing }
+SbRawClient >> hasValidConnector [
+	^connector notNil and: [connector isNull not]
+]
+
+{ #category : #testing }
 SbRawClient >> isConnected [
 	self connection ifNil: [ ^false ].
 	^self connection isReady
@@ -165,20 +170,22 @@ SbRawClient >> printOn: aStream [
 
 { #category : #'initialization-release' }
 SbRawClient >> release [
-	self releaseFactory.
-	self releaseConnector.
+	self hasValidConnector ifTrue: [ 
+		self releaseFactory.
+		self releaseConnector.
+	].
 	configBuilder := connection :=  nil.
 ]
 
 { #category : #releasing }
 SbRawClient >> releaseConnector [
-	(connector notNil and: [connector isNull not]) ifTrue: [ connector destroy ].
+	self hasValidConnector ifTrue: [ connector destroy ].
 	connector := nil
 ]
 
 { #category : #releasing }
 SbRawClient >> releaseFactory [
-	(factory notNil and: [factory isNull not]) ifTrue:[ factory autoRelease ].
+	factory ifNotNil: [ factory autoRelease ].
 	factory := nil
 ]
 
