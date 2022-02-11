@@ -191,15 +191,9 @@ SbBoltValue >> size [
 
 { #category : #accessing }
 SbBoltValue >> stringValue [
-	| sz rawString strm str |
+	| sz |
 	sz := self ffi getSizeOnValue: self.
-	rawString := [self ffi getStringOnValue: self] on: Error do: [:ex |
-		^ self rawStringValueSized: sz.
-	].
-	strm := rawString readStream.
-	str := String new: sz.
-	strm readInto: str startingAt: 1 count: sz.
-	^ str readStream upTo: 0 asCharacter
+	^ self rawStringValueSized: sz
 ]
 
 { #category : #accessing }
