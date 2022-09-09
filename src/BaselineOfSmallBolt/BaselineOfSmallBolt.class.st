@@ -33,7 +33,7 @@ BaselineOfSmallBolt >> platformLibraryName [
 	os := Smalltalk os.
 	libBaseName := self sharedLibraryBaseName.
 	os isUnix ifTrue: [ ^ libBaseName, '.so' ].
-	os isWin32 ifTrue: [ ^ libBaseName, '.dll' ].
+	os isWindows ifTrue: [ ^ libBaseName, '.dll' ].
 	os isMacOSX ifTrue: [ ^ libBaseName, '.dylib' ].
 	self error: 'Unsupported OS platform'
 ]
